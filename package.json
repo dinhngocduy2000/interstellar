@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
@@ -27,10 +28,26 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "^9.32.0",
     "eslint-config-next": "15.4.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "eslint-plugin-no-unsanitized": "^4.1.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "eslint-plugin-security": "^3.0.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix --ext .js,.jsx,.ts,.tsx",
+      ".husky/scripts/check-xss.sh",
+      ".husky/scripts/check-secrets.sh",
+      "prettier --write"
+    ]
   }
 }
