@@ -28,7 +28,6 @@ const LoginFormComponent = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) setError("");
   };
-  const test = "";
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1 text-center">
