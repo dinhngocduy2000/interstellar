@@ -30,7 +30,7 @@ export default function RootLayout({
         />
         <meta
           name="description"
-          content="FakeGPT is a modern AI chatbot that can help you with your tasks and projects"
+          content="Interstellar is a modern AI chatbot that can help you with your tasks and projects"
         />
       </head>
       <body

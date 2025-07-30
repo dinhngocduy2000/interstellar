@@ -5,6 +5,9 @@
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
+    },
+    "parserOptions": {
+      "project": "./tsconfig.json"
     }
   },
   "plugins": ["security", "no-unsanitized", "react", "@typescript-eslint"],
@@ -12,15 +15,23 @@
     "plugin:security/recommended",
     "plugin:no-unsanitized/recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "next/core-web-vitals"
   ],
   "rules": {
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
     "react/no-danger": "error",
     "no-unsanitized/property": "error",
     "no-unsanitized/method": "error",
     "security/detect-eval-with-expression": "error",
     "security/detect-unsafe-regex": "warn",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "no-unused-vars": [
+      "error",
+      { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
+    ],
+    "no-undef": "off"
   },
   "env": {
     "browser": true,

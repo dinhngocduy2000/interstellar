@@ -24,9 +24,15 @@ export default tseslint.config(
       ...js.configs.recommended.rules,
       ...tseslint.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off",
+      "no-undef": "off",
       "react/no-danger": "error",
       "react/prop-types": "off",
-
+      "no-unused-vars": [
+        "error",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
       "react-hooks/exhaustive-deps": "off",
     },
   },
