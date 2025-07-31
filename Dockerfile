@@ -1,29 +1,35 @@
-# Stage 1: Base image for installing dependencies
-FROM node:18-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm ci
+# Build Stage
+FROM node:20-alpine AS builder
 
-# Stage 2: Build the Next.js application
-FROM node:18-alpine AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+
+# Copy package.json and package-lock.json first to leverage Docker cache
+COPY package.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
+
+# Build the Next.js application for production with standalone output
 RUN npm run build
 
-# Stage 3: Production image
-FROM node:18-alpine AS runner
+# Production Stage
+FROM node:20-alpine AS runner
+
 WORKDIR /app
+
+# Set environment variables for Next.js
 ENV NODE_ENV=production
 
-# Copy only necessary files
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Copy the standalone output from the builder stage
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
 # Expose the port Next.js runs on
 EXPOSE 3000
 
-# Start the Next.js application
-CMD ["npm", "start"]
+# Start the Next.js application using the standalone server
+CMD ["node", "server.js"]
