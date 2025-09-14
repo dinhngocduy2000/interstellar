@@ -4,6 +4,7 @@ import { DefaultMetadata } from "@/lib/utils";
 import { Geist, Geist_Mono } from "next/font/google";
 import ToastProvider from "@/components/providers/toast.provider";
 import ReactQueryProviders from "@/components/providers/react-query-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -39,7 +40,14 @@ export default function RootLayout({
       >
         <main className="flex h-screen w-screen items-center justify-center bg-muted">
           <ReactQueryProviders>
-            <ToastProvider>{children}</ToastProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <ToastProvider>{children}</ToastProvider>
+            </ThemeProvider>
           </ReactQueryProviders>
         </main>
       </body>
