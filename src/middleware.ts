@@ -35,10 +35,7 @@ export async function middleware(request: NextRequest) {
       return;
     }
     await setCookiesAction({
-      access_token: "123",
-      token_type: "Bearer",
-      expired_at: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
-      refresh_token: "123",
+      ...res.data,
       saveSession: saveSession === "true" ? true : false,
     });
     return NextResponse.next();

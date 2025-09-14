@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "@/assets/style/globals.css";
-import { DefaultMetadata } from "@/lib/utils/utils";
+import { DefaultMetadata } from "@/lib/utils";
 
 export const metadata: Metadata = DefaultMetadata;
 

@@ -20,22 +20,22 @@ export const getSaveSessionCookie = async () => {
 };
 
 export const setCookiesAction = async (
-  res: LoginResponse & { saveSession?: boolean }
+  res: LoginResponse & { saveSession?: boolean },
 ) => {
   const cookieStore = await cookies();
   cookieStore.set({
     name: COOKIE_KEYS.ACCESS_TOKEN,
-    value: res.access_token,
-    expires: res.saveSession ? new Date(res.expired_at) : undefined,
+    value: res.accessToken,
+    expires: res.saveSession ? new Date(res.expiresIn) : undefined,
     path: "/",
     httpOnly: true,
     sameSite: "lax",
   });
   cookieStore.set({
     name: COOKIE_KEYS.REFRESH_TOKEN,
-    value: res.refresh_token,
+    value: res.refreshToken,
     expires: res.saveSession
-      ? new Date(res.expired_at).setHours(new Date().getHours() + 2)
+      ? new Date(res.expiresIn).setHours(new Date().getHours() + 2)
       : undefined,
     path: "/",
     httpOnly: true,
@@ -45,7 +45,7 @@ export const setCookiesAction = async (
     name: COOKIE_KEYS.SAVE_SESSION,
     value: String(res.saveSession),
     expires: res.saveSession
-      ? new Date(res.expired_at).setHours(new Date().getHours() + 3)
+      ? new Date(res.expiresIn).setHours(new Date().getHours() + 3)
       : undefined,
   });
 };

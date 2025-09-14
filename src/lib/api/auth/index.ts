@@ -8,3 +8,9 @@ export const loginAPI = async (
 ): Promise<LoginResponse> => {
   return await axiosConfig.post(AUTH_ENDPOINTS.LOGIN, data, { signal });
 };
+
+export const refreshToken = async (params: {
+  token: string;
+}): Promise<LoginResponse> => {
+  return await axiosConfig.post(AUTH_ENDPOINTS.REFRESH_TOKEN, params);
+};

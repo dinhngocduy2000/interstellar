@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "../assets/style/globals.css";
-import { DefaultMetadata } from "@/lib/utils/utils";
+import { DefaultMetadata } from "@/lib/utils";
 import { Geist, Geist_Mono } from "next/font/google";
 import ToastProvider from "@/components/providers/toast.provider";
 import ReactQueryProviders from "@/components/providers/react-query-provider";

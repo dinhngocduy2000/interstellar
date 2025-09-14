@@ -11,9 +11,9 @@ import {
   UseFormStateReturn,
 } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-import { cn } from "@/lib/utils/utils";
-import { Label } from "../ui/label";
+import { cn } from "@/lib/utils";
 import { MessageCircleWarning } from "lucide-react";
+import { Label } from "../ui/label";
 
 interface Props<T extends FieldValues> {
   maxCharactersText?: string | ReactNode;
