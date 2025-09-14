@@ -1,6 +1,13 @@
+import z from "zod";
+import { LoginSchema } from "../schemas/login-schema";
+
 export interface LoginResponse {
-  access_token: string;
-  token_type: string;
-  expired_at: string;
-  refresh_token: string;
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  email: string;
+  username: string;
+  role: string;
 }
+
+export type LoginForm = z.infer<typeof LoginSchema>;
