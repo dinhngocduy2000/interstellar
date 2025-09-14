@@ -2,22 +2,22 @@ import { clsx, type ClassValue } from "clsx";
 import { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
 export const DefaultMetadata: Metadata = {
-  title: "FakeGPT",
+  title: "Interstellar",
   description:
-    "FakeGPT is a modern AI chatbot that can help you with your tasks and projects",
+    "Interstellar is a modern AI chatbot that can help you with your tasks and projects",
   keywords: [
-    "FakeGPT",
+    "Interstellar",
     "Task management app",
     "Manage Tasks",
     "Kanban board",
     "Calendar view",
   ],
   openGraph: {
-    title: "FakeGPT | Modern AI Chatbot",
+    title: "Interstellar | Modern AI Chatbot",
     description:
-      "FakeGPT is a modern AI chatbot that can help you with your tasks and projects",
+      "Interstellar is a modern AI chatbot that can help you with your tasks and projects",
     url: "https://nullify-eight.vercel.app/", // Replace with your actual URL
-    siteName: "FakeGPT",
+    siteName: "Interstellar",
     images: [
       {
         url: "/images/nuliplayer-thumbnail.png", // Replace with your image path
@@ -30,9 +30,9 @@ export const DefaultMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FakeGPT | Modern AI Chatbot",
+    title: "Interstellar | Modern AI Chatbot",
     description:
-      "FakeGPT is a modern AI chatbot that can help you with your tasks and projects",
+      "Interstellar is a modern AI chatbot that can help you with your tasks and projects",
     images: ["/images/nuliplayer-thumbnail.png"], // Replace with your image path
   },
 };

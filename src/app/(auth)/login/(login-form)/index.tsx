@@ -19,7 +19,7 @@ const LoginFormContainerComponent = () => {
       <CardHeader className="space-y-1 text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
           <MessageSquare className="h-6 w-6" />
-          <span className="font-bold text-xl">FakeGPT</span>
+          <span className="font-bold text-xl">Interstellar</span>
         </div>
         <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
         <CardDescription>

@@ -55,7 +55,7 @@ const FormInputContainer = <T extends FieldValues>({
     <div
       className={cn(
         "flex w-full",
-        vertialAlign ? "flex-col gap-1" : "flex-row justify-center  gap-2",
+        vertialAlign ? "flex-col gap-1" : "flex-row justify-center gap-2",
         containerClassName && containerClassName,
       )}
     >
