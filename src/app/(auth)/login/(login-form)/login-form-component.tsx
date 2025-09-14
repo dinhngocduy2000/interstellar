@@ -12,6 +12,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormInputContainer from "@/components/reusable/form-input-container";
 import { useLoginMutation } from "@/lib/queries/auth-query";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { ROUTE_PATH } from "@/lib/enum/route-path";
+import { setCookiesAction } from "@/actions/cookie";
 
 const LoginFormComponent = () => {
   const {
@@ -22,10 +25,11 @@ const LoginFormComponent = () => {
     resolver: zodResolver(LoginSchema),
     mode: "onChange",
   });
+  const navigate = useRouter();
   const { mutateAsync } = useLoginMutation({
-    onSuccess: () => {
-      toast.success("Login successful");
-      console.log("Login successful");
+    onSuccess: (res) => {
+      setCookiesAction(res);
+      navigate.replace(ROUTE_PATH.HOME);
     },
     onError: (error) => {
       toast.error("Login failed");
