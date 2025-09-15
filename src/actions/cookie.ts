@@ -26,7 +26,9 @@ export const setCookiesAction = async (
   cookieStore.set({
     name: COOKIE_KEYS.ACCESS_TOKEN,
     value: res.accessToken,
-    expires: res.saveSession ? new Date(res.expiresIn) : undefined,
+    expires: res.saveSession
+      ? new Date().setDate(new Date().getDate() + 30)
+      : undefined,
     path: "/",
     httpOnly: true,
     sameSite: "lax",
@@ -35,7 +37,7 @@ export const setCookiesAction = async (
     name: COOKIE_KEYS.REFRESH_TOKEN,
     value: res.refreshToken,
     expires: res.saveSession
-      ? new Date(res.expiresIn).setHours(new Date().getHours() + 2)
+      ? new Date().setDate(new Date().getDate() + 30)
       : undefined,
     path: "/",
     httpOnly: true,
@@ -45,7 +47,7 @@ export const setCookiesAction = async (
     name: COOKIE_KEYS.SAVE_SESSION,
     value: String(res.saveSession),
     expires: res.saveSession
-      ? new Date(res.expiresIn).setHours(new Date().getHours() + 3)
+      ? new Date().setDate(new Date().getDate() + 30)
       : undefined,
   });
 };

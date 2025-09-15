@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import LoginFormComponent from "./login-form-component";
 
@@ -17,10 +16,6 @@ const LoginFormContainerComponent = () => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1 text-center">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <MessageSquare className="h-6 w-6" />
-          <span className="font-bold text-xl">Interstellar</span>
-        </div>
         <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
         <CardDescription>
           Enter your credentials to access your account
@@ -78,7 +73,7 @@ const LoginFormContainerComponent = () => {
         <p className="text-center text-sm text-muted-foreground w-full">
           Don&apos;t have an account?{" "}
           <Link
-            href="/auth/signup"
+            href="/signup"
             className="text-primary hover:underline font-medium"
           >
             Sign up

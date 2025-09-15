@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -23,15 +22,18 @@ const LoginFormComponent = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<LoginForm>({
     resolver: zodResolver(LoginSchema),
     mode: "onChange",
+    defaultValues: {
+      saveSession: false,
+    },
   });
   const navigate = useRouter();
   const { mutateAsync } = useLoginMutation({
-    onSuccess: (res) => {
-      setCookiesAction(res);
+    onSuccess: (res, data) => {
+      setCookiesAction({ ...res, saveSession: data.saveSession });
       navigate.replace(ROUTE_PATH.HOME);
     },
     onError: (error) => {
@@ -103,14 +105,22 @@ const LoginFormComponent = () => {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <input
-            id="remember"
-            type="checkbox"
-            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+          <FormInputContainer
+            control={control}
+            name="saveSession"
+            label={"Remember me"}
+            errors={errors}
+            render={({ field }) => (
+              <Input
+                id="saveSession"
+                type="checkbox"
+                defaultChecked={field.value as boolean}
+                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                onChange={(e) => field.onChange(e.target.checked)}
+              />
+            )}
+            containerClassName="flex-row-reverse items-start"
           />
-          <Label htmlFor="remember" className="text-sm font-normal">
-            Remember me
-          </Label>
         </div>
         <Link
           href="/auth/forgot-password"
@@ -120,7 +130,12 @@ const LoginFormComponent = () => {
         </Link>
       </div>
 
-      <Button disabled={!isValid} type="submit" className="w-full">
+      <Button
+        loading={isSubmitting}
+        disabled={!isValid}
+        type="submit"
+        className="w-full"
+      >
         Sign in
       </Button>
     </form>
