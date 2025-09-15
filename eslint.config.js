@@ -36,4 +36,10 @@ export default tseslint.config(
       "react-hooks/exhaustive-deps": "off",
     },
   },
+  {
+    files: ["src/lib/enum/*.ts"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off", // Disable for enums
+    },
+  },
 );
