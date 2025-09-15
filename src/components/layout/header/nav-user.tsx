@@ -27,6 +27,8 @@ import {
 import { logoutAction } from "@/actions/auth";
 import { useTransition } from "react";
 import { cn } from "@/lib/utils";
+import { trackSession } from "@/lib/api/auth";
+import { useQuery } from "@tanstack/react-query";
 
 export function NavUser({
   user,
@@ -38,6 +40,11 @@ export function NavUser({
   };
 }) {
   const [isPending, startTransition] = useTransition();
+  useQuery({
+    queryKey: ["track"],
+    queryFn: ({ signal }) => trackSession(signal),
+    refetchInterval: 600000, //10 minnutes
+  });
   return (
     <SidebarMenu className={cn("w-fit")}>
       <SidebarMenuItem>

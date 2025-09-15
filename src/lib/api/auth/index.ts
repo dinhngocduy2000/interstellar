@@ -21,3 +21,7 @@ export const refreshToken = async (
     signal,
   });
 };
+
+export const trackSession = async (signal?: AbortSignal): Promise<unknown> => {
+  return await axiosConfig.get(AUTH_ENDPOINTS.TRACK_SESSION, { signal });
+};

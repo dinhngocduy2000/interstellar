@@ -1,14 +1,11 @@
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import React from "react";
 import HomePageClientComponent from "./client-component";
 import { getListConversations } from "@/lib/api/conversations";
+import { getQueryClient } from "@/lib/queries/query-client";
 
 const HomePage = async () => {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: ["conversations"],
