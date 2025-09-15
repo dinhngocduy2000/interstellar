@@ -1,4 +1,10 @@
-import axios, { AxiosResponse } from "axios";
+import {
+  getAccessTokenCookie,
+  getRefreshTokenCookie,
+  setCookiesAction,
+} from "@/actions/cookie";
+import { refreshTokenAction } from "@/actions/refresh-token";
+import axios, { AxiosError, AxiosResponse } from "axios";
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1"; // Set in .env
 
@@ -7,18 +13,16 @@ const axiosConfig = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
 });
 // Add a request interceptor
 axiosConfig.interceptors.request.use(
   async function (config) {
-    // const accessToken = await getAccessTokenCookie();
+    const accessToken = await getAccessTokenCookie();
     // console.log("CHECKING TOKEN: ", accessToken);
-    // if (accessToken) {
-    //   // config.headers["Cookie"] = `${COOKIE_KEYS.ACCESS_TOKEN}=${accessToken}`;
-    //   config.headers["Authorization"] =
-    //     `${COOKIE_KEYS.ACCESS_TOKEN}=${accessToken}`;
-    // }
+    if (accessToken) {
+      // config.headers["Cookie"] = `${COOKIE_KEYS.ACCESS_TOKEN}=${accessToken}`;
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
 
     // Do something before request is sent
     return config;
@@ -39,14 +43,12 @@ axiosConfig.interceptors.response.use(
     }
     switch (error.response.status) {
       case 403:
-        // return await handleRenewToken(error);
-        break;
+        return await handleRenewToken(error);
       case 404:
         break;
       case 401:
-        // return await handleRenewToken(error);
-        // Refetch token with access token
-        break;
+        return await handleRenewToken(error);
+      // Refetch token with access token
       case 500:
         break;
       default:
@@ -57,31 +59,33 @@ axiosConfig.interceptors.response.use(
   },
 );
 
-// const handleRenewToken = async (error: unknown) => {
-//   if (!(error instanceof AxiosError)) {
-//     return;
-//   }
-//   const axiosError: AxiosError = error;
-//   const originalRequest = axiosError.config;
-//   if (!originalRequest) {
-//     return;
-//   }
-//   const refreshToken = await getRefreshTokenCookie();
-//   console.log(`GET REFRESH TOKEN: ${refreshToken}`);
-//   if (!refreshToken) {
-//     return;
-//   }
-//   const newAccessToken = await refreshTokenAction({ token: refreshToken });
+const handleRenewToken = async (error: unknown) => {
+  if (!(error instanceof AxiosError)) {
+    return;
+  }
+  const axiosError: AxiosError = error;
+  const originalRequest = axiosError.config;
+  if (!originalRequest) {
+    return;
+  }
+  const refreshToken = await getRefreshTokenCookie();
+  if (!refreshToken) {
+    return;
+  }
+  const newAccessToken = await refreshTokenAction({
+    refreshToken: refreshToken,
+  });
 
-//   if (!newAccessToken.data) {
-//     console.log(`No Access token`);
-//     return;
-//   }
-//   // originalRequest.headers.Authorization = `Bearer ${newAccessToken.token}`;
-//   originalRequest.headers[
-//     "Cookie"
-//   ] = `${COOKIE_KEYS.ACCESS_TOKEN}=${newAccessToken.data.access_token}`;
-//   return await axiosConfig(originalRequest);
-// };
+  if (!newAccessToken.accessToken) {
+    console.log(`No Access token`);
+    return;
+  }
+  await setCookiesAction({
+    ...newAccessToken,
+    saveSession: true,
+  });
+
+  return await axiosConfig(originalRequest);
+};
 
 export default axiosConfig;

@@ -1,4 +1,8 @@
-import { LoginForm, LoginResponse } from "@/lib/interfaces/auth";
+import {
+  LoginForm,
+  LoginResponse,
+  RefreshTokenPayload,
+} from "@/lib/interfaces/auth";
 import axiosConfig from "..";
 import { AUTH_ENDPOINTS } from "@/lib/enum/endpoints";
 
@@ -9,8 +13,11 @@ export const loginAPI = async (
   return await axiosConfig.post(AUTH_ENDPOINTS.LOGIN, data, { signal });
 };
 
-export const refreshToken = async (params: {
-  token: string;
-}): Promise<LoginResponse> => {
-  return await axiosConfig.post(AUTH_ENDPOINTS.REFRESH_TOKEN, params);
+export const refreshToken = async (
+  params: RefreshTokenPayload,
+  signal?: AbortSignal,
+): Promise<LoginResponse> => {
+  return await axiosConfig.post(AUTH_ENDPOINTS.REFRESH_TOKEN, params, {
+    signal,
+  });
 };

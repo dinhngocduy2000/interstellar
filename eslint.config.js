@@ -39,7 +39,16 @@ export default tseslint.config(
   {
     files: ["src/lib/enum/*.ts"],
     rules: {
-      "@typescript-eslint/no-unused-vars": "off", // Disable for enums
+      "no-unused-vars": "off", // Disable for enums
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          // Customize as needed (e.g., ignore vars prefixed with _)
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          // For enums: No extra config needed; it handles them correctly
+        },
+      ],
     },
   },
 );
