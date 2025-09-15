@@ -15,6 +15,9 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { setCookiesAction } from "@/actions/cookie";
+import { AxiosError } from "axios";
+import { AxiosErrorPayload } from "@/lib/interfaces/utils";
+import { getErrorMessage } from "@/lib/utils";
 
 const LoginFormComponent = () => {
   const {
@@ -32,8 +35,8 @@ const LoginFormComponent = () => {
       navigate.replace(ROUTE_PATH.HOME);
     },
     onError: (error) => {
-      toast.error("Login failed");
-      console.error("Login failed", error);
+      const axiosError = error as AxiosError<AxiosErrorPayload>;
+      toast.error(getErrorMessage(axiosError));
     },
   });
   const [showPassword, setShowPassword] = useState(false);

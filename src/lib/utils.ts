@@ -1,6 +1,8 @@
+import { AxiosError } from "axios";
 import { clsx, type ClassValue } from "clsx";
 import { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
+import { AxiosErrorPayload } from "./interfaces/utils";
 export const DefaultMetadata: Metadata = {
   title: "Interstellar",
   description:
@@ -40,3 +42,7 @@ export const DefaultMetadata: Metadata = {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const getErrorMessage = (error: AxiosError<AxiosErrorPayload>) => {
+  return error.response?.data?.message || "Something went wrong";
+};

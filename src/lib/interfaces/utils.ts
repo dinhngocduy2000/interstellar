@@ -20,7 +20,7 @@ export interface IPagination {
 export type IDropdownMenuProps = {
   trigger?: string | ReactNode;
   items: IDropdownMenuItem[];
-  onSearch?: (value: string) => void;
+  onSearch?: (_value: string) => void;
   dropdownContentClassName?: string;
 };
 
@@ -36,7 +36,7 @@ export interface BreadcrumbHandle {
 
 export interface IMutation {
   onSuccess?: VoidFunction;
-  onError?: (error: unknown) => void;
+  onError?: (_error: unknown) => void;
   onMutate?: VoidFunction;
   signal?: AbortSignal;
 }
@@ -49,4 +49,10 @@ export interface CheckWorkflowResult {
   status: string;
   failed_message: string;
   failed_activity_type: string;
+}
+
+export interface AxiosErrorPayload {
+  message: string;
+  error: string;
+  statusCode: number;
 }
