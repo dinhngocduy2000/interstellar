@@ -1,4 +1,12 @@
 import { ReactNode } from "react";
+export type ReactQueryHookParams<T> = {
+  queryKey: unknown[];
+  params: T;
+};
+export type IResponseDataWithPagination<T> = {
+  total: number;
+  data: T[];
+};
 
 export type ReduxStatePayload<T> = {
   type: string;
@@ -14,7 +22,7 @@ export interface IPagination {
   page: number;
   limit: number;
   type?: "page" | "infinite";
-  name?: string;
+  title?: string;
 }
 
 export type IDropdownMenuProps = {
@@ -39,16 +47,6 @@ export interface IMutation {
   onError?: (_error: unknown) => void;
   onMutate?: VoidFunction;
   signal?: AbortSignal;
-}
-
-export interface WorkflowResponse {
-  workflow_id: string;
-}
-
-export interface CheckWorkflowResult {
-  status: string;
-  failed_message: string;
-  failed_activity_type: string;
 }
 
 export interface AxiosErrorPayload {

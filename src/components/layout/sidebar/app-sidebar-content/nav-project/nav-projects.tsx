@@ -3,9 +3,11 @@
 import {
   Folder,
   Forward,
+  Frame,
+  Map,
   MoreHorizontal,
+  PieChart,
   Trash2,
-  type LucideIcon,
 } from "lucide-react";
 
 import {
@@ -25,16 +27,25 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-export function NavProjects({
-  items,
-}: {
-  items: {
-    name: string;
-    url: string;
-    icon: LucideIcon;
-  }[];
-}) {
+export function NavProjects() {
   const { isMobile } = useSidebar();
+  const items = [
+    {
+      name: "Projects",
+      url: "#",
+      icon: Frame,
+    },
+    {
+      name: "Members",
+      url: "#",
+      icon: PieChart,
+    },
+    {
+      name: "Feedbacks",
+      url: "#",
+      icon: Map,
+    },
+  ];
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">

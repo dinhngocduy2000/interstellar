@@ -32,5 +32,6 @@ export const useTrackSessionQuery = () => {
   return useQuery({
     queryKey: ["track"],
     queryFn: ({ signal }) => trackSession(signal),
+    refetchInterval: 60000 * 10,
   });
 };

@@ -7,4 +7,5 @@ export enum ROUTE_PATH {
   PROJECT = "/projects",
   TASK = "/tasks",
   FEEDBACKS = "/feedbacks",
+  CALENDAR = "/calendar",
 }

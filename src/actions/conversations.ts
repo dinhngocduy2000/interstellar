@@ -1,17 +1,15 @@
-import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
-import axiosConfig from "..";
+"use server";
+
+import { getListConversations } from "@/lib/api/conversations";
 import {
   Conversation,
   IConversationQuery,
 } from "@/lib/interfaces/conversations";
 import { IResponseDataWithPagination } from "@/lib/interfaces/utils";
 
-export const getListConversations = async (
+export const getListConversationsAction = async (
   params: IConversationQuery,
   signal?: AbortSignal,
 ): Promise<IResponseDataWithPagination<Conversation>> => {
-  return await axiosConfig.get(CONVERSATIONS_ENDPOINTS.LIST, {
-    signal: signal,
-    params: params,
-  });
+  return await getListConversations(params, signal);
 };
