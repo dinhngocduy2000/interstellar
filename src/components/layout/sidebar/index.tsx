@@ -8,18 +8,22 @@ import {
 import {
   AudioWaveform,
   BookOpen,
-  Bot,
   Command,
   Map,
   Frame,
   GalleryVerticalEnd,
   PieChart,
-  SquareTerminal,
   Settings2,
+  SquarePen,
+  ClipboardList,
+  ArchiveIcon,
+  Pin,
+  Clock,
 } from "lucide-react";
 import { TeamSwitcher } from "./team-switcher";
 import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
+import { ROUTE_PATH } from "@/lib/enum/route-path";
 
 // This is sample data.
 const data = {
@@ -45,44 +49,13 @@ const data = {
     },
   ],
   navMain: [
+    { title: "Ask", url: ROUTE_PATH.HOME, icon: SquarePen },
+    { title: "Tasks", url: ROUTE_PATH.TASK, icon: ClipboardList },
+    { title: "Files", url: ROUTE_PATH.FILES, icon: ArchiveIcon },
     {
-      title: "Overview",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Board",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      title: "Feedbacks",
+      url: ROUTE_PATH.FEEDBACKS,
+      icon: Settings2,
     },
     {
       title: "Calendar",
@@ -108,37 +81,43 @@ const data = {
       ],
     },
     {
-      title: "Documentation",
+      title: "Pinned",
       url: "#",
-      icon: BookOpen,
+      icon: Pin,
+      isActive: true,
       items: [
         {
-          title: "Introduction",
+          title: "History",
           url: "#",
         },
         {
-          title: "Get Started",
+          title: "Starred",
           url: "#",
         },
         {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
+          title: "Settings",
           url: "#",
         },
       ],
     },
     {
-      title: "Inbox",
+      title: "History",
       url: "#",
-      icon: Settings2,
-    },
-    {
-      title: "Feedbacks",
-      url: "#",
-      icon: Settings2,
+      icon: Clock,
+      items: [
+        {
+          title: "Genesis",
+          url: "#",
+        },
+        {
+          title: "Explorer",
+          url: "#",
+        },
+        {
+          title: "Quantum",
+          url: "#",
+        },
+      ],
     },
   ],
   projects: [

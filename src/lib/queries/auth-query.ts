@@ -1,7 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { IMutation } from "../interfaces/utils";
 import { LoginForm, LoginResponse } from "../interfaces/auth";
 import { loginAction } from "@/actions/auth";
+import { trackSession } from "../api/auth";
 type ILoginMutation = Omit<IMutation, "onSuccess"> & {
   onSuccess: (_res: LoginResponse, _data: LoginForm) => void;
 };
@@ -24,5 +25,12 @@ export const useLoginMutation = ({
     onMutate: () => {
       onMutate?.();
     },
+  });
+};
+
+export const useTrackSessionQuery = () => {
+  return useQuery({
+    queryKey: ["track"],
+    queryFn: ({ signal }) => trackSession(signal),
   });
 };

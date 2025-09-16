@@ -30,12 +30,12 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(ROUTE_PATH.LOGIN, request.url));
     }
     // Refresh failed, redirect to login
-    const res = await refreshTokenAction({ token: refreshToken });
-    if (!res.data) {
+    const res = await refreshTokenAction({ refreshToken: refreshToken });
+    if (!res) {
       return;
     }
     await setCookiesAction({
-      ...res.data,
+      ...res,
       saveSession: saveSession === "true" ? true : false,
     });
     return NextResponse.next();
