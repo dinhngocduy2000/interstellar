@@ -1,8 +1,4 @@
-import {
-  getAccessTokenCookie,
-  getRefreshTokenCookie,
-  setCookiesAction,
-} from "@/actions/cookie";
+import { getRefreshTokenCookie, setCookiesAction } from "@/actions/cookie";
 import { refreshTokenAction } from "@/actions/refresh-token";
 import axios, { AxiosError, AxiosResponse } from "axios";
 const BASE_URL =
@@ -13,17 +9,11 @@ const axiosConfig = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 // Add a request interceptor
 axiosConfig.interceptors.request.use(
   async function (config) {
-    const accessToken = await getAccessTokenCookie();
-    // console.log("CHECKING TOKEN: ", accessToken);
-    if (accessToken) {
-      // config.headers["Cookie"] = `${COOKIE_KEYS.ACCESS_TOKEN}=${accessToken}`;
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
-    }
-
     // Do something before request is sent
     return config;
   },
