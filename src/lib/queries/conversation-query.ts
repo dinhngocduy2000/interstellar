@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IConversationQuery } from "../interfaces/conversations";
 import { ReactQueryHookParams } from "../interfaces/utils";
 import { CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
-import { getListConversationsAction } from "@/actions/conversations";
+import { getListConversations } from "../api/conversations";
 
 export const useConversationListQuery = ({
   queryKey,
@@ -14,6 +14,6 @@ export const useConversationListQuery = ({
       { ...params, title: undefined },
       ...queryKey,
     ],
-    queryFn: () => getListConversationsAction(params),
+    queryFn: () => getListConversations(params),
   });
 };
