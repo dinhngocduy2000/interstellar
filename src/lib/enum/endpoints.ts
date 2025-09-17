@@ -7,4 +7,5 @@ export enum AUTH_ENDPOINTS {
 
 export enum CONVERSATIONS_ENDPOINTS {
   LIST = "/conversations",
+  GET = "/conversations/{$id}",
 }

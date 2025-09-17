@@ -1,6 +1,6 @@
 import AppLogoComponent from "@/components/reusable/app-logo-component";
 import React from "react";
-import HomePageClientComponent from "./client-component";
+import ChatInputComponent from "@/components/reusable/chat-input-component";
 
 const HomePage = async () => {
   return (
@@ -9,7 +9,7 @@ const HomePage = async () => {
         <AppLogoComponent height={80} width={80} />
         <p className="font-semibold text-2xl text-primary">Interstellar</p>
       </div>
-      <HomePageClientComponent />
+      <ChatInputComponent />
     </div>
   );
 };

@@ -1,8 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { IConversationQuery } from "../interfaces/conversations";
-import { ReactQueryHookParams } from "../interfaces/utils";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Conversation,
+  IConversationQuery,
+  ICreateConversation,
+} from "../interfaces/conversations";
+import { IMutation, ReactQueryHookParams } from "../interfaces/utils";
 import { CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
-import { getListConversations } from "../api/conversations";
+import { createConversation, getListConversations } from "../api/conversations";
+
+type ICreateConversationMutation = Omit<IMutation, "onSuccess"> & {
+  onSuccess?: (_res: Conversation, _data: ICreateConversation) => void;
+};
 
 export const useConversationListQuery = ({
   queryKey,
@@ -17,3 +25,22 @@ export const useConversationListQuery = ({
     queryFn: () => getListConversations(params),
   });
 };
+
+export const useCreateConversationQuery = ({
+  onSuccess,
+  onError,
+  onMutate,
+}: ICreateConversationMutation) =>
+  useMutation({
+    mutationFn: async (data: ICreateConversation) =>
+      await createConversation(data),
+    onSuccess: (data, variables) => {
+      onSuccess?.(data, variables);
+    },
+    onError: (error) => {
+      onError?.(error);
+    },
+    onMutate: () => {
+      onMutate?.();
+    },
+  });

@@ -2,6 +2,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { Conversation } from "@/lib/interfaces/conversations";
 import Link from "next/link";
 import React from "react";
@@ -14,7 +15,7 @@ const ConversationItemComponent = ({ conversation }: Props) => {
   return (
     <SidebarMenuSubItem>
       <SidebarMenuSubButton asChild>
-        <Link href={conversation.id}>
+        <Link href={`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`}>
           <span>{conversation.title}</span>
         </Link>
       </SidebarMenuSubButton>

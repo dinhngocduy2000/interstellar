@@ -30,6 +30,8 @@ export type IDropdownMenuProps = {
   items: IDropdownMenuItem[];
   onSearch?: (_value: string) => void;
   dropdownContentClassName?: string;
+  contentAlign?: "start" | "end";
+  dropdownTriggerClassName?: string;
 };
 
 export type IDropdownMenuItem = {

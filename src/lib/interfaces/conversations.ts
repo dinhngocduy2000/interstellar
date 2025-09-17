@@ -1,4 +1,6 @@
+import z from "zod";
 import { IPagination } from "./utils";
+import { CreateConversationSchema } from "../schemas/create-conversation-schema";
 
 export type Conversation = {
   id: string;
@@ -13,3 +15,5 @@ export type Conversation = {
 };
 
 export type IConversationQuery = Partial<Conversation> & IPagination;
+
+export type ICreateConversation = z.infer<typeof CreateConversationSchema>;
