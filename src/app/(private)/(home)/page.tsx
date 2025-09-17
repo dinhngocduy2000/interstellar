@@ -1,8 +1,17 @@
+import AppLogoComponent from "@/components/reusable/app-logo-component";
 import React from "react";
 import HomePageClientComponent from "./client-component";
 
 const HomePage = async () => {
-  return <HomePageClientComponent />;
+  return (
+    <div className="w-full h-full flex flex-col justify-center gap-8 items-center p-4">
+      <div className="gap-4 flex flex-col items-center">
+        <AppLogoComponent height={80} width={80} />
+        <p className="font-semibold text-2xl text-primary">Interstellar</p>
+      </div>
+      <HomePageClientComponent />
+    </div>
+  );
 };
 
 export default HomePage;
