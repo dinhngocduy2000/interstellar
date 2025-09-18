@@ -4,16 +4,21 @@ import AppDropdownMenu from "@/components/reusable/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { getConversationDetail } from "@/lib/api/conversations";
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
+import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { IDropdownMenuItem } from "@/lib/interfaces/utils";
 import { useQuery } from "@tanstack/react-query";
 import { EllipsisVertical, PenSquare, Pin, Share, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
+import { toast } from "react-toastify";
 
 type Props = {
   conversationID: string;
 };
 
 const ConversationLayoutHeader = ({ conversationID }: Props) => {
+  const pathname = usePathname();
   const { data: conversation } = useQuery({
     queryKey: [CONVERSATIONS_ENDPOINTS.GET, conversationID],
     queryFn: ({ signal }) => getConversationDetail(conversationID, signal),
@@ -38,6 +43,18 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
       onClick: () => {},
     },
   ];
+  const handleShareConversation = async () => {
+    try {
+      const pageURL = `${window.location.origin}${pathname}`;
+      await window.navigator.clipboard.writeText(pageURL);
+      toast.success(
+        "Copied link to clipboard. Shared links can be viewed by anyone with the links",
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to copy link to clipboard");
+    }
+  };
   return (
     <div className="w-full flex gap-4 justify-between p-4">
       <p className="text-lg font-semibold">
@@ -50,13 +67,15 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
             trigger={<EllipsisVertical />}
           />
         </AppTooltipComponent>
-        <Button variant={"outline"}>
+        <Button onClick={handleShareConversation} variant={"outline"}>
           <Share />
           Share
         </Button>
         <AppTooltipComponent content={"New Chat"}>
           <Button variant={"ghost"}>
-            <PenSquare className="size-5" height={25} width={25} />
+            <Link href={ROUTE_PATH.HOME}>
+              <PenSquare className="size-5" height={25} width={25} />
+            </Link>
           </Button>
         </AppTooltipComponent>
       </div>

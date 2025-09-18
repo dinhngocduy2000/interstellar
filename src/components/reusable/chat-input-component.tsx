@@ -19,8 +19,11 @@ import { useCreateConversationQuery } from "@/lib/queries/conversation-query";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import LoadingSpinner from "./loading-spinner";
+import { useQueryClient } from "@tanstack/react-query";
+import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 
 const ChatInputComponent = () => {
+  const queryClient = useQueryClient();
   const [chatText, setChatText] = useState<string>("");
   const pathname = usePathname();
   const params = useSearchParams();
@@ -29,7 +32,14 @@ const ChatInputComponent = () => {
   const { mutateAsync: createConversation, isPending: isCreatingConversation } =
     useCreateConversationQuery({
       onSuccess: (res) => {
-        router.push(`${ROUTE_PATH.CONVERSATIONS}/${res.id}`);
+        queryClient.invalidateQueries({
+          queryKey: [CONVERSATIONS_ENDPOINTS.LIST],
+        });
+        router.push(
+          `${ROUTE_PATH.CONVERSATIONS}/${res.id}?${new URLSearchParams({
+            message: chatText,
+          })}`,
+        );
       },
       onError: (error) => {
         const axiosError = error as AxiosError<AxiosErrorPayload>;
@@ -67,7 +77,7 @@ const ChatInputComponent = () => {
     <div
       className={cn(
         "w-full p-8 flex flex-col gap-4 justify-center",
-        pathname.includes(ROUTE_PATH.CONVERSATIONS) && "mt-auto",
+        pathname.includes(ROUTE_PATH.CONVERSATIONS) && "mt-auto pb-0",
       )}
     >
       <form
