@@ -1,6 +1,7 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import React, { use, useEffect, useRef, useState } from "react";
+import MessageItem from "./message-item";
 
 const ListMessageComponent = ({
   params,
@@ -8,7 +9,7 @@ const ListMessageComponent = ({
   params: Promise<{ conversationID: string }>;
 }) => {
   const searchParams = useSearchParams();
-  const newMessage = searchParams.get("message");
+  const newMessage = searchParams.get("message") ?? "";
   const [messages, setMessages] = useState<string>("");
   const { conversationID } = use(params);
   const eventSourceRef = useRef<EventSource | null>(null);
@@ -37,7 +38,15 @@ const ListMessageComponent = ({
     };
   }, []);
 
-  return <div>{messages}</div>;
+  return (
+    <div className="w-full flex-1 overflow-auto h-full flex flex-col md:max-w-4xl max-w-full mx-auto gap-4 px-4">
+      <MessageItem
+        content={newMessage}
+        containerProps={{ className: "self-end" }}
+      />
+      <MessageItem content={messages} />
+    </div>
+  );
 };
 
 export default ListMessageComponent;
