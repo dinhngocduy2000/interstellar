@@ -9,3 +9,8 @@ export enum CONVERSATIONS_ENDPOINTS {
   LIST = "/conversations",
   GET = "/conversations/{$id}",
 }
+
+export enum CHAT_ENDPOINTS {
+  SEND_MESSAGE = "/chat/sse/",
+  GET_MESSAGES = "/chat",
+}

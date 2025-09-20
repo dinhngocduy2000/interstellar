@@ -1,18 +1,31 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { Fragment, use, useEffect, useRef } from "react";
 import MessageItem from "./message-item";
 import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
+import { useGetConversationMessageQuery } from "@/lib/queries/conversation-message-query";
+import NoDataComponent from "@/components/reusable/no-data-component";
+import { getErrorMessage } from "@/lib/utils";
+import { AxiosError } from "axios";
+import { AxiosErrorPayload } from "@/lib/interfaces/utils";
+import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 
 const ListMessageComponent = ({
   params,
 }: {
   params: Promise<{ conversationID: string }>;
 }) => {
-  const [messages, setMessages] = useState<string>("");
   const { conversationID } = use(params);
   const { data: conversationDetail } = useGetConversationDetailQuery({
     queryKey: [],
     params: {
+      conversationID: conversationID,
+    },
+  });
+  const { data: listMessagesData, error } = useGetConversationMessageQuery({
+    queryKey: [],
+    params: {
+      page: 1,
+      limit: 10,
       conversationID: conversationID,
     },
   });
@@ -31,7 +44,6 @@ const ListMessageComponent = ({
     );
     eventSourceRef.current.addEventListener("message", function (event) {
       // Use the setMessages function to update state
-      setMessages((prev) => prev + event.data);
       console.log(event.data);
     });
     eventSourceRef.current.addEventListener("end", () => {
@@ -47,13 +59,33 @@ const ListMessageComponent = ({
     };
   }, [conversationDetail]);
 
+  if (error) {
+    return (
+      <NoDataComponent
+        text={getErrorMessage(error as AxiosError<AxiosErrorPayload>)}
+      />
+    );
+  }
+
+  if (listMessagesData?.data.length === 0) {
+    return <NoDataComponent />;
+  }
+
   return (
     <div className="w-full flex-1 overflow-auto h-full flex flex-col md:max-w-4xl max-w-full mx-auto gap-4 px-4">
-      <MessageItem
-        content={conversationDetail?.first_message ?? ""}
-        containerProps={{ className: "self-end" }}
-      />
-      <MessageItem content={messages} />
+      {listMessagesData?.data.map((message) => (
+        <Fragment key={message.id}>
+          {message.author === MESSAGE_AUTHOR.USER && (
+            <MessageItem
+              content={message.content}
+              containerProps={{ className: "self-end" }}
+            />
+          )}
+          {message.author === MESSAGE_AUTHOR.BOT && (
+            <MessageItem content={message.content} />
+          )}
+        </Fragment>
+      ))}
     </div>
   );
 };
