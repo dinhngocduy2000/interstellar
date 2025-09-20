@@ -35,11 +35,7 @@ const ChatInputComponent = () => {
         queryClient.invalidateQueries({
           queryKey: [CONVERSATIONS_ENDPOINTS.LIST],
         });
-        router.push(
-          `${ROUTE_PATH.CONVERSATIONS}/${res.id}?${new URLSearchParams({
-            message: chatText,
-          })}`,
-        );
+        router.push(`${ROUTE_PATH.CONVERSATIONS}/${res.id}`);
       },
       onError: (error) => {
         const axiosError = error as AxiosError<AxiosErrorPayload>;

@@ -12,6 +12,8 @@ export type Conversation = {
   is_pinned: boolean;
   model: string;
   user_id: string;
+  is_new: boolean;
+  first_message: string;
 };
 
 export type IConversationQuery = Partial<Conversation> & IPagination;

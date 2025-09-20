@@ -6,7 +6,11 @@ import {
 } from "../interfaces/conversations";
 import { IMutation, ReactQueryHookParams } from "../interfaces/utils";
 import { CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
-import { createConversation, getListConversations } from "../api/conversations";
+import {
+  createConversation,
+  getConversationDetail,
+  getListConversations,
+} from "../api/conversations";
 
 type ICreateConversationMutation = Omit<IMutation, "onSuccess"> & {
   onSuccess?: (_res: Conversation, _data: ICreateConversation) => void;
@@ -44,3 +48,20 @@ export const useCreateConversationQuery = ({
       onMutate?.();
     },
   });
+
+export const useGetConversationDetailQuery = ({
+  queryKey,
+  params,
+}: ReactQueryHookParams<{ conversationID: string }>) => {
+  return useQuery({
+    queryKey: [
+      CONVERSATIONS_ENDPOINTS.GET,
+      params.conversationID,
+      ...[queryKey],
+    ],
+    queryFn: async ({ signal }) =>
+      await getConversationDetail(params.conversationID, signal),
+    refetchOnWindowFocus: false,
+    staleTime: 5000,
+  });
+};

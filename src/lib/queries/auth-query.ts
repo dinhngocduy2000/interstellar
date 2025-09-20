@@ -33,5 +33,6 @@ export const useTrackSessionQuery = () => {
     queryKey: ["track"],
     queryFn: ({ signal }) => trackSession(signal),
     refetchInterval: 60000 * 10,
+    refetchIntervalInBackground: true,
   });
 };

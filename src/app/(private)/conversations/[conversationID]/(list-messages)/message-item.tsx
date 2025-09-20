@@ -11,11 +11,11 @@ const MessageItem = ({ content, containerProps }: Props) => {
     <div
       {...containerProps}
       className={cn(
-        "max-w-xl bg-gray-800 rounded-lg p-4",
+        "max-w-xl bg-primary-foreground rounded-lg p-4 flex flex-col gap-2",
         containerProps?.className && containerProps?.className,
       )}
     >
-      {content}
+      <p className="text-primary">{content}</p>
     </div>
   );
 };

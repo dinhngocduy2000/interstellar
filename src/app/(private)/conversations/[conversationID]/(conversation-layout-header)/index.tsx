@@ -2,11 +2,9 @@
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import AppDropdownMenu from "@/components/reusable/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { getConversationDetail } from "@/lib/api/conversations";
-import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { IDropdownMenuItem } from "@/lib/interfaces/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
 import { EllipsisVertical, PenSquare, Pin, Share, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,9 +17,11 @@ type Props = {
 
 const ConversationLayoutHeader = ({ conversationID }: Props) => {
   const pathname = usePathname();
-  const { data: conversation } = useQuery({
-    queryKey: [CONVERSATIONS_ENDPOINTS.GET, conversationID],
-    queryFn: ({ signal }) => getConversationDetail(conversationID, signal),
+  const { data: conversation } = useGetConversationDetailQuery({
+    queryKey: [],
+    params: {
+      conversationID: conversationID,
+    },
   });
   const chatMenuItems: IDropdownMenuItem[] = [
     {

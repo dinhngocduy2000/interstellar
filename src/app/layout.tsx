@@ -37,6 +37,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        cz-shortcut-listen="true"
       >
         <main className="flex h-screen w-screen items-center justify-center bg-muted">
           <ReactQueryProviders>

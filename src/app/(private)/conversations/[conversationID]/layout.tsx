@@ -16,6 +16,7 @@ export default async function ConversationLayout({
   await queryClient.prefetchQuery({
     queryKey: [CONVERSATIONS_ENDPOINTS.GET, conversationID],
     queryFn: ({ signal }) => getConversationDetail(conversationID, signal),
+    staleTime: 5000,
   });
   return (
     <>
