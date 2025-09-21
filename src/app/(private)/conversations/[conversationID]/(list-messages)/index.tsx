@@ -5,9 +5,9 @@ import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query"
 import { useGetConversationMessageQuery } from "@/lib/queries/conversation-message-query";
 import NoDataComponent from "@/components/reusable/no-data-component";
 import { getErrorMessage } from "@/lib/utils";
-import { AxiosError } from "axios";
 import { AxiosErrorPayload } from "@/lib/interfaces/utils";
 import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
+import { AxiosError } from "axios";
 
 const ListMessageComponent = ({
   params,
