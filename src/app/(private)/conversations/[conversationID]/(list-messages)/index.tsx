@@ -5,18 +5,24 @@ import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query"
 import { useGetConversationMessageQuery } from "@/lib/queries/conversation-message-query";
 import NoDataComponent from "@/components/reusable/no-data-component";
 import { getErrorMessage } from "@/lib/utils";
-import { AxiosErrorPayload, IPagination } from "@/lib/interfaces/utils";
+import {
+  AxiosErrorPayload,
+  IPagination,
+  IResponseDataWithPagination,
+} from "@/lib/interfaces/utils";
 import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { AxiosError } from "axios";
 import { useQueryClient } from "@tanstack/react-query";
-import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
+import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { Conversation } from "@/lib/interfaces/conversations";
+import { IConversationMessage } from "@/lib/interfaces/message";
 
 const ListMessageComponent = ({
   params,
 }: {
   params: Promise<{ conversationID: string }>;
 }) => {
+  const newMessageRef = useRef<string>("");
   const { conversationID } = use(params);
   const conversationMessagesParams: IPagination & { conversationID: string } = {
     conversationID: conversationID,
@@ -49,11 +55,36 @@ const ListMessageComponent = ({
     );
     eventSourceRef.current.addEventListener("message", function (event) {
       // Use the setMessages function to update state
-      // queryClient.setQueryData(
-      //   [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
-      //   () => {}
-      // );
-      console.log(event.data);
+      const newMessage: IConversationMessage = {
+        id: "new_message",
+        author: MESSAGE_AUTHOR.BOT,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        is_upvote: false,
+        is_downvote: false,
+        content: newMessageRef.current + event.data,
+        conversation_id: conversationID,
+      };
+      newMessageRef.current = newMessage.content;
+      queryClient.setQueryData(
+        [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
+        (
+          oldData: IResponseDataWithPagination<IConversationMessage>,
+        ): IResponseDataWithPagination<IConversationMessage> => {
+          return {
+            ...oldData,
+            data:
+              oldData.data[oldData.data.length - 1]?.id === "new_message"
+                ? oldData.data.map((oldListsMessage) => {
+                    if (oldListsMessage.id === "new_message") {
+                      return newMessage;
+                    }
+                    return oldListsMessage;
+                  })
+                : [...oldData.data, newMessage],
+          };
+        },
+      );
     });
     eventSourceRef.current.addEventListener("end", () => {
       queryClient.setQueryData(
@@ -63,11 +94,14 @@ const ListMessageComponent = ({
           is_new: false,
         }),
       );
+      queryClient.invalidateQueries({
+        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
+      });
 
-      console.log(conversationDetail);
       closeSSEConnection();
     });
   };
+
   useEffect(() => {
     if (conversationDetail?.is_new && conversationDetail) {
       handleSendMessage(conversationDetail.first_message);
@@ -87,6 +121,12 @@ const ListMessageComponent = ({
 
   return (
     <div className="w-full flex-1 overflow-auto h-full flex flex-col md:max-w-4xl max-w-full mx-auto gap-4 px-4">
+      {conversationDetail?.is_new && (
+        <MessageItem
+          content={conversationDetail?.first_message}
+          containerProps={{ className: "self-end" }}
+        />
+      )}
       {listMessagesData?.data.map((message) => (
         <Fragment key={message.id}>
           {message.author === MESSAGE_AUTHOR.USER && (
