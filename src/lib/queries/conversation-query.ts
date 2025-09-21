@@ -54,11 +54,7 @@ export const useGetConversationDetailQuery = ({
   params,
 }: ReactQueryHookParams<{ conversationID: string }>) => {
   return useQuery({
-    queryKey: [
-      CONVERSATIONS_ENDPOINTS.GET,
-      params.conversationID,
-      ...[queryKey],
-    ],
+    queryKey: [CONVERSATIONS_ENDPOINTS.GET, params.conversationID, ...queryKey],
     queryFn: async ({ signal }) =>
       await getConversationDetail(params.conversationID, signal),
     refetchOnWindowFocus: false,

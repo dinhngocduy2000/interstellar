@@ -5,9 +5,12 @@ import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query"
 import { useGetConversationMessageQuery } from "@/lib/queries/conversation-message-query";
 import NoDataComponent from "@/components/reusable/no-data-component";
 import { getErrorMessage } from "@/lib/utils";
-import { AxiosErrorPayload } from "@/lib/interfaces/utils";
+import { AxiosErrorPayload, IPagination } from "@/lib/interfaces/utils";
 import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { AxiosError } from "axios";
+import { useQueryClient } from "@tanstack/react-query";
+import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
+import { Conversation } from "@/lib/interfaces/conversations";
 
 const ListMessageComponent = ({
   params,
@@ -15,6 +18,12 @@ const ListMessageComponent = ({
   params: Promise<{ conversationID: string }>;
 }) => {
   const { conversationID } = use(params);
+  const conversationMessagesParams: IPagination & { conversationID: string } = {
+    conversationID: conversationID,
+    page: 1,
+    limit: 10,
+  };
+  const queryClient = useQueryClient();
   const { data: conversationDetail } = useGetConversationDetailQuery({
     queryKey: [],
     params: {
@@ -23,14 +32,10 @@ const ListMessageComponent = ({
   });
   const { data: listMessagesData, error } = useGetConversationMessageQuery({
     queryKey: [],
-    params: {
-      page: 1,
-      limit: 10,
-      conversationID: conversationID,
-    },
+    params: conversationMessagesParams,
+    enabled: conversationDetail?.is_new === false,
   });
   const eventSourceRef = useRef<EventSource | null>(null);
-  const isNewConversation = conversationDetail?.is_new;
   const closeSSEConnection = () => {
     eventSourceRef.current?.close();
     eventSourceRef.current = null;
@@ -44,14 +49,27 @@ const ListMessageComponent = ({
     );
     eventSourceRef.current.addEventListener("message", function (event) {
       // Use the setMessages function to update state
+      // queryClient.setQueryData(
+      //   [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
+      //   () => {}
+      // );
       console.log(event.data);
     });
     eventSourceRef.current.addEventListener("end", () => {
+      queryClient.setQueryData(
+        [CONVERSATIONS_ENDPOINTS.GET, conversationID],
+        (oldData: Conversation): Conversation => ({
+          ...oldData,
+          is_new: false,
+        }),
+      );
+
+      console.log(conversationDetail);
       closeSSEConnection();
     });
   };
   useEffect(() => {
-    if (isNewConversation) {
+    if (conversationDetail?.is_new && conversationDetail) {
       handleSendMessage(conversationDetail.first_message);
     }
     return () => {
@@ -65,10 +83,6 @@ const ListMessageComponent = ({
         text={getErrorMessage(error as AxiosError<AxiosErrorPayload>)}
       />
     );
-  }
-
-  if (listMessagesData?.data.length === 0) {
-    return <NoDataComponent />;
   }
 
   return (
