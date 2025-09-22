@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, use, useEffect, useRef } from "react";
+import React, { Fragment, use, useEffect, useRef, useState } from "react";
 import MessageItem from "./message-item";
 import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
 import { useGetConversationMessageQuery } from "@/lib/queries/conversation-message-query";
@@ -26,6 +26,7 @@ const ListMessageComponent = ({
   const queryClient = useQueryClient();
   const newMessageRef = useRef<string>("");
   const eventSourceRef = useRef<EventSource | null>(null);
+  const [isResponding, setIsResponding] = useState(false);
   const conversationMessagesParams: IPagination & { conversationID: string } = {
     conversationID: conversationID,
     page: 1,
@@ -45,33 +46,42 @@ const ListMessageComponent = ({
   const closeSSEConnection = () => {
     eventSourceRef.current?.close();
     eventSourceRef.current = null;
+    setIsResponding(false);
   };
   const handleSendMessage = async (message: string) => {
-    const userMessage: IConversationMessage = {
-      id: "new_user_message",
-      author: MESSAGE_AUTHOR.USER,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      is_upvote: false,
-      is_downvote: false,
-      content: message,
-      conversation_id: conversationID,
-    };
-    queryClient.setQueryData(
-      [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
-      (
-        oldData: IResponseDataWithPagination<IConversationMessage>,
-      ): IResponseDataWithPagination<IConversationMessage> => ({
-        ...oldData,
-        data: [...oldData.data, userMessage],
-      }),
-    );
+    if (eventSourceRef.current) {
+      return;
+    }
+    setIsResponding(true);
     eventSourceRef.current = new EventSource(
       `http://localhost:3000/api/v1/chat/sse/${conversationID}?content=${message}`,
       {
         withCredentials: true,
       },
     );
+
+    eventSourceRef.current.addEventListener("open", () => {
+      const userMessage: IConversationMessage = {
+        id: "new_user_message",
+        author: MESSAGE_AUTHOR.USER,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        is_upvote: false,
+        is_downvote: false,
+        content: message,
+        conversation_id: conversationID,
+      };
+      queryClient.setQueryData(
+        [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
+        (
+          oldData: IResponseDataWithPagination<IConversationMessage>,
+        ): IResponseDataWithPagination<IConversationMessage> => ({
+          ...oldData,
+          data: [...oldData.data, userMessage],
+        }),
+      );
+    });
+
     eventSourceRef.current.addEventListener("message", function (event) {
       // Use the setMessages function to update state
       const newMessage: IConversationMessage = {
@@ -146,12 +156,17 @@ const ListMessageComponent = ({
         <Fragment key={message.id}>
           {message.author === MESSAGE_AUTHOR.USER && (
             <MessageItem
-              content={message.content}
+              key={message.id}
+              message={message}
               containerProps={{ className: "self-end" }}
             />
           )}
           {message.author === MESSAGE_AUTHOR.BOT && (
-            <MessageItem content={message.content} />
+            <MessageItem
+              key={message.id}
+              message={message}
+              isResponding={isResponding}
+            />
           )}
         </Fragment>
       ))}
