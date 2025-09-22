@@ -22,14 +22,15 @@ const ListMessageComponent = ({
 }: {
   params: Promise<{ conversationID: string }>;
 }) => {
-  const newMessageRef = useRef<string>("");
   const { conversationID } = use(params);
+  const queryClient = useQueryClient();
+  const newMessageRef = useRef<string>("");
+  const eventSourceRef = useRef<EventSource | null>(null);
   const conversationMessagesParams: IPagination & { conversationID: string } = {
     conversationID: conversationID,
     page: 1,
     limit: 10,
   };
-  const queryClient = useQueryClient();
   const { data: conversationDetail } = useGetConversationDetailQuery({
     queryKey: [],
     params: {
@@ -41,12 +42,30 @@ const ListMessageComponent = ({
     params: conversationMessagesParams,
     enabled: conversationDetail?.is_new === false,
   });
-  const eventSourceRef = useRef<EventSource | null>(null);
   const closeSSEConnection = () => {
     eventSourceRef.current?.close();
     eventSourceRef.current = null;
   };
   const handleSendMessage = async (message: string) => {
+    const userMessage: IConversationMessage = {
+      id: "new_user_message",
+      author: MESSAGE_AUTHOR.USER,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      is_upvote: false,
+      is_downvote: false,
+      content: message,
+      conversation_id: conversationID,
+    };
+    queryClient.setQueryData(
+      [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
+      (
+        oldData: IResponseDataWithPagination<IConversationMessage>,
+      ): IResponseDataWithPagination<IConversationMessage> => ({
+        ...oldData,
+        data: [...oldData.data, userMessage],
+      }),
+    );
     eventSourceRef.current = new EventSource(
       `http://localhost:3000/api/v1/chat/sse/${conversationID}?content=${message}`,
       {
@@ -87,6 +106,11 @@ const ListMessageComponent = ({
       );
     });
     eventSourceRef.current.addEventListener("end", () => {
+      newMessageRef.current = "";
+      queryClient.invalidateQueries({
+        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
+      });
+
       queryClient.setQueryData(
         [CONVERSATIONS_ENDPOINTS.GET, conversationID],
         (oldData: Conversation): Conversation => ({
@@ -94,9 +118,6 @@ const ListMessageComponent = ({
           is_new: false,
         }),
       );
-      queryClient.invalidateQueries({
-        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
-      });
 
       closeSSEConnection();
     });
@@ -121,12 +142,6 @@ const ListMessageComponent = ({
 
   return (
     <div className="w-full flex-1 overflow-auto h-full flex flex-col md:max-w-4xl max-w-full mx-auto gap-4 px-4">
-      {conversationDetail?.is_new && (
-        <MessageItem
-          content={conversationDetail?.first_message}
-          containerProps={{ className: "self-end" }}
-        />
-      )}
       {listMessagesData?.data.map((message) => (
         <Fragment key={message.id}>
           {message.author === MESSAGE_AUTHOR.USER && (
