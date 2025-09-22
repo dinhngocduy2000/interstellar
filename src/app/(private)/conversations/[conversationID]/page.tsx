@@ -1,6 +1,4 @@
-import ChatInputComponent from "@/components/reusable/chat-input-component";
-import React, { Suspense } from "react";
-import ListMessageComponent from "./(list-messages)";
+import ConversationClientComponent from "./client-component";
 
 const ConversationPage = async ({
   params,
@@ -9,10 +7,7 @@ const ConversationPage = async ({
 }) => {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto">
-      <ListMessageComponent params={params} />
-      <Suspense>
-        <ChatInputComponent />
-      </Suspense>
+      <ConversationClientComponent params={params} />
     </div>
   );
 };

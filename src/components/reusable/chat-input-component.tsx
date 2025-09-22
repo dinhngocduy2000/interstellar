@@ -22,7 +22,11 @@ import LoadingSpinner from "./loading-spinner";
 import { useQueryClient } from "@tanstack/react-query";
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 
-const ChatInputComponent = () => {
+const ChatInputComponent = ({
+  handleSendMessage,
+}: {
+  handleSendMessage?: (_message: string) => Promise<void>;
+}) => {
   const queryClient = useQueryClient();
   const [chatText, setChatText] = useState<string>("");
   const pathname = usePathname();
@@ -66,7 +70,7 @@ const ChatInputComponent = () => {
       await handleCreateChat();
       return;
     }
-    toast.success(chatText);
+    await handleSendMessage?.(chatText);
   };
 
   return (
