@@ -10,15 +10,20 @@ const ConversationClientComponent = ({
   params: Promise<{ conversationID: string }>;
 }) => {
   const { conversationID } = use(params);
-  const { handleSendMessage, closeSSEConnection, isResponding } =
-    useSendChatMessageSSE({
+  const {
+    handleSendMessage,
+    closeSSEConnection,
+    isResponding,
+    lastMessageRef,
+    isAllowingAutoScroll,
+  } = useSendChatMessageSSE({
+    conversationID,
+    conversationMessagesParams: {
       conversationID,
-      conversationMessagesParams: {
-        conversationID,
-        page: 1,
-        limit: 10,
-      },
-    });
+      page: 1,
+      limit: 10,
+    },
+  });
   return (
     <>
       <ListMessageComponent
@@ -26,6 +31,8 @@ const ConversationClientComponent = ({
         handleSendMessage={handleSendMessage}
         closeSSEConnection={closeSSEConnection}
         isResponding={isResponding}
+        ref={lastMessageRef}
+        isAllowingAutoScrollRef={isAllowingAutoScroll}
       />
       <Suspense>
         <ChatInputComponent handleSendMessage={handleSendMessage} />

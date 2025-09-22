@@ -14,9 +14,11 @@ export const useSendChatMessageSSE = ({
   conversationMessagesParams,
 }: SendChatMessageSSEProps) => {
   const newMessageRef = useRef<string>("");
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
   const [isResponding, setIsResponding] = useState<boolean>(false);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const isAllowingAutoScroll = useRef<boolean>(true);
   const closeSSEConnection = () => {
     eventSourceRef.current?.close();
     eventSourceRef.current = null;
@@ -89,6 +91,9 @@ export const useSendChatMessageSSE = ({
           };
         },
       );
+      if (isAllowingAutoScroll.current) {
+        lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+      }
     });
     eventSourceRef.current.addEventListener("end", () => {
       newMessageRef.current = "";
@@ -107,10 +112,13 @@ export const useSendChatMessageSSE = ({
       closeSSEConnection();
     });
   };
+
   return {
     closeSSEConnection,
     handleSendMessage,
     eventSourceRef,
     isResponding,
+    lastMessageRef,
+    isAllowingAutoScroll,
   };
 };
