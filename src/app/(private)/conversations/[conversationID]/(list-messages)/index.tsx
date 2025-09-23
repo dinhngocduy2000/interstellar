@@ -54,9 +54,9 @@ const ListMessageComponent = ({
   }, [conversationDetail]);
 
   useEffect(() => {
-    if (!listMessagesData || !ref?.current) return;
+    if (!ref?.current) return;
     ref?.current?.scrollIntoView({ behavior: "instant" });
-  }, [listMessagesData]);
+  }, [conversationID]);
 
   const onHandleScroll = () => {
     if (!listMessagesRef.current) return;
@@ -69,7 +69,7 @@ const ListMessageComponent = ({
       isAllowingAutoScrollRef.current = true;
       return;
     }
-    if (isScrolledOnce.current) {
+    if (isScrolledOnce.current && scrollTop + clientHeight < scrollHeight - 1) {
       isAllowingAutoScrollRef.current = false;
     }
   };

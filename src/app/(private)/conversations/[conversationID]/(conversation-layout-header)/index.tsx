@@ -56,7 +56,7 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
     }
   };
   return (
-    <div className="w-full flex gap-4 justify-between p-4 pb-0">
+    <div className="w-full flex gap-4 justify-between px-4 pt-2">
       <p className="text-lg font-semibold">
         {conversation?.title ?? "Private chat"}
       </p>

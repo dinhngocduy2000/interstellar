@@ -42,7 +42,7 @@ export const useSendChatMessageSSE = ({
       lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
       setTimeout(() => {
         isScrolledOnce.current = true;
-      }, 1000);
+      }, 500);
       const userMessage: IConversationMessage = {
         id: "new_user_message",
         author: MESSAGE_AUTHOR.USER,
