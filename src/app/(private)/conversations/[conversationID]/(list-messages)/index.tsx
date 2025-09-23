@@ -2,12 +2,13 @@
 import React, { Fragment, RefObject, use, useEffect, useRef } from "react";
 import MessageItem from "./message-item";
 import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
-import { useGetConversationMessageQuery } from "@/lib/queries/conversation-message-query";
+import { useGetConversationMessagesInfiniteQuery } from "@/lib/queries/conversation-message-query";
 import NoDataComponent from "@/components/reusable/no-data-component";
 import { cn, getErrorMessage } from "@/lib/utils";
 import { AxiosErrorPayload, IPagination } from "@/lib/interfaces/utils";
 import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { AxiosError } from "axios";
+import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 const ListMessageComponent = ({
   params,
   handleSendMessage,
@@ -38,10 +39,25 @@ const ListMessageComponent = ({
       conversationID: conversationID,
     },
   });
-  const { data: listMessagesData, error } = useGetConversationMessageQuery({
+  const {
+    data: listMessagesData,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useGetConversationMessagesInfiniteQuery({
     queryKey: [],
     params: conversationMessagesParams,
     enabled: conversationDetail?.is_new === false,
+  });
+
+  const { loaderRef: topScrollRef } = useInfiniteScroll({
+    onPageChange: () => {
+      console.log("onPageChange");
+      fetchNextPage();
+    },
+    hasMore: hasNextPage,
+    isFetchingData: isFetchingNextPage,
   });
 
   useEffect(() => {
@@ -88,25 +104,30 @@ const ListMessageComponent = ({
       ref={listMessagesRef}
       className="w-full flex-1 overflow-auto h-full flex flex-col-reverse md:max-w-4xl max-w-full mx-auto gap-4 px-4"
     >
-      {listMessagesData?.data.map((message) => (
-        <Fragment key={message.id}>
-          {message.author === MESSAGE_AUTHOR.USER && (
-            <MessageItem
-              key={message.id}
-              message={message}
-              containerProps={{ className: "self-end" }}
-            />
-          )}
-          {message.author === MESSAGE_AUTHOR.BOT && (
-            <MessageItem
-              key={message.id}
-              message={message}
-              isResponding={isResponding}
-            />
-          )}
-        </Fragment>
+      {listMessagesData?.pages.map((page, index) => (
+        <div className="flex flex-col gap-4" key={index}>
+          <div ref={topScrollRef} className={cn("min-h-2")} />
+          {page.data.map((message) => (
+            <Fragment key={message.id}>
+              {message.author === MESSAGE_AUTHOR.USER && (
+                <MessageItem
+                  key={message.id}
+                  message={message}
+                  containerProps={{ className: "self-end" }}
+                />
+              )}
+              {message.author === MESSAGE_AUTHOR.BOT && (
+                <MessageItem
+                  key={message.id}
+                  message={message}
+                  isResponding={isResponding}
+                />
+              )}
+            </Fragment>
+          ))}
+          <div ref={ref} className={cn(isResponding && "min-h-2")} />
+        </div>
       ))}
-      <div ref={ref} className={cn(isResponding && "min-h-2")}></div>
     </div>
   );
 };

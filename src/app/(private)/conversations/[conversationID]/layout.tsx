@@ -3,8 +3,12 @@ import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { getQueryClient } from "@/lib/queries/query-client";
 import ConversationLayoutHeader from "./(conversation-layout-header)";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { IPagination } from "@/lib/interfaces/utils";
+import {
+  IPagination,
+  IResponseDataWithPagination,
+} from "@/lib/interfaces/utils";
 import { getConversationMessages } from "@/lib/api/chat";
+import { IConversationMessage } from "@/lib/interfaces/message";
 
 export default async function ConversationLayout({
   children,
@@ -26,11 +30,22 @@ export default async function ConversationLayout({
       queryFn: ({ signal }) => getConversationDetail(conversationID, signal),
       staleTime: 5000,
     }),
-    queryClient.prefetchQuery({
-      queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
-      queryFn: ({ signal }) =>
-        getConversationMessages(conversationMessagesParams, signal),
+    queryClient.prefetchInfiniteQuery({
+      queryKey: [CHAT_ENDPOINTS.GET_MESSAGES],
+      queryFn: async ({ signal }) =>
+        await getConversationMessages(conversationMessagesParams, signal),
       staleTime: 5000,
+      getNextPageParam: (
+        currentPageData: IResponseDataWithPagination<IConversationMessage>,
+        _param: unknown,
+        currentPageParams: number,
+      ) => {
+        return currentPageParams <
+          Math.ceil(currentPageData.total / conversationMessagesParams.limit)
+          ? currentPageParams + 1
+          : undefined;
+      },
+      initialPageParam: 1,
     }),
   ]);
   return (

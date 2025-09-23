@@ -22,7 +22,7 @@ export const useInfiniteScroll = ({
           onPageChange();
         }
       },
-      { root: null, rootMargin: "0px", threshold: 0.3 },
+      { root: null, rootMargin: "0px", threshold: 0.5 },
     );
 
     observerRef.current.observe(loaderRef.current);
