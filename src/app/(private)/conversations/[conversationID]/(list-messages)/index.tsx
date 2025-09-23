@@ -86,7 +86,7 @@ const ListMessageComponent = ({
     <div
       onScroll={onHandleScroll}
       ref={listMessagesRef}
-      className="w-full flex-1 overflow-auto h-full flex flex-col md:max-w-4xl max-w-full mx-auto gap-4 px-4"
+      className="w-full flex-1 overflow-auto h-full flex flex-col-reverse md:max-w-4xl max-w-full mx-auto gap-4 px-4"
     >
       {listMessagesData?.data.map((message) => (
         <Fragment key={message.id}>
