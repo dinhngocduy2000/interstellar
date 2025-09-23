@@ -16,6 +16,7 @@ const ConversationClientComponent = ({
     isResponding,
     lastMessageRef,
     isAllowingAutoScroll,
+    isScrolledOnce,
   } = useSendChatMessageSSE({
     conversationID,
     conversationMessagesParams: {
@@ -33,6 +34,7 @@ const ConversationClientComponent = ({
         isResponding={isResponding}
         ref={lastMessageRef}
         isAllowingAutoScrollRef={isAllowingAutoScroll}
+        isScrolledOnce={isScrolledOnce}
       />
       <Suspense>
         <ChatInputComponent handleSendMessage={handleSendMessage} />

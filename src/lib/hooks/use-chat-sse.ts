@@ -18,6 +18,7 @@ export const useSendChatMessageSSE = ({
   const queryClient = useQueryClient();
   const [isResponding, setIsResponding] = useState<boolean>(false);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const isScrolledOnce = useRef<boolean>(false);
   const isAllowingAutoScroll = useRef<boolean>(true);
   const closeSSEConnection = () => {
     eventSourceRef.current?.close();
@@ -38,6 +39,10 @@ export const useSendChatMessageSSE = ({
     );
 
     eventSourceRef.current.addEventListener("open", () => {
+      lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+      setTimeout(() => {
+        isScrolledOnce.current = true;
+      }, 1000);
       const userMessage: IConversationMessage = {
         id: "new_user_message",
         author: MESSAGE_AUTHOR.USER,
@@ -97,6 +102,7 @@ export const useSendChatMessageSSE = ({
     });
     eventSourceRef.current.addEventListener("end", () => {
       newMessageRef.current = "";
+      isScrolledOnce.current = false;
       queryClient.invalidateQueries({
         queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
       });
@@ -120,5 +126,6 @@ export const useSendChatMessageSSE = ({
     isResponding,
     lastMessageRef,
     isAllowingAutoScroll,
+    isScrolledOnce,
   };
 };

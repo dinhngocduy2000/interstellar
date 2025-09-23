@@ -15,6 +15,7 @@ const ListMessageComponent = ({
   isResponding,
   ref,
   isAllowingAutoScrollRef,
+  isScrolledOnce,
 }: {
   params: Promise<{ conversationID: string }>;
   handleSendMessage: (_message: string) => Promise<void>;
@@ -22,6 +23,7 @@ const ListMessageComponent = ({
   isResponding: boolean;
   ref?: RefObject<HTMLDivElement | null>;
   isAllowingAutoScrollRef: RefObject<boolean>;
+  isScrolledOnce: RefObject<boolean>;
 }) => {
   const { conversationID } = use(params);
   const listMessagesRef = useRef<HTMLDivElement | null>(null);
@@ -51,6 +53,11 @@ const ListMessageComponent = ({
     };
   }, [conversationDetail]);
 
+  useEffect(() => {
+    if (!listMessagesData || !ref?.current) return;
+    ref?.current?.scrollIntoView({ behavior: "instant" });
+  }, [listMessagesData]);
+
   const onHandleScroll = () => {
     if (!listMessagesRef.current) return;
     if (!isResponding) {
@@ -62,8 +69,9 @@ const ListMessageComponent = ({
       isAllowingAutoScrollRef.current = true;
       return;
     }
-
-    isAllowingAutoScrollRef.current = false;
+    if (isScrolledOnce.current) {
+      isAllowingAutoScrollRef.current = false;
+    }
   };
 
   if (error) {
@@ -98,7 +106,7 @@ const ListMessageComponent = ({
           )}
         </Fragment>
       ))}
-      <div ref={ref} className={cn(isResponding && "min-h-14")}></div>
+      <div ref={ref} className={cn(isResponding && "min-h-2")}></div>
     </div>
   );
 };
