@@ -3,15 +3,18 @@ import { IConversationMessage } from "../interfaces/message";
 import { MESSAGE_AUTHOR } from "../enum/message-author";
 import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
 import { useQueryClient } from "@tanstack/react-query";
-import { IPagination, IResponseDataWithPagination } from "../interfaces/utils";
+import { IPagination } from "../interfaces/utils";
 import { Conversation } from "../interfaces/conversations";
+import {
+  addNewUserMessageData,
+  updateNewBotReplyMessageData,
+} from "../queries/conversation-message-query";
 type SendChatMessageSSEProps = {
   conversationID: string;
   conversationMessagesParams: IPagination & { conversationID: string };
 };
 export const useSendChatMessageSSE = ({
   conversationID,
-  conversationMessagesParams,
 }: SendChatMessageSSEProps) => {
   const newMessageRef = useRef<string>("");
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
@@ -53,15 +56,11 @@ export const useSendChatMessageSSE = ({
         content: message,
         conversation_id: conversationID,
       };
-      queryClient.setQueryData(
-        [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
-        (
-          oldData: IResponseDataWithPagination<IConversationMessage>,
-        ): IResponseDataWithPagination<IConversationMessage> => ({
-          ...oldData,
-          data: [...oldData.data, userMessage],
-        }),
-      );
+      addNewUserMessageData({
+        userMessage,
+        queryClient,
+        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES],
+      });
     });
 
     eventSourceRef.current.addEventListener("message", function (event) {
@@ -77,25 +76,11 @@ export const useSendChatMessageSSE = ({
         conversation_id: conversationID,
       };
       newMessageRef.current = newMessage.content;
-      queryClient.setQueryData(
-        [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
-        (
-          oldData: IResponseDataWithPagination<IConversationMessage>,
-        ): IResponseDataWithPagination<IConversationMessage> => {
-          return {
-            ...oldData,
-            data:
-              oldData.data[oldData.data.length - 1]?.id === "new_message"
-                ? oldData.data.map((oldListsMessage) => {
-                    if (oldListsMessage.id === "new_message") {
-                      return newMessage;
-                    }
-                    return oldListsMessage;
-                  })
-                : [...oldData.data, newMessage],
-          };
-        },
-      );
+      updateNewBotReplyMessageData({
+        newMessage,
+        queryClient,
+        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES],
+      });
       if (isAllowingAutoScroll.current) {
         lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
       }
@@ -104,7 +89,7 @@ export const useSendChatMessageSSE = ({
       newMessageRef.current = "";
       isScrolledOnce.current = false;
       queryClient.invalidateQueries({
-        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationMessagesParams],
+        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES],
       });
 
       queryClient.setQueryData(

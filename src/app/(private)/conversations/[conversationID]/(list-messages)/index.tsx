@@ -9,6 +9,7 @@ import { AxiosErrorPayload, IPagination } from "@/lib/interfaces/utils";
 import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { AxiosError } from "axios";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
+import LoadingSpinner from "@/components/reusable/loading-spinner";
 const ListMessageComponent = ({
   params,
   handleSendMessage,
@@ -104,9 +105,15 @@ const ListMessageComponent = ({
       ref={listMessagesRef}
       className="w-full flex-1 overflow-auto h-full flex flex-col-reverse md:max-w-4xl max-w-full mx-auto gap-4 px-4"
     >
+      <div ref={ref} className={cn("min-h-2")} />
       {listMessagesData?.pages.map((page, index) => (
         <div className="flex flex-col gap-4" key={index}>
-          <div ref={topScrollRef} className={cn("min-h-2")} />
+          <div
+            ref={topScrollRef}
+            className={cn("min-h-2 w-full flex justify-center py-2")}
+          >
+            {isFetchingNextPage && <LoadingSpinner />}
+          </div>
           {page.data.map((message) => (
             <Fragment key={message.id}>
               {message.author === MESSAGE_AUTHOR.USER && (
@@ -125,7 +132,6 @@ const ListMessageComponent = ({
               )}
             </Fragment>
           ))}
-          <div ref={ref} className={cn(isResponding && "min-h-2")} />
         </div>
       ))}
     </div>

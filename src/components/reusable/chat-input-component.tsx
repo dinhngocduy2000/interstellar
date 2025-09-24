@@ -66,6 +66,7 @@ const ChatInputComponent = ({
   };
 
   const onChatSubmit = async () => {
+    setChatText("");
     if (pathname === ROUTE_PATH.HOME) {
       await handleCreateChat();
       return;
@@ -97,6 +98,7 @@ const ChatInputComponent = ({
               onChatSubmit();
             }
           }}
+          value={chatText}
           disabled={isCreatingConversation}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
