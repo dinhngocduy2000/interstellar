@@ -37,7 +37,11 @@ const ConversationClientComponent = ({
         isScrolledOnce={isScrolledOnce}
       />
       <Suspense>
-        <ChatInputComponent handleSendMessage={handleSendMessage} />
+        <ChatInputComponent
+          closeSSEConnection={closeSSEConnection}
+          isResponding={isResponding}
+          handleSendMessage={handleSendMessage}
+        />
       </Suspense>
     </>
   );

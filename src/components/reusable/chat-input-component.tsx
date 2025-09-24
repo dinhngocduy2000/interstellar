@@ -11,6 +11,7 @@ import {
   Newspaper,
   Paperclip,
   PlusIcon,
+  Square,
 } from "lucide-react";
 import { cn, getErrorMessage } from "@/lib/utils";
 import DropdownMenu from "./dropdown-menu";
@@ -20,12 +21,16 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import LoadingSpinner from "./loading-spinner";
 import { useQueryClient } from "@tanstack/react-query";
-import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
+import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 
 const ChatInputComponent = ({
   handleSendMessage,
+  closeSSEConnection,
+  isResponding,
 }: {
   handleSendMessage?: (_message: string) => Promise<void>;
+  closeSSEConnection: VoidFunction;
+  isResponding: boolean;
 }) => {
   const queryClient = useQueryClient();
   const [chatText, setChatText] = useState<string>("");
@@ -66,6 +71,13 @@ const ChatInputComponent = ({
   };
 
   const onChatSubmit = async () => {
+    if (isResponding) {
+      closeSSEConnection();
+      queryClient.invalidateQueries({
+        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES],
+      });
+      return;
+    }
     setChatText("");
     if (pathname === ROUTE_PATH.HOME) {
       await handleCreateChat();
@@ -120,12 +132,14 @@ const ChatInputComponent = ({
           />
           <Button
             type="button"
-            disabled={!chatText || isCreatingConversation}
+            disabled={(!chatText || isCreatingConversation) && !isResponding}
             className="rounded-full ml-auto"
             onClick={onChatSubmit}
           >
             {isCreatingConversation ? (
               <LoadingSpinner />
+            ) : isResponding ? (
+              <Square />
             ) : (
               <Navigation2 className="rotate-90" />
             )}

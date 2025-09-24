@@ -13,6 +13,7 @@ export const DefaultMetadata: Metadata = {
     "Manage Tasks",
     "Kanban board",
     "Calendar view",
+    "Chatbot",
   ],
   openGraph: {
     title: "Interstellar | Modern AI Chatbot",
