@@ -10,6 +10,7 @@ import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { AxiosError } from "axios";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import LoadingSpinner from "@/components/reusable/loading-spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 const ListMessageComponent = ({
   params,
   handleSendMessage,
@@ -46,10 +47,10 @@ const ListMessageComponent = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
+    isFetching,
   } = useGetConversationMessagesInfiniteQuery({
     queryKey: [],
     params: conversationMessagesParams,
-    enabled: conversationDetail?.is_new === false,
   });
 
   const { loaderRef: topScrollRef } = useInfiniteScroll({
@@ -90,6 +91,16 @@ const ListMessageComponent = ({
       isAllowingAutoScrollRef.current = false;
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="h-screen w-screen">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Skeleton key={index} className="size-6" />
+        ))}
+      </div>
+    );
+  }
 
   if (error) {
     return (

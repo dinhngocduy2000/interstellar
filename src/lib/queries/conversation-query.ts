@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
   Conversation,
   IConversationQuery,
@@ -53,7 +53,7 @@ export const useGetConversationDetailQuery = ({
   queryKey,
   params,
 }: ReactQueryHookParams<{ conversationID: string }>) => {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: [CONVERSATIONS_ENDPOINTS.GET, params.conversationID, ...queryKey],
     queryFn: async ({ signal }) =>
       await getConversationDetail(params.conversationID, signal),

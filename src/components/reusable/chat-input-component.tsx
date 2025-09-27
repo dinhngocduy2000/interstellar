@@ -29,8 +29,8 @@ const ChatInputComponent = ({
   isResponding,
 }: {
   handleSendMessage?: (_message: string) => Promise<void>;
-  closeSSEConnection: VoidFunction;
-  isResponding: boolean;
+  closeSSEConnection?: VoidFunction;
+  isResponding?: boolean;
 }) => {
   const queryClient = useQueryClient();
   const [chatText, setChatText] = useState<string>("");
@@ -72,7 +72,7 @@ const ChatInputComponent = ({
 
   const onChatSubmit = async () => {
     if (isResponding) {
-      closeSSEConnection();
+      closeSSEConnection?.();
       queryClient.invalidateQueries({
         queryKey: [CHAT_ENDPOINTS.GET_MESSAGES],
       });

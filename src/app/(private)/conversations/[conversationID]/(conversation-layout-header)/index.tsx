@@ -2,6 +2,7 @@
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import AppDropdownMenu from "@/components/reusable/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { IDropdownMenuItem } from "@/lib/interfaces/utils";
 import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
@@ -17,7 +18,7 @@ type Props = {
 
 const ConversationLayoutHeader = ({ conversationID }: Props) => {
   const pathname = usePathname();
-  const { data: conversation } = useGetConversationDetailQuery({
+  const { data: conversation, isFetching } = useGetConversationDetailQuery({
     queryKey: [],
     params: {
       conversationID: conversationID,
@@ -55,6 +56,14 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
       toast.error("Failed to copy link to clipboard");
     }
   };
+  if (isFetching) {
+    return (
+      <div className="w-full flex gap-4 justify-between px-4 pt-2">
+        <Skeleton className="w-full h-7" />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex gap-4 justify-between px-4 pt-2">
       <p className="text-lg font-semibold">

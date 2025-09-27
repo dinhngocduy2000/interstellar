@@ -9,6 +9,7 @@ import {
 } from "@/lib/interfaces/utils";
 import { getConversationMessages } from "@/lib/api/chat";
 import { IConversationMessage } from "@/lib/interfaces/message";
+import { Suspense } from "react";
 
 export default async function ConversationLayout({
   children,
@@ -49,11 +50,14 @@ export default async function ConversationLayout({
     }),
   ]);
   return (
-    <>
+    <Suspense
+      fallback={<div className="h-screen w-full bg-red-400">Loading...</div>}
+    >
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ConversationLayoutHeader conversationID={conversationID} />
       </HydrationBoundary>
+
       {children}
-    </>
+    </Suspense>
   );
 }
