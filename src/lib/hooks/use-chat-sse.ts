@@ -128,7 +128,7 @@ export const useSendChatMessageSSE = ({
 
   useEffect(() => {
     return () => {
-      if (conversationID === "private" && eventSourceRef.current) {
+      if (conversationID === "private") {
         queryClient.resetQueries({
           queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
         });

@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import LoadingSpinner from "@/components/reusable/loading-spinner";
 import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
+import { Skeleton } from "@/components/ui/skeleton";
 const ListMessageComponent = ({
   params,
   handleSendMessage,
@@ -48,6 +49,8 @@ const ListMessageComponent = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
+    isFetching,
+    isFetchedAfterMount,
   } = useGetConversationMessagesInfiniteQuery({
     queryKey: [],
     params: conversationMessagesParams,
@@ -61,7 +64,6 @@ const ListMessageComponent = ({
     hasMore: hasNextPage,
     isFetchingData: isFetchingNextPage,
   });
-
   useEffect(() => {
     if (conversationID === "private") {
       const privateMessage = localStorage.getItem(
@@ -101,15 +103,15 @@ const ListMessageComponent = ({
     }
   };
 
-  // if (isRefetching) {
-  //   return (
-  //     <div className="mt-6 h-full w-full flex flex-col gap-4 md:max-w-4xl max-w-full mx-auto">
-  //       {Array.from({ length: 8 }).map((_, index) => (
-  //         <Skeleton key={index} className="h-8 w-full" />
-  //       ))}
-  //     </div>
-  //   );
-  // }
+  if (isFetching && !isFetchedAfterMount) {
+    return (
+      <div className="mt-6 h-full w-full flex flex-col gap-4 md:max-w-4xl max-w-full mx-auto">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <Skeleton key={index} className="h-8 w-full" />
+        ))}
+      </div>
+    );
+  }
 
   if (error) {
     return (

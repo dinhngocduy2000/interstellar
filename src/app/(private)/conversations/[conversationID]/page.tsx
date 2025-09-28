@@ -1,3 +1,4 @@
+export const revalidate = 0; // Revalidate immediately (no caching)
 import ConversationClientComponent from "./client-component";
 
 const ConversationPage = async ({
