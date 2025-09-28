@@ -129,7 +129,6 @@ export const useSendChatMessageSSE = ({
   useEffect(() => {
     return () => {
       if (conversationID === "private" && eventSourceRef.current) {
-        console.log("closeSSEConnection");
         queryClient.resetQueries({
           queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
         });

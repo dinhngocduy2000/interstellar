@@ -56,7 +56,6 @@ const ListMessageComponent = ({
 
   const { loaderRef: topScrollRef } = useInfiniteScroll({
     onPageChange: () => {
-      console.log("onPageChange");
       fetchNextPage();
     },
     hasMore: hasNextPage,
@@ -68,7 +67,6 @@ const ListMessageComponent = ({
       const privateMessage = localStorage.getItem(
         LOCAL_STORAGE_KEY.PRIVATE_MESSAGE,
       );
-      console.log(privateMessage);
       if (!privateMessage) {
         return;
       }

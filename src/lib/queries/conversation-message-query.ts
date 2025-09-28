@@ -74,7 +74,6 @@ export const addNewUserMessageData = ({
       | undefined => {
       const firstPage = oldData?.pages[0];
       const updatedFirstPageData = [...(firstPage?.data ?? []), userMessage];
-      console.log(firstPage);
 
       if (!firstPage) {
         return {
