@@ -1,8 +1,8 @@
 import {
   InfiniteData,
   QueryClient,
+  useInfiniteQuery,
   useQuery,
-  useSuspenseInfiniteQuery,
 } from "@tanstack/react-query";
 import {
   IPagination,
@@ -33,8 +33,8 @@ export const useGetConversationMessagesInfiniteQuery = ({
   params,
   queryKey,
 }: ReactQueryHookParams<IPagination & { conversationID: string }> & {}) =>
-  useSuspenseInfiniteQuery({
-    queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, ...queryKey],
+  useInfiniteQuery({
+    queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, params.conversationID, ...queryKey],
     queryFn: async ({ signal, pageParam }) =>
       await getConversationMessages({ ...params, page: pageParam }, signal),
     getNextPageParam: (currentPageData, _, currentPageParams) => {

@@ -41,6 +41,7 @@ const ConversationClientComponent = ({
           closeSSEConnection={closeSSEConnection}
           isResponding={isResponding}
           handleSendMessage={handleSendMessage}
+          conversationID={conversationID}
         />
       </Suspense>
     </>

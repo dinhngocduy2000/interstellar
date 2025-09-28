@@ -22,22 +22,23 @@ import { toast } from "react-toastify";
 import LoadingSpinner from "./loading-spinner";
 import { useQueryClient } from "@tanstack/react-query";
 import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
-
 const ChatInputComponent = ({
   handleSendMessage,
   closeSSEConnection,
   isResponding,
+  conversationID,
 }: {
   handleSendMessage?: (_message: string) => Promise<void>;
   closeSSEConnection?: VoidFunction;
   isResponding?: boolean;
+  conversationID?: string;
 }) => {
   const queryClient = useQueryClient();
   const [chatText, setChatText] = useState<string>("");
   const pathname = usePathname();
-  const params = useSearchParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const isPrivate = params.get("private") === "true";
+  const isPrivate = searchParams.get("private") === "true";
   const { mutateAsync: createConversation, isPending: isCreatingConversation } =
     useCreateConversationQuery({
       onSuccess: (res) => {
@@ -74,7 +75,7 @@ const ChatInputComponent = ({
     if (isResponding) {
       closeSSEConnection?.();
       queryClient.invalidateQueries({
-        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES],
+        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
       });
       return;
     }
