@@ -10,7 +10,7 @@ import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { AxiosError } from "axios";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import LoadingSpinner from "@/components/reusable/loading-spinner";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
 const ListMessageComponent = ({
   params,
   handleSendMessage,
@@ -40,6 +40,7 @@ const ListMessageComponent = ({
     params: {
       conversationID: conversationID,
     },
+    enabled: conversationID !== "private",
   });
   const {
     data: listMessagesData,
@@ -47,11 +48,10 @@ const ListMessageComponent = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-    isFetching,
-    isRefetching,
   } = useGetConversationMessagesInfiniteQuery({
     queryKey: [],
     params: conversationMessagesParams,
+    enabled: conversationDetail?.is_new === false,
   });
 
   const { loaderRef: topScrollRef } = useInfiniteScroll({
@@ -64,13 +64,23 @@ const ListMessageComponent = ({
   });
 
   useEffect(() => {
+    if (conversationID === "private") {
+      const privateMessage = localStorage.getItem(
+        LOCAL_STORAGE_KEY.PRIVATE_MESSAGE,
+      );
+      console.log(privateMessage);
+      if (!privateMessage) {
+        return;
+      }
+      handleSendMessage(privateMessage);
+    }
     if (conversationDetail?.is_new && conversationDetail) {
       handleSendMessage(conversationDetail.first_message);
     }
     return () => {
       closeSSEConnection();
     };
-  }, [conversationDetail]);
+  }, [conversationDetail, conversationID]);
 
   useEffect(() => {
     if (!ref?.current) return;
@@ -93,15 +103,15 @@ const ListMessageComponent = ({
     }
   };
 
-  if (isFetching || isRefetching) {
-    return (
-      <div className="mt-6 h-full w-full flex flex-col gap-4 md:max-w-4xl max-w-full mx-auto">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <Skeleton key={index} className="h-8 w-full" />
-        ))}
-      </div>
-    );
-  }
+  // if (isRefetching) {
+  //   return (
+  //     <div className="mt-6 h-full w-full flex flex-col gap-4 md:max-w-4xl max-w-full mx-auto">
+  //       {Array.from({ length: 8 }).map((_, index) => (
+  //         <Skeleton key={index} className="h-8 w-full" />
+  //       ))}
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (
@@ -110,7 +120,6 @@ const ListMessageComponent = ({
       />
     );
   }
-
   return (
     <div
       onScroll={onHandleScroll}
@@ -126,24 +135,29 @@ const ListMessageComponent = ({
           >
             {isFetchingNextPage && <LoadingSpinner />}
           </div>
-          {page.data.map((message) => (
-            <Fragment key={message.id}>
-              {message.author === MESSAGE_AUTHOR.USER && (
-                <MessageItem
-                  key={message.id}
-                  message={message}
-                  containerProps={{ className: "self-end" }}
-                />
-              )}
-              {message.author === MESSAGE_AUTHOR.BOT && (
-                <MessageItem
-                  key={message.id}
-                  message={message}
-                  isResponding={isResponding}
-                />
-              )}
-            </Fragment>
-          ))}
+          {page.data.map((message) => {
+            return (
+              <Fragment key={message.id}>
+                {message.author === MESSAGE_AUTHOR.USER && (
+                  <MessageItem
+                    key={message.id}
+                    message={message}
+                    containerProps={{ className: "self-end" }}
+                  />
+                )}
+                {message.author === MESSAGE_AUTHOR.BOT && (
+                  <MessageItem
+                    key={message.id}
+                    message={message}
+                    isResponding={isResponding}
+                    isLastMessage={
+                      message.id === `new_message_${page.data.length}`
+                    }
+                  />
+                )}
+              </Fragment>
+            );
+          })}
         </div>
       ))}
     </div>

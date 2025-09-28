@@ -23,6 +23,7 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
     params: {
       conversationID: conversationID,
     },
+    enabled: conversationID !== "private",
   });
   const chatMenuItems: IDropdownMenuItem[] = [
     {

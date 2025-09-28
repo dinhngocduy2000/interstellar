@@ -44,9 +44,7 @@ export default async function ConversationLayout({
     // }),
   ]);
   return (
-    <Suspense
-      fallback={<div className="h-screen w-full bg-red-400">Loading...</div>}
-    >
+    <Suspense fallback={<div className="h-screen w-full">Loading...</div>}>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ConversationLayoutHeader conversationID={conversationID} />
       </HydrationBoundary>

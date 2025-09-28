@@ -22,6 +22,8 @@ import { toast } from "react-toastify";
 import LoadingSpinner from "./loading-spinner";
 import { useQueryClient } from "@tanstack/react-query";
 import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
+import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
+import { Conversation } from "@/lib/interfaces/conversations";
 const ChatInputComponent = ({
   handleSendMessage,
   closeSSEConnection,
@@ -77,9 +79,22 @@ const ChatInputComponent = ({
       queryClient.invalidateQueries({
         queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
       });
+
+      queryClient.setQueryData(
+        [CONVERSATIONS_ENDPOINTS.GET, conversationID],
+        (oldData: Conversation): Conversation => ({
+          ...oldData,
+          is_new: false,
+        }),
+      );
       return;
     }
     setChatText("");
+    if (isPrivate) {
+      localStorage.setItem(LOCAL_STORAGE_KEY.PRIVATE_MESSAGE, chatText);
+      router.push(`${ROUTE_PATH.CONVERSATIONS}/private`);
+      return;
+    }
     if (pathname === ROUTE_PATH.HOME) {
       await handleCreateChat();
       return;
@@ -97,7 +112,7 @@ const ChatInputComponent = ({
       <form
         className={cn(
           "min-h-[100px] h-[140px] md:max-w-4xl border rounded-xl max-w-full w-full mx-auto flex flex-col",
-          isPrivate
+          isPrivate || conversationID === "private"
             ? "bg-[#1B1B23] border-[#4B3B7C]"
             : "bg-chat-foreground border-ring",
         )}

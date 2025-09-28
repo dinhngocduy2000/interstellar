@@ -32,7 +32,10 @@ export const useGetConversationMessageQuery = ({
 export const useGetConversationMessagesInfiniteQuery = ({
   params,
   queryKey,
-}: ReactQueryHookParams<IPagination & { conversationID: string }> & {}) =>
+  enabled,
+}: ReactQueryHookParams<IPagination & { conversationID: string }> & {
+  enabled?: boolean;
+}) =>
   useInfiniteQuery({
     queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, params.conversationID, ...queryKey],
     queryFn: async ({ signal, pageParam }) =>
@@ -45,6 +48,7 @@ export const useGetConversationMessagesInfiniteQuery = ({
     initialPageParam: 1,
     refetchOnWindowFocus: false,
     staleTime: 5000,
+    enabled: enabled,
   });
 
 export const addNewUserMessageData = ({
@@ -70,7 +74,20 @@ export const addNewUserMessageData = ({
       | undefined => {
       const firstPage = oldData?.pages[0];
       const updatedFirstPageData = [...(firstPage?.data ?? []), userMessage];
+      console.log(firstPage);
 
+      if (!firstPage) {
+        return {
+          ...oldData,
+          pages: [
+            {
+              data: updatedFirstPageData ?? [],
+              total: 0,
+            },
+          ],
+          pageParams: oldData?.pageParams ?? [],
+        };
+      }
       return {
         ...oldData,
         pageParams: oldData?.pageParams ?? [],
@@ -98,10 +115,12 @@ export const updateNewBotReplyMessageData = ({
   newMessage,
   queryClient,
   queryKey,
+  index,
 }: {
   newMessage: IConversationMessage;
   queryClient: QueryClient;
   queryKey: unknown[];
+  index: number;
 }) => {
   queryClient.setQueryData(
     queryKey,
@@ -117,9 +136,10 @@ export const updateNewBotReplyMessageData = ({
       | undefined => {
       const firstPage = oldData?.pages[0];
       const updatedFirstPageData =
-        firstPage?.data[firstPage?.data.length - 1]?.id === "new_message"
+        firstPage?.data[firstPage?.data.length - 1]?.id ===
+        `new_message_${index}`
           ? firstPage.data.map((oldListsMessage) => {
-              if (oldListsMessage.id === "new_message") {
+              if (oldListsMessage.id === `new_message_${index}`) {
                 return newMessage;
               }
               return oldListsMessage;
