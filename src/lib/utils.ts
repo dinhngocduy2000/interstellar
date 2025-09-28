@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx";
 import { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
 import { AxiosErrorPayload } from "./interfaces/utils";
+import { uuidSchema } from "./schemas/utils";
 export const DefaultMetadata: Metadata = {
   title: "Interstellar",
   description:
@@ -47,3 +48,6 @@ export function cn(...inputs: ClassValue[]) {
 export const getErrorMessage = (error: AxiosError<AxiosErrorPayload>) => {
   return error.response?.data?.message || "Something went wrong";
 };
+
+export const isStringUUID = (value: string): boolean =>
+  uuidSchema.safeParse(value).success;

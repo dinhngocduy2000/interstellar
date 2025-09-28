@@ -1,6 +1,6 @@
 "use client";
 import React, { Fragment, RefObject, use, useEffect, useRef } from "react";
-import MessageItem from "./message-item";
+import MessageItem from "./(message-item)/message-item";
 import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
 import { useGetConversationMessagesInfiniteQuery } from "@/lib/queries/conversation-message-query";
 import NoDataComponent from "@/components/reusable/no-data-component";

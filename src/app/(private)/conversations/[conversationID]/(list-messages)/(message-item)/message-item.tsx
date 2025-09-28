@@ -1,7 +1,9 @@
 import ChatTypingComponent from "@/components/reusable/chat-typing-component";
+import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { IConversationMessage } from "@/lib/interfaces/message";
-import { cn } from "@/lib/utils";
+import { cn, isStringUUID } from "@/lib/utils";
 import React from "react";
+import MessageItemActionComponent from "./message-item-action";
 
 type Props = {
   message: IConversationMessage;
@@ -21,13 +23,16 @@ const MessageItem = ({
       <div
         {...containerProps}
         className={cn(
-          "max-w-xl bg-primary-foreground rounded-lg p-4 flex flex-col gap-2",
+          "max-w-xl bg-primary-foreground rounded-lg p-4 flex flex-col gap-4",
           containerProps?.className && containerProps?.className,
         )}
       >
         <p className="text-primary">{message.content}</p>
+        {isResponding && isLastMessage && <ChatTypingComponent />}
       </div>
-      {isResponding && isLastMessage && <ChatTypingComponent />}
+      {isStringUUID(message.id) && message.author === MESSAGE_AUTHOR.BOT && (
+        <MessageItemActionComponent message={message} />
+      )}
     </>
   );
 };
