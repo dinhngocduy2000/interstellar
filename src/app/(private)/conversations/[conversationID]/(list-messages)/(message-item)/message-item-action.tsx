@@ -76,7 +76,9 @@ const MessageItemActionComponent = ({ message }: Props) => {
       icon: (
         <ThumbsUp
           className={cn(
-            message.is_upvote ? "stroke-green-400" : "stroke-primary",
+            message.is_upvote
+              ? "fill-green-400 stroke-green-400"
+              : "stroke-primary",
           )}
         />
       ),
@@ -92,7 +94,9 @@ const MessageItemActionComponent = ({ message }: Props) => {
       icon: (
         <ThumbsDown
           className={cn(
-            message.is_downvote ? "stroke-red-400" : "stroke-primary",
+            message.is_downvote
+              ? "fill-red-400 stroke-red-400"
+              : "stroke-primary",
           )}
         />
       ),
