@@ -10,3 +10,7 @@ export type IConversationMessage = {
   content: string;
   conversation_id: string;
 };
+
+export type IVoteMessage = {
+  data: boolean;
+};

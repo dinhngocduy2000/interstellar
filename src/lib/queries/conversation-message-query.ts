@@ -2,16 +2,22 @@ import {
   InfiniteData,
   QueryClient,
   useInfiniteQuery,
+  useMutation,
   useQuery,
 } from "@tanstack/react-query";
 import {
+  IMutation,
   IPagination,
   IResponseDataWithPagination,
   ReactQueryHookParams,
 } from "../interfaces/utils";
 import { CHAT_ENDPOINTS } from "../enum/endpoints";
-import { getConversationMessages } from "../api/chat";
-import { IConversationMessage } from "../interfaces/message";
+import {
+  downvoteMessage,
+  getConversationMessages,
+  upvoteMessage,
+} from "../api/chat";
+import { IConversationMessage, IVoteMessage } from "../interfaces/message";
 
 export const useGetConversationMessageQuery = ({
   params,
@@ -49,6 +55,46 @@ export const useGetConversationMessagesInfiniteQuery = ({
     refetchOnWindowFocus: false,
     staleTime: 5000,
     enabled: enabled,
+  });
+
+export const useUpvoteMessageMutation = ({
+  onSuccess,
+  onError,
+  onMutate,
+  signal,
+}: IMutation) =>
+  useMutation({
+    mutationFn: async (params: IVoteMessage & { messageID: string }) =>
+      await upvoteMessage(params, signal),
+    onSuccess: () => {
+      onSuccess?.();
+    },
+    onError: (error) => {
+      onError?.(error);
+    },
+    onMutate: () => {
+      onMutate?.();
+    },
+  });
+
+export const useDownvoteMessageMutation = ({
+  onSuccess,
+  onError,
+  onMutate,
+  signal,
+}: IMutation) =>
+  useMutation({
+    mutationFn: async (params: IVoteMessage & { messageID: string }) =>
+      await downvoteMessage(params, signal),
+    onSuccess: () => {
+      onSuccess?.();
+    },
+    onError: (error) => {
+      onError?.(error);
+    },
+    onMutate: () => {
+      onMutate?.();
+    },
   });
 
 export const addNewUserMessageData = ({

@@ -1,7 +1,18 @@
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
+import LoadingSpinner from "@/components/reusable/loading-spinner";
 import { Button } from "@/components/ui/button";
+import { CHAT_ENDPOINTS } from "@/lib/enum/endpoints";
 import { IConversationMessage } from "@/lib/interfaces/message";
+import { AxiosErrorPayload } from "@/lib/interfaces/utils";
+import {
+  useDownvoteMessageMutation,
+  useUpvoteMessageMutation,
+} from "@/lib/queries/conversation-message-query";
+import { cn, getErrorMessage } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { Clipboard, ThumbsDown, ThumbsUp } from "lucide-react";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -10,6 +21,41 @@ type Props = {
 };
 
 const MessageItemActionComponent = ({ message }: Props) => {
+  const queryClient = useQueryClient();
+  const pathname = usePathname();
+  const { mutateAsync: downvoteMessage, isPending: isDownvotePending } =
+    useDownvoteMessageMutation({
+      onSuccess: () => {
+        handleRefetchMessages();
+        toast.success("Downvote successful");
+      },
+      onError: (error) => {
+        toast.error(
+          `Failed to downvote: ${getErrorMessage(error as AxiosError<AxiosErrorPayload>)}`,
+        );
+      },
+    });
+
+  const { mutateAsync: upvoteMessage, isPending: isUpvotePending } =
+    useUpvoteMessageMutation({
+      onSuccess: () => {
+        handleRefetchMessages();
+        toast.success("Upvote successful");
+      },
+      onError: (error) => {
+        toast.error(
+          `Failed to upvote: ${getErrorMessage(error as AxiosError<AxiosErrorPayload>)}`,
+        );
+      },
+    });
+
+  const handleRefetchMessages = () => {
+    const conversationID = pathname.split("/").pop();
+    queryClient.invalidateQueries({
+      queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
+    });
+  };
+
   const handleShareConversation = async (string: string) => {
     try {
       await window.navigator.clipboard.writeText(string);
@@ -23,16 +69,39 @@ const MessageItemActionComponent = ({ message }: Props) => {
     label: string;
     icon: React.ReactNode;
     onClick: VoidFunction;
+    isLoading?: boolean;
   }[] = [
     {
       label: "Upvote",
-      icon: <ThumbsUp />,
-      onClick: () => {},
+      icon: (
+        <ThumbsUp
+          className={cn(
+            message.is_upvote ? "stroke-green-400" : "stroke-primary",
+          )}
+        />
+      ),
+      onClick: () =>
+        upvoteMessage({
+          data: !message.is_upvote,
+          messageID: message.id,
+        }),
+      isLoading: isUpvotePending,
     },
     {
       label: "Downvote",
-      icon: <ThumbsDown />,
-      onClick: () => {},
+      icon: (
+        <ThumbsDown
+          className={cn(
+            message.is_downvote ? "stroke-red-400" : "stroke-primary",
+          )}
+        />
+      ),
+      onClick: () =>
+        downvoteMessage({
+          data: !message.is_downvote,
+          messageID: message.id,
+        }),
+      isLoading: isDownvotePending,
     },
     {
       label: "Copy",
@@ -47,9 +116,10 @@ const MessageItemActionComponent = ({ message }: Props) => {
           <Button
             variant={"ghost"}
             onClick={action.onClick}
+            disabled={action.isLoading}
             className="rounded-full !px-2.5"
           >
-            {action.icon}
+            {action.isLoading ? <LoadingSpinner /> : action.icon}
           </Button>
         </AppTooltipComponent>
       ))}

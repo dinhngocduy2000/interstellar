@@ -13,4 +13,6 @@ export enum CONVERSATIONS_ENDPOINTS {
 export enum CHAT_ENDPOINTS {
   SEND_MESSAGE = "/chat/sse/",
   GET_MESSAGES = "/chat",
+  UPVOTE_MESSAGE = "/chat/upvote",
+  DOWNVOTE_MESSAGE = "/chat/downvote",
 }
