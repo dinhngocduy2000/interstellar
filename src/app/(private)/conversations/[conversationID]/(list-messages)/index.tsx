@@ -126,7 +126,7 @@ const ListMessageComponent = ({
       ref={listMessagesRef}
       className="w-full flex-1 overflow-auto h-full flex flex-col-reverse md:max-w-4xl max-w-full mx-auto gap-4 px-4"
     >
-      <div ref={ref} className={cn("min-h-2")} />
+      <div ref={ref} className={cn(isResponding && "min-h-2")} />
       {listMessagesData?.pages.map((page, index) => (
         <div className="flex flex-col gap-4" key={index}>
           <div

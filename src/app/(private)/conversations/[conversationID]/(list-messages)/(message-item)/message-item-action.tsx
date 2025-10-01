@@ -27,7 +27,6 @@ const MessageItemActionComponent = ({ message }: Props) => {
     useDownvoteMessageMutation({
       onSuccess: () => {
         handleRefetchMessages();
-        toast.success("Downvote successful");
       },
       onError: (error) => {
         toast.error(
@@ -40,7 +39,6 @@ const MessageItemActionComponent = ({ message }: Props) => {
     useUpvoteMessageMutation({
       onSuccess: () => {
         handleRefetchMessages();
-        toast.success("Upvote successful");
       },
       onError: (error) => {
         toast.error(
