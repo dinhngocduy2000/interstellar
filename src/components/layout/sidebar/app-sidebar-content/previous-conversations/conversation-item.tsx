@@ -5,6 +5,7 @@ import {
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { Conversation } from "@/lib/interfaces/conversations";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 type Props = {
@@ -12,9 +13,13 @@ type Props = {
 };
 
 const ConversationItemComponent = ({ conversation }: Props) => {
+  const pathname = usePathname();
   return (
     <SidebarMenuSubItem>
-      <SidebarMenuSubButton asChild>
+      <SidebarMenuSubButton
+        isActive={pathname.includes(conversation.id)}
+        asChild
+      >
         <Link href={`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`}>
           <span>{conversation.title}</span>
         </Link>
