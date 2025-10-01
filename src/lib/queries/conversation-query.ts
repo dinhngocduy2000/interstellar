@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Conversation,
+  ConversationPinRequestDTO,
   IConversationQuery,
   ICreateConversation,
 } from "../interfaces/conversations";
@@ -76,6 +77,31 @@ export const useDeleteConversationQuery = ({
     mutationFn: async (conversationID: string) =>
       await getConversations().conversationControllerDeleteConversation(
         conversationID,
+      ),
+    onSuccess: () => {
+      onSuccess?.();
+    },
+    onError: (error) => {
+      onError?.(error);
+    },
+    onMutate: () => {
+      onMutate?.();
+    },
+  });
+
+export const usePinConversationMutation = ({
+  onSuccess,
+  onError,
+  onMutate,
+}: IMutation) =>
+  useMutation({
+    mutationFn: async (params: {
+      conversationID: string;
+      conversationPinRequestDTO: ConversationPinRequestDTO;
+    }) =>
+      await getConversations().conversationControllerPinConversation(
+        params.conversationID,
+        params.conversationPinRequestDTO,
       ),
     onSuccess: () => {
       onSuccess?.();

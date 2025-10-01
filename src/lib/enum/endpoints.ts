@@ -8,6 +8,7 @@ export enum AUTH_ENDPOINTS {
 export enum CONVERSATIONS_ENDPOINTS {
   LIST = "/api/v1/conversations",
   GET = "/api/v1/conversations/{$id}",
+  PIN = "/api/v1/conversations/pinned",
 }
 
 export enum CHAT_ENDPOINTS {

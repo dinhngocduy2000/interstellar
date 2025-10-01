@@ -19,3 +19,7 @@ export type Conversation = {
 export type IConversationQuery = Partial<Conversation> & IPagination;
 
 export type ICreateConversation = z.infer<typeof CreateConversationSchema>;
+export interface ConversationPinRequestDTO {
+  /** Whether the conversation is pinned */
+  is_pinned: boolean;
+}

@@ -5,17 +5,17 @@
  * Interstellar API Documentation
  * OpenAPI spec version: 1.0
  */
-
-import { ConversationControllerGetPinnedConversationsParams } from "@/lib/interfaces/conversations/conversationControllerGetPinnedConversationsParams";
-import { customInstance } from ".././mutator";
-import { SuccessResponse } from "@/lib/interfaces";
-import {
-  ListConversationResponseDTO,
-  ConversationPinRequestDTO,
+import { ConversationPinRequestDTO } from "@/lib/interfaces/conversations";
+import type {
+  ConversationControllerGetListConversationsParams,
+  ConversationControllerGetPinnedConversationsParams,
   ConversationCreateRequestDTO,
   ConversationResponseDTO,
-} from "@/lib/interfaces/users";
-import { ConversationControllerGetListConversationsParams } from "@/lib/interfaces/conversations/conversationControllerGetListConversationsParams";
+  ListConversationResponseDTO,
+  SuccessResponse,
+} from "../../interfaces/conversations/";
+
+import { customInstance } from ".././mutator";
 
 type SecondParameter<T extends (..._args: never) => unknown> = Parameters<T>[1];
 

@@ -10,8 +10,9 @@ import { AxiosErrorPayload, IDropdownMenuItem } from "@/lib/interfaces/utils";
 import {
   useDeleteConversationQuery,
   useGetConversationDetailQuery,
+  usePinConversationMutation,
 } from "@/lib/queries/conversation-query";
-import { getErrorMessage } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { EllipsisVertical, PenSquare, Pin, Share, Trash2 } from "lucide-react";
@@ -35,6 +36,22 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
     },
     enabled: conversationID !== "private",
   });
+  const { mutateAsync: pinConversation, isPending: isPinningConversation } =
+    usePinConversationMutation({
+      onSuccess: () => {
+        toast.success(
+          `Conversation ${conversation?.is_pinned ? "unpinned" : "pinned"} successfully`,
+        );
+        queryClient.invalidateQueries({
+          queryKey: [CONVERSATIONS_ENDPOINTS.GET, conversationID],
+        });
+      },
+      onError: (error) => {
+        toast.error(
+          `Failed to pin conversation: ${getErrorMessage(error as AxiosError<AxiosErrorPayload>)}`,
+        );
+      },
+    });
   const { mutateAsync: deleteConversation, isPending: isDeletingConversation } =
     useDeleteConversationQuery({
       onSuccess: () => {
@@ -61,11 +78,22 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
     {
       label: (
         <div className="flex gap-2 items-center">
-          <Pin />
+          <Pin
+            className={cn(
+              conversation?.is_pinned ? "fill-primary" : "fill-none",
+            )}
+          />
           Pin
         </div>
       ),
-      onClick: () => {},
+      onClick: async () => {
+        await pinConversation({
+          conversationID: conversationID,
+          conversationPinRequestDTO: {
+            is_pinned: !conversation?.is_pinned,
+          },
+        });
+      },
     },
     {
       label: (
@@ -107,7 +135,7 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
       <div className="flex gap-2">
         <AppTooltipComponent content={"More Actions"}>
           <AppDropdownMenu
-            disabled={isDeletingConversation}
+            disabled={isDeletingConversation || isPinningConversation}
             items={chatMenuItems}
             trigger={
               isDeletingConversation ? <LoadingSpinner /> : <EllipsisVertical />
