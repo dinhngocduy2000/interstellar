@@ -1,4 +1,6 @@
-module.exports = {
+import { defineConfig } from "orval";
+
+export default defineConfig({
   "interstellar-api": {
     // Arbitrary name for this spec
     input: {
@@ -27,4 +29,4 @@ module.exports = {
       // afterAllFilesWrite: "next --fix", // Auto-fix generated code with ESLint
     },
   },
-};
+});
