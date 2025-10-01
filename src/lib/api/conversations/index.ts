@@ -2,6 +2,7 @@ import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import axiosConfig from "..";
 import {
   Conversation,
+  ConversationPinRequestDTO,
   IConversationQuery,
   ICreateConversation,
 } from "@/lib/interfaces/conversations";
@@ -32,6 +33,20 @@ export const getConversationDetail = async (
 ): Promise<Conversation> => {
   return await axiosConfig.get(
     CONVERSATIONS_ENDPOINTS.GET.replace("{$id}", conversationID),
+    {
+      signal: signal,
+    },
+  );
+};
+
+export const pinConversation = async (
+  conversationID: string,
+  conversationPinRequestDTO: ConversationPinRequestDTO,
+  signal?: AbortSignal,
+): Promise<Conversation> => {
+  return await axiosConfig.post(
+    `${CONVERSATIONS_ENDPOINTS.PIN}/${conversationID}`,
+    conversationPinRequestDTO,
     {
       signal: signal,
     },
