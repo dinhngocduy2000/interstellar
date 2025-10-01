@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "next lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "orval:gen": "orval",
+    "orval:watch": "orval --watch"
   },
   "dependencies": {
     "@hookform/error-message": "^2.0.1",
@@ -56,6 +58,7 @@
     "eslint-plugin-security": "^3.0.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
+    "orval": "^7.13.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.6",

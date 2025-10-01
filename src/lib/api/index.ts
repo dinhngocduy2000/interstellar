@@ -5,8 +5,7 @@ import {
 } from "@/actions/cookie";
 import { refreshTokenAction } from "@/actions/refresh-token";
 import axios, { AxiosError, AxiosResponse } from "axios";
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1"; // Set in .env
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; // Set in .env
 
 const axiosConfig = axios.create({
   baseURL: BASE_URL,
