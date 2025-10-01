@@ -16,11 +16,12 @@ const AppDropdownMenu = ({
   onSearch,
   dropdownContentClassName,
   dropdownTriggerClassName,
+  disabled,
   contentAlign = "end",
 }: IDropdownMenuProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger disabled={disabled} asChild>
         <Button variant={"outline"} className={dropdownTriggerClassName}>
           {trigger ?? "Actions"}
           {!trigger && <ChevronDownIcon strokeWidth={1} />}

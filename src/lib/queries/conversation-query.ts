@@ -11,6 +11,7 @@ import {
   getConversationDetail,
   getListConversations,
 } from "../api/conversations";
+import { getConversations } from "../api/conversations/conversations";
 
 type ICreateConversationMutation = Omit<IMutation, "onSuccess"> & {
   onSuccess?: (_res: Conversation, _data: ICreateConversation) => void;
@@ -65,3 +66,24 @@ export const useGetConversationDetailQuery = ({
     enabled: enabled,
   });
 };
+
+export const useDeleteConversationQuery = ({
+  onSuccess,
+  onError,
+  onMutate,
+}: IMutation) =>
+  useMutation({
+    mutationFn: async (conversationID: string) =>
+      await getConversations().conversationControllerDeleteConversation(
+        conversationID,
+      ),
+    onSuccess: () => {
+      onSuccess?.();
+    },
+    onError: (error) => {
+      onError?.(error);
+    },
+    onMutate: () => {
+      onMutate?.();
+    },
+  });
