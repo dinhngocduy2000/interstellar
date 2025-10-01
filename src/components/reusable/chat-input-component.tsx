@@ -105,7 +105,7 @@ const ChatInputComponent = ({
   return (
     <div
       className={cn(
-        "w-full p-8 flex flex-col gap-4 justify-center",
+        "w-full p-8 flex flex-col gap-4 justify-center pt-0",
         pathname.includes(ROUTE_PATH.CONVERSATIONS) && "mt-auto pb-0",
       )}
     >

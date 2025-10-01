@@ -5,7 +5,7 @@
  * Interstellar API Documentation
  * OpenAPI spec version: 1.0
  */
-import type { RegisterDto, UserResponseDto } from "../../interfaces";
+import type { RegisterDto, UserResponseDto } from "../../interfaces/users";
 
 import { customInstance } from ".././mutator";
 
