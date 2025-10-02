@@ -5,35 +5,108 @@
  * Interstellar API Documentation
  * OpenAPI spec version: 1.0
  */
+import { useMutation } from "@tanstack/react-query";
 import type {
-  RegisterDto,
-  UserResponseDto,
-} from "../../interfaces/users/index";
+  MutationFunction,
+  QueryClient,
+  UseMutationOptions,
+  UseMutationResult,
+} from "@tanstack/react-query";
+
+import type { RegisterDto, UserResponseDto } from "../../interfaces";
 
 import { customInstance } from ".././mutator";
 
 type SecondParameter<T extends (..._args: never) => unknown> = Parameters<T>[1];
 
-export const getUsers = () => {
-  /**
-   * @summary Register a new user
-   */
-  const usersControllerRegister = (
-    registerDto: RegisterDto,
-    options?: SecondParameter<typeof customInstance<UserResponseDto>>,
-  ) => {
-    return customInstance<UserResponseDto>(
-      {
-        url: `/api/v1/users/register`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: registerDto,
-      },
-      options,
-    );
-  };
-  return { usersControllerRegister };
+/**
+ * @summary Register a new user
+ */
+export const usersControllerRegister = (
+  registerDto: RegisterDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<UserResponseDto>(
+    {
+      url: `/api/v1/users/register`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: registerDto,
+      signal,
+    },
+    options
+  );
 };
-export type UsersControllerRegisterResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getUsers>["usersControllerRegister"]>>
+
+export const getUsersControllerRegisterMutationOptions = <
+  TError = void | void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof usersControllerRegister>>,
+    TError,
+    { data: RegisterDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof usersControllerRegister>>,
+  TError,
+  { data: RegisterDto },
+  TContext
+> => {
+  const mutationKey = ["usersControllerRegister"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof usersControllerRegister>>,
+    { data: RegisterDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return usersControllerRegister(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UsersControllerRegisterMutationResult = NonNullable<
+  Awaited<ReturnType<typeof usersControllerRegister>>
 >;
+export type UsersControllerRegisterMutationBody = RegisterDto;
+export type UsersControllerRegisterMutationError = void | void;
+
+/**
+ * @summary Register a new user
+ */
+export const useUsersControllerRegister = <
+  TError = void | void,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof usersControllerRegister>>,
+      TError,
+      { data: RegisterDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof usersControllerRegister>>,
+  TError,
+  { data: RegisterDto },
+  TContext
+> => {
+  const mutationOptions = getUsersControllerRegisterMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};

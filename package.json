@@ -7,10 +7,13 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint",
+    "lint": "next lint --fix",
     "prepare": "husky",
     "orval:gen": "orval",
-    "orval:watch": "orval --watch"
+    "orval:watch": "orval --watch",
+    "lint-staged": {
+      "*.{js,jsx,ts,tsx}": "next lint --fix --file"
+    }
   },
   "dependencies": {
     "@hookform/error-message": "^2.0.1",

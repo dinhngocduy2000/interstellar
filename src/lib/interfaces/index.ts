@@ -24,3 +24,5 @@ export * from "./messageUpvoteRequestDTO";
 export * from "./registerDto";
 export * from "./successResponse";
 export * from "./userResponseDto";
+export * from './messageControllerChatParams';
+export * from './messageControllerListMessagesParams';

@@ -5,168 +5,873 @@
  * Interstellar API Documentation
  * OpenAPI spec version: 1.0
  */
-import { ConversationPinRequestDTO } from "@/lib/interfaces/conversations";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
+  MutationFunction,
+  QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+} from "@tanstack/react-query";
+
 import type {
   ConversationControllerGetListConversationsParams,
   ConversationControllerGetPinnedConversationsParams,
   ConversationCreateRequestDTO,
+  ConversationPinRequestDTO,
   ConversationResponseDTO,
   ListConversationResponseDTO,
   SuccessResponse,
-} from "../../interfaces/conversations/";
+} from "../../interfaces";
 
 import { customInstance } from ".././mutator";
 
-type SecondParameter<T extends (..._args: never) => unknown> = Parameters<T>[1];
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export const getConversations = () => {
-  /**
-   * @summary Get all pinned conversations
-   */
-  const conversationControllerGetPinnedConversations = (
-    params?: ConversationControllerGetPinnedConversationsParams,
-    options?: SecondParameter<
-      typeof customInstance<ListConversationResponseDTO>
-    >,
-  ) => {
-    return customInstance<ListConversationResponseDTO>(
-      { url: `/api/v1/conversations/pinned`, method: "GET", params },
-      options,
-    );
-  };
-  /**
-   * @summary Pin/unpin a conversation
-   */
-  const conversationControllerPinConversation = (
-    id: string,
-    conversationPinRequestDTO: ConversationPinRequestDTO,
-    options?: SecondParameter<typeof customInstance<SuccessResponse>>,
-  ) => {
-    return customInstance<SuccessResponse>(
-      {
-        url: `/api/v1/conversations/pinned/${id}`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: conversationPinRequestDTO,
-      },
-      options,
-    );
-  };
-  /**
-   * @summary Get all conversations
-   */
-  const conversationControllerGetListConversations = (
-    params?: ConversationControllerGetListConversationsParams,
-    options?: SecondParameter<
-      typeof customInstance<ListConversationResponseDTO>
-    >,
-  ) => {
-    return customInstance<ListConversationResponseDTO>(
-      { url: `/api/v1/conversations`, method: "GET", params },
-      options,
-    );
-  };
-  /**
-   * @summary Create a conversation
-   */
-  const conversationControllerCreateConversation = (
-    conversationCreateRequestDTO: ConversationCreateRequestDTO,
-    options?: SecondParameter<typeof customInstance<ConversationResponseDTO>>,
-  ) => {
-    return customInstance<ConversationResponseDTO>(
-      {
-        url: `/api/v1/conversations`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: conversationCreateRequestDTO,
-      },
-      options,
-    );
-  };
-  /**
-   * @summary Delete a conversation
-   */
-  const conversationControllerDeleteConversation = (
-    id: string,
-    options?: SecondParameter<typeof customInstance<SuccessResponse>>,
-  ) => {
-    return customInstance<SuccessResponse>(
-      { url: `/api/v1/conversations/${id}`, method: "DELETE" },
-      options,
-    );
-  };
-  /**
-   * @summary Get a conversation
-   */
-  const conversationControllerGetConversation = (
-    id: string,
-    options?: SecondParameter<typeof customInstance<ConversationResponseDTO>>,
-  ) => {
-    return customInstance<ConversationResponseDTO>(
-      { url: `/api/v1/conversations/${id}`, method: "GET" },
-      options,
-    );
-  };
-  return {
-    conversationControllerGetPinnedConversations,
-    conversationControllerPinConversation,
-    conversationControllerGetListConversations,
-    conversationControllerCreateConversation,
-    conversationControllerDeleteConversation,
-    conversationControllerGetConversation,
-  };
+/**
+ * @summary Get all pinned conversations
+ */
+export const conversationControllerGetPinnedConversations = (
+  params?: ConversationControllerGetPinnedConversationsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<ListConversationResponseDTO>(
+    { url: `/api/v1/conversations/pinned`, method: "GET", params, signal },
+    options
+  );
 };
-export type ConversationControllerGetPinnedConversationsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getConversations
-      >["conversationControllerGetPinnedConversations"]
-    >
-  >
+
+export const getConversationControllerGetPinnedConversationsQueryKey = (
+  params?: ConversationControllerGetPinnedConversationsParams
+) => {
+  return [`/api/v1/conversations/pinned`, ...(params ? [params] : [])] as const;
+};
+
+export const getConversationControllerGetPinnedConversationsQueryOptions = <
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetPinnedConversations>
+  >,
+  TError = unknown,
+>(
+  params?: ConversationControllerGetPinnedConversationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof conversationControllerGetPinnedConversations>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getConversationControllerGetPinnedConversationsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof conversationControllerGetPinnedConversations>>
+  > = ({ signal }) =>
+    conversationControllerGetPinnedConversations(
+      params,
+      requestOptions,
+      signal
+    );
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof conversationControllerGetPinnedConversations>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ConversationControllerGetPinnedConversationsQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof conversationControllerGetPinnedConversations>>
+  >;
+export type ConversationControllerGetPinnedConversationsQueryError = unknown;
+
+export function useConversationControllerGetPinnedConversations<
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetPinnedConversations>
+  >,
+  TError = unknown,
+>(
+  params: undefined | ConversationControllerGetPinnedConversationsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof conversationControllerGetPinnedConversations>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<
+            ReturnType<typeof conversationControllerGetPinnedConversations>
+          >,
+          TError,
+          Awaited<
+            ReturnType<typeof conversationControllerGetPinnedConversations>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useConversationControllerGetPinnedConversations<
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetPinnedConversations>
+  >,
+  TError = unknown,
+>(
+  params?: ConversationControllerGetPinnedConversationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof conversationControllerGetPinnedConversations>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<
+            ReturnType<typeof conversationControllerGetPinnedConversations>
+          >,
+          TError,
+          Awaited<
+            ReturnType<typeof conversationControllerGetPinnedConversations>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useConversationControllerGetPinnedConversations<
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetPinnedConversations>
+  >,
+  TError = unknown,
+>(
+  _params?: ConversationControllerGetPinnedConversationsParams,
+  _options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof conversationControllerGetPinnedConversations>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  _queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Get all pinned conversations
+ */
+// eslint-disable-next-line no-redeclare, @typescript-eslint/no-redeclare
+export function useConversationControllerGetPinnedConversations<
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetPinnedConversations>
+  >,
+  TError = unknown,
+>(
+  params?: ConversationControllerGetPinnedConversationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof conversationControllerGetPinnedConversations>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getConversationControllerGetPinnedConversationsQueryOptions(
+      params,
+      options
+    );
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Pin/unpin a conversation
+ */
+export const conversationControllerPinConversation = (
+  id: string,
+  conversationPinRequestDTO: ConversationPinRequestDTO,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<SuccessResponse>(
+    {
+      url: `/api/v1/conversations/pinned/${id}`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: conversationPinRequestDTO,
+      signal,
+    },
+    options
+  );
+};
+
+export const getConversationControllerPinConversationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof conversationControllerPinConversation>>,
+    TError,
+    { id: string; data: ConversationPinRequestDTO },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof conversationControllerPinConversation>>,
+  TError,
+  { id: string; data: ConversationPinRequestDTO },
+  TContext
+> => {
+  const mutationKey = ["conversationControllerPinConversation"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof conversationControllerPinConversation>>,
+    { id: string; data: ConversationPinRequestDTO }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return conversationControllerPinConversation(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ConversationControllerPinConversationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof conversationControllerPinConversation>>
 >;
-export type ConversationControllerPinConversationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getConversations
-      >["conversationControllerPinConversation"]
-    >
-  >
+export type ConversationControllerPinConversationMutationBody =
+  ConversationPinRequestDTO;
+export type ConversationControllerPinConversationMutationError = unknown;
+
+/**
+ * @summary Pin/unpin a conversation
+ */
+export const useConversationControllerPinConversation = <
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof conversationControllerPinConversation>>,
+      TError,
+      { id: string; data: ConversationPinRequestDTO },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof conversationControllerPinConversation>>,
+  TError,
+  { id: string; data: ConversationPinRequestDTO },
+  TContext
+> => {
+  const mutationOptions =
+    getConversationControllerPinConversationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+/**
+ * @summary Get all conversations
+ */
+export const conversationControllerGetListConversations = (
+  params?: ConversationControllerGetListConversationsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<ListConversationResponseDTO>(
+    { url: `/api/v1/conversations`, method: "GET", params, signal },
+    options
+  );
+};
+
+export const getConversationControllerGetListConversationsQueryKey = (
+  params?: ConversationControllerGetListConversationsParams
+) => {
+  return [`/api/v1/conversations`, ...(params ? [params] : [])] as const;
+};
+
+export const getConversationControllerGetListConversationsQueryOptions = <
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetListConversations>
+  >,
+  TError = unknown,
+>(
+  params?: ConversationControllerGetListConversationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetListConversations>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getConversationControllerGetListConversationsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof conversationControllerGetListConversations>>
+  > = ({ signal }) =>
+    conversationControllerGetListConversations(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof conversationControllerGetListConversations>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ConversationControllerGetListConversationsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof conversationControllerGetListConversations>>
 >;
-export type ConversationControllerGetListConversationsResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getConversations
-      >["conversationControllerGetListConversations"]
-    >
-  >
+export type ConversationControllerGetListConversationsQueryError = unknown;
+
+export function useConversationControllerGetListConversations<
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetListConversations>
+  >,
+  TError = unknown,
+>(
+  _params: undefined | ConversationControllerGetListConversationsParams,
+  _options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetListConversations>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<
+            ReturnType<typeof conversationControllerGetListConversations>
+          >,
+          TError,
+          Awaited<ReturnType<typeof conversationControllerGetListConversations>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  _queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+// eslint-disable-next-line no-redeclare
+export function useConversationControllerGetListConversations<
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetListConversations>
+  >,
+  TError = unknown,
+>(
+  _params?: ConversationControllerGetListConversationsParams,
+  _options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetListConversations>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<
+            ReturnType<typeof conversationControllerGetListConversations>
+          >,
+          TError,
+          Awaited<ReturnType<typeof conversationControllerGetListConversations>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  _queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+// eslint-disable-next-line no-redeclare
+export function useConversationControllerGetListConversations<
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetListConversations>
+  >,
+  TError = unknown,
+>(
+  _params?: ConversationControllerGetListConversationsParams,
+  _options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetListConversations>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  _queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Get all conversations
+ */
+
+// eslint-disable-next-line no-redeclare
+export function useConversationControllerGetListConversations<
+  TData = Awaited<
+    ReturnType<typeof conversationControllerGetListConversations>
+  >,
+  TError = unknown,
+>(
+  params?: ConversationControllerGetListConversationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetListConversations>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getConversationControllerGetListConversationsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Create a conversation
+ */
+export const conversationControllerCreateConversation = (
+  conversationCreateRequestDTO: ConversationCreateRequestDTO,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<ConversationResponseDTO>(
+    {
+      url: `/api/v1/conversations`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: conversationCreateRequestDTO,
+      signal,
+    },
+    options
+  );
+};
+
+export const getConversationControllerCreateConversationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof conversationControllerCreateConversation>>,
+    TError,
+    { data: ConversationCreateRequestDTO },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof conversationControllerCreateConversation>>,
+  TError,
+  { data: ConversationCreateRequestDTO },
+  TContext
+> => {
+  const mutationKey = ["conversationControllerCreateConversation"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof conversationControllerCreateConversation>>,
+    { data: ConversationCreateRequestDTO }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return conversationControllerCreateConversation(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ConversationControllerCreateConversationMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof conversationControllerCreateConversation>>
+  >;
+export type ConversationControllerCreateConversationMutationBody =
+  ConversationCreateRequestDTO;
+export type ConversationControllerCreateConversationMutationError = unknown;
+
+/**
+ * @summary Create a conversation
+ */
+export const useConversationControllerCreateConversation = <
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof conversationControllerCreateConversation>>,
+      TError,
+      { data: ConversationCreateRequestDTO },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof conversationControllerCreateConversation>>,
+  TError,
+  { data: ConversationCreateRequestDTO },
+  TContext
+> => {
+  const mutationOptions =
+    getConversationControllerCreateConversationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+/**
+ * @summary Delete a conversation
+ */
+export const conversationControllerDeleteConversation = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>
+) => {
+  return customInstance<SuccessResponse>(
+    { url: `/api/v1/conversations/${id}`, method: "DELETE" },
+    options
+  );
+};
+
+export const getConversationControllerDeleteConversationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof conversationControllerDeleteConversation>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof conversationControllerDeleteConversation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["conversationControllerDeleteConversation"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof conversationControllerDeleteConversation>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return conversationControllerDeleteConversation(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ConversationControllerDeleteConversationMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof conversationControllerDeleteConversation>>
+  >;
+
+export type ConversationControllerDeleteConversationMutationError = unknown;
+
+/**
+ * @summary Delete a conversation
+ */
+export const useConversationControllerDeleteConversation = <
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof conversationControllerDeleteConversation>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof conversationControllerDeleteConversation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions =
+    getConversationControllerDeleteConversationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+/**
+ * @summary Get a conversation
+ */
+export const conversationControllerGetConversation = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<ConversationResponseDTO>(
+    { url: `/api/v1/conversations/${id}`, method: "GET", signal },
+    options
+  );
+};
+
+export const getConversationControllerGetConversationQueryKey = (
+  id?: string
+) => {
+  return [`/api/v1/conversations/${id}`] as const;
+};
+
+export const getConversationControllerGetConversationQueryOptions = <
+  TData = Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getConversationControllerGetConversationQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof conversationControllerGetConversation>>
+  > = ({ signal }) =>
+    conversationControllerGetConversation(id, requestOptions, signal);
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ConversationControllerGetConversationQueryResult = NonNullable<
+  Awaited<ReturnType<typeof conversationControllerGetConversation>>
 >;
-export type ConversationControllerCreateConversationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getConversations
-      >["conversationControllerCreateConversation"]
-    >
-  >
->;
-export type ConversationControllerDeleteConversationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getConversations
-      >["conversationControllerDeleteConversation"]
-    >
-  >
->;
-export type ConversationControllerGetConversationResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getConversations
-      >["conversationControllerGetConversation"]
-    >
-  >
->;
+export type ConversationControllerGetConversationQueryError = unknown;
+
+export function useConversationControllerGetConversation<
+  TData = Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+  TError = unknown,
+>(
+  _id: string,
+  _options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+          TError,
+          Awaited<ReturnType<typeof conversationControllerGetConversation>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  _queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+// eslint-disable-next-line no-redeclare
+export function useConversationControllerGetConversation<
+  TData = Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+  TError = unknown,
+>(
+  _id: string,
+  _options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+          TError,
+          Awaited<ReturnType<typeof conversationControllerGetConversation>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  _queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+// eslint-disable-next-line no-redeclare
+export function useConversationControllerGetConversation<
+  TData = Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+  TError = unknown,
+>(
+  _id: string,
+  _options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  _queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Get a conversation
+ */
+
+// eslint-disable-next-line no-redeclare
+export function useConversationControllerGetConversation<
+  TData = Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof conversationControllerGetConversation>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getConversationControllerGetConversationQueryOptions(
+    id,
+    options
+  );
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
