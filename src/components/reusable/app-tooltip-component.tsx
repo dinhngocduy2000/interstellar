@@ -20,7 +20,7 @@ const AppTooltipComponent = ({
 }: Props) => {
   return (
     <TooltipProvider>
-      <Tooltip>
+      <Tooltip delayDuration={500}>
         <TooltipTrigger asChild className={triggerClassName}>
           {children}
         </TooltipTrigger>

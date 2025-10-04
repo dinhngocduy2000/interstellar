@@ -1,4 +1,5 @@
 import AlertDialogComponent from "@/components/reusable/app-alert-dialog";
+import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import AppDropdownMenu from "@/components/reusable/dropdown-menu";
 import LoadingSpinner from "@/components/reusable/loading-spinner";
 import {
@@ -135,19 +136,21 @@ const ConversationItemComponent = ({ conversation }: Props) => {
     <>
       <SidebarMenuSubButton
         isActive={pathname.includes(conversation.id)}
-        className="w-full justify-between gap-2 py-4"
+        className="w-full justify-between gap-2 py-4 pr-0"
         asChild
       >
         <SidebarMenuSubItem
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          <Link
-            className="flex-1"
-            href={`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`}
-          >
-            {conversation.title}
-          </Link>
+          <AppTooltipComponent content={conversation.title}>
+            <Link
+              className="flex-1 truncate"
+              href={`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`}
+            >
+              {conversation.title}
+            </Link>
+          </AppTooltipComponent>
           <AppDropdownMenu
             disabled={isDeletingConversation || isPinningConversation}
             items={chatMenuItems}
