@@ -1,30 +1,154 @@
+import AlertDialogComponent from "@/components/reusable/app-alert-dialog";
+import AppDropdownMenu from "@/components/reusable/dropdown-menu";
+import LoadingSpinner from "@/components/reusable/loading-spinner";
 import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { Conversation } from "@/lib/interfaces/conversations";
+import { AxiosErrorPayload, IDropdownMenuItem } from "@/lib/interfaces/utils";
+import {
+  useDeleteConversationQuery,
+  usePinConversationMutation,
+} from "@/lib/queries/conversation-query";
+import { cn, getErrorMessage } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { EllipsisVertical, Pin, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 type Props = {
   conversation: Conversation;
 };
 
 const ConversationItemComponent = ({ conversation }: Props) => {
+  const router = useRouter();
   const pathname = usePathname();
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+  const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
+  const { mutateAsync: pinConversation, isPending: isPinningConversation } =
+    usePinConversationMutation({
+      onSuccess: () => {
+        toast.success(
+          `Conversation ${conversation?.is_pinned ? "unpinned" : "pinned"} successfully`,
+        );
+        queryClient.invalidateQueries({
+          queryKey: [CONVERSATIONS_ENDPOINTS.GET, conversation.id],
+        });
+      },
+      onError: (error) => {
+        toast.error(
+          `Failed to pin conversation: ${getErrorMessage(error as AxiosError<AxiosErrorPayload>)}`,
+        );
+      },
+    });
+  const { mutateAsync: deleteConversation, isPending: isDeletingConversation } =
+    useDeleteConversationQuery({
+      onSuccess: () => {
+        toast.success("Conversation deleted successfully");
+        setOpenConfirmDelete(false);
+        queryClient.invalidateQueries({
+          queryKey: [
+            CONVERSATIONS_ENDPOINTS.LIST,
+            {
+              page: 1,
+              limit: 10,
+            },
+          ],
+        });
+        if (pathname.includes(conversation.id)) {
+          router.push(ROUTE_PATH.HOME);
+        }
+      },
+      onError: (error) => {
+        toast.error(
+          `Failed to delete conversation: ${getErrorMessage(error as AxiosError<AxiosErrorPayload>)}`,
+        );
+      },
+    });
+  const chatMenuItems: IDropdownMenuItem[] = [
+    {
+      label: (
+        <div className="flex gap-2 items-center">
+          <Pin
+            className={cn(
+              conversation?.is_pinned ? "fill-primary" : "fill-none",
+            )}
+          />
+          Pin
+        </div>
+      ),
+      onClick: async () => {
+        await pinConversation({
+          conversationID: conversation.id,
+          conversationPinRequestDTO: {
+            is_pinned: !conversation?.is_pinned,
+          },
+        });
+      },
+    },
+    {
+      label: (
+        <div className="flex gap-2 items-center">
+          <Trash2 />
+          Delete
+        </div>
+      ),
+      onClick: () => setOpenConfirmDelete(true),
+    },
+  ];
+  const handleConfirmDeleteConversation = async () => {
+    await deleteConversation(conversation.id);
+  };
   return (
-    <SidebarMenuSubItem>
-      <SidebarMenuSubButton
-        isActive={pathname.includes(conversation.id)}
-        asChild
+    <>
+      <SidebarMenuSubItem
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
       >
-        <Link href={`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`}>
-          <span>{conversation.title}</span>
-        </Link>
-      </SidebarMenuSubButton>
-    </SidebarMenuSubItem>
+        <SidebarMenuSubButton
+          isActive={pathname.includes(conversation.id)}
+          className="w-full justify-between gap-2 py-5"
+        >
+          <>
+            <Link href={`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`}>
+              {conversation.title}
+            </Link>
+            <AppDropdownMenu
+              disabled={isDeletingConversation || isPinningConversation}
+              items={chatMenuItems}
+              contentAlign="start"
+              dropdownTriggerClassName={cn(
+                "w-fit !px-2 bg-transparent border-none hover:bg-gray-700 data-[state=open]:bg-gray-700",
+                isHovering ? "opacity-100" : "opacity-0",
+              )}
+              trigger={
+                isDeletingConversation ? (
+                  <LoadingSpinner />
+                ) : (
+                  <EllipsisVertical />
+                )
+              }
+            />
+          </>
+        </SidebarMenuSubButton>
+      </SidebarMenuSubItem>
+      <AlertDialogComponent
+        open={openConfirmDelete}
+        text="Are you sure you want to delete this conversation?"
+        setOpen={setOpenConfirmDelete}
+        loading={isDeletingConversation}
+        dialogTrigger={undefined}
+        title={`Delete conversation: <${conversation?.title}>`}
+        onConfirm={handleConfirmDeleteConversation}
+      />
+    </>
   );
 };
 

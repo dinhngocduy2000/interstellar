@@ -28,20 +28,16 @@ const ListConversationComponent = () => {
     return <NoDataComponent />;
   }
   return (
-    <>
-      {
-        <CollapsibleContent>
-          <SidebarMenuSub>
-            {data?.data.map((conversation) => (
-              <ConversationItemComponent
-                conversation={conversation}
-                key={conversation.id}
-              />
-            ))}
-          </SidebarMenuSub>
-        </CollapsibleContent>
-      }
-    </>
+    <CollapsibleContent>
+      <SidebarMenuSub className="pr-0">
+        {data?.data.map((conversation) => (
+          <ConversationItemComponent
+            conversation={conversation}
+            key={conversation.id}
+          />
+        ))}
+      </SidebarMenuSub>
+    </CollapsibleContent>
   );
 };
 
