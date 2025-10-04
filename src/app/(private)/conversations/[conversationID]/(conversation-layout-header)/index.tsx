@@ -7,7 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
-import { AxiosErrorPayload, IDropdownMenuItem } from "@/lib/interfaces/utils";
+import { Conversation } from "@/lib/interfaces/conversations";
+import {
+  AxiosErrorPayload,
+  IDropdownMenuItem,
+  IResponseDataWithPagination,
+} from "@/lib/interfaces/utils";
 import {
   useDeleteConversationQuery,
   useGetConversationDetailQuery,
@@ -47,6 +52,27 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
         queryClient.invalidateQueries({
           queryKey: [CONVERSATIONS_ENDPOINTS.GET, conversationID],
         });
+        queryClient.setQueryData(
+          [CONVERSATIONS_ENDPOINTS.LIST, { page: 1, limit: 10 }],
+          (
+            oldData: IResponseDataWithPagination<Conversation> | undefined,
+          ): IResponseDataWithPagination<Conversation> | undefined => {
+            return {
+              ...oldData,
+              data:
+                oldData?.data.map((conversationItem) => {
+                  if (conversationID !== conversationItem.id) {
+                    return conversationItem;
+                  }
+                  return {
+                    ...conversationItem,
+                    is_pinned: !conversation?.is_pinned,
+                  };
+                }) ?? [],
+              total: oldData?.total ?? 0,
+            };
+          },
+        );
       },
       onError: (error) => {
         toast.error(
