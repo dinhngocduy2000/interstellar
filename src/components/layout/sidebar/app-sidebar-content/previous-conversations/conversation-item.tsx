@@ -8,7 +8,11 @@ import {
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { Conversation } from "@/lib/interfaces/conversations";
-import { AxiosErrorPayload, IDropdownMenuItem } from "@/lib/interfaces/utils";
+import {
+  AxiosErrorPayload,
+  IDropdownMenuItem,
+  IResponseDataWithPagination,
+} from "@/lib/interfaces/utils";
 import {
   useDeleteConversationQuery,
   usePinConversationMutation,
@@ -41,6 +45,27 @@ const ConversationItemComponent = ({ conversation }: Props) => {
         queryClient.invalidateQueries({
           queryKey: [CONVERSATIONS_ENDPOINTS.GET, conversation.id],
         });
+        queryClient.setQueryData(
+          [CONVERSATIONS_ENDPOINTS.LIST, { page: 1, limit: 10 }],
+          (
+            oldData: IResponseDataWithPagination<Conversation> | undefined,
+          ): IResponseDataWithPagination<Conversation> | undefined => {
+            return {
+              ...oldData,
+              data:
+                oldData?.data.map((conversationItem) => {
+                  if (conversation.id !== conversationItem.id) {
+                    return conversationItem;
+                  }
+                  return {
+                    ...conversationItem,
+                    is_pinned: !conversation?.is_pinned,
+                  };
+                }) ?? [],
+              total: oldData?.total ?? 0,
+            };
+          },
+        );
       },
       onError: (error) => {
         toast.error(
@@ -108,37 +133,36 @@ const ConversationItemComponent = ({ conversation }: Props) => {
   };
   return (
     <>
-      <SidebarMenuSubItem
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
+      <SidebarMenuSubButton
+        isActive={pathname.includes(conversation.id)}
+        className="w-full justify-between gap-2 py-4"
+        asChild
       >
-        <SidebarMenuSubButton
-          isActive={pathname.includes(conversation.id)}
-          className="w-full justify-between gap-2 py-5"
+        <SidebarMenuSubItem
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
         >
-          <>
-            <Link href={`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`}>
-              {conversation.title}
-            </Link>
-            <AppDropdownMenu
-              disabled={isDeletingConversation || isPinningConversation}
-              items={chatMenuItems}
-              contentAlign="start"
-              dropdownTriggerClassName={cn(
-                "w-fit !px-2 bg-transparent border-none hover:bg-gray-700 data-[state=open]:bg-gray-700",
-                isHovering ? "opacity-100" : "opacity-0",
-              )}
-              trigger={
-                isDeletingConversation ? (
-                  <LoadingSpinner />
-                ) : (
-                  <EllipsisVertical />
-                )
-              }
-            />
-          </>
-        </SidebarMenuSubButton>
-      </SidebarMenuSubItem>
+          <Link
+            className="flex-1"
+            href={`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`}
+          >
+            {conversation.title}
+          </Link>
+          <AppDropdownMenu
+            disabled={isDeletingConversation || isPinningConversation}
+            items={chatMenuItems}
+            contentAlign="start"
+            dropdownTriggerClassName={cn(
+              "w-fit !px-2 bg-transparent border-none hover:bg-gray-700 data-[state=open]:bg-gray-700",
+              isHovering ? "opacity-100" : "opacity-0",
+            )}
+            trigger={
+              isDeletingConversation ? <LoadingSpinner /> : <EllipsisVertical />
+            }
+          />
+        </SidebarMenuSubItem>
+      </SidebarMenuSubButton>
+
       <AlertDialogComponent
         open={openConfirmDelete}
         text="Are you sure you want to delete this conversation?"
