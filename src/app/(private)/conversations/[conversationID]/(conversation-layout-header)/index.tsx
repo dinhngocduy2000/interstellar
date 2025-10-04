@@ -1,4 +1,5 @@
 "use client";
+import AlertDialogComponent from "@/components/reusable/app-alert-dialog";
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import AppDropdownMenu from "@/components/reusable/dropdown-menu";
 import LoadingSpinner from "@/components/reusable/loading-spinner";
@@ -18,7 +19,7 @@ import { AxiosError } from "axios";
 import { EllipsisVertical, PenSquare, Pin, Share, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -28,6 +29,7 @@ type Props = {
 const ConversationLayoutHeader = ({ conversationID }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
+  const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const { data: conversation, isFetching } = useGetConversationDetailQuery({
     queryKey: [],
@@ -56,6 +58,7 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
     useDeleteConversationQuery({
       onSuccess: () => {
         toast.success("Conversation deleted successfully");
+        setOpenConfirmDelete(false);
         queryClient.invalidateQueries({
           queryKey: [
             CONVERSATIONS_ENDPOINTS.LIST,
@@ -102,9 +105,7 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
           Delete
         </div>
       ),
-      onClick: async () => {
-        await deleteConversation(conversationID);
-      },
+      onClick: () => setOpenConfirmDelete(true),
     },
   ];
   const handleShareConversation = async () => {
@@ -119,6 +120,10 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
       toast.error("Failed to copy link to clipboard");
     }
   };
+
+  const handleConfirmDeleteConversation = async () => {
+    await deleteConversation(conversationID);
+  };
   if (isFetching) {
     return (
       <div className="w-full flex gap-4 justify-between px-4 pt-2">
@@ -128,33 +133,48 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
   }
 
   return (
-    <div className="w-full flex gap-4 justify-between px-4 pt-2">
-      <p className="text-lg font-semibold">
-        {conversation?.title ?? "Private chat"}
-      </p>
-      <div className="flex gap-2">
-        <AppTooltipComponent content={"More Actions"}>
-          <AppDropdownMenu
-            disabled={isDeletingConversation || isPinningConversation}
-            items={chatMenuItems}
-            trigger={
-              isDeletingConversation ? <LoadingSpinner /> : <EllipsisVertical />
-            }
-          />
-        </AppTooltipComponent>
-        <Button onClick={handleShareConversation} variant={"outline"}>
-          <Share />
-          Share
-        </Button>
-        <AppTooltipComponent content={"New Chat"}>
-          <Button variant={"ghost"}>
-            <Link href={ROUTE_PATH.HOME}>
-              <PenSquare className="size-5" height={25} width={25} />
-            </Link>
+    <>
+      <div className="w-full flex gap-4 justify-between px-4 pt-2">
+        <p className="text-lg font-semibold">
+          {conversation?.title ?? "Private chat"}
+        </p>
+        <div className="flex gap-2">
+          <AppTooltipComponent content={"More Actions"}>
+            <AppDropdownMenu
+              disabled={isDeletingConversation || isPinningConversation}
+              items={chatMenuItems}
+              trigger={
+                isDeletingConversation ? (
+                  <LoadingSpinner />
+                ) : (
+                  <EllipsisVertical />
+                )
+              }
+            />
+          </AppTooltipComponent>
+          <Button onClick={handleShareConversation} variant={"outline"}>
+            <Share />
+            Share
           </Button>
-        </AppTooltipComponent>
+          <AppTooltipComponent content={"New Chat"}>
+            <Button variant={"ghost"}>
+              <Link href={ROUTE_PATH.HOME}>
+                <PenSquare className="size-5" height={25} width={25} />
+              </Link>
+            </Button>
+          </AppTooltipComponent>
+        </div>
       </div>
-    </div>
+      <AlertDialogComponent
+        open={openConfirmDelete}
+        text="Are you sure you want to delete this conversation?"
+        setOpen={setOpenConfirmDelete}
+        loading={isDeletingConversation}
+        dialogTrigger={undefined}
+        title={`Delete conversation: <${conversation?.title}>`}
+        onConfirm={handleConfirmDeleteConversation}
+      />
+    </>
   );
 };
 
