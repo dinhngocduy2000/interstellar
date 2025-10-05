@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   Conversation,
   ConversationPinRequestDTO,
@@ -26,13 +31,28 @@ export const useConversationListQuery = ({
   enabled?: boolean;
 }) => {
   return useQuery({
-    queryKey: [
-      CONVERSATIONS_ENDPOINTS.LIST,
-      { ...params, title: undefined },
-      ...queryKey,
-    ],
+    queryKey: [CONVERSATIONS_ENDPOINTS.LIST, params, ...queryKey],
     queryFn: () => getListConversations(params),
     enabled: enabled,
+  });
+};
+
+export const useConversationListInfiniteQuery = ({
+  params,
+  queryKey,
+}: ReactQueryHookParams<IConversationQuery>) => {
+  return useInfiniteQuery({
+    queryKey: [CONVERSATIONS_ENDPOINTS.LIST, params, ...queryKey],
+    queryFn: ({ signal, pageParam }) =>
+      getListConversations({ ...params, page: pageParam }, signal),
+    initialPageParam: 1,
+    getNextPageParam: (currentPageData, _, currentPageParams) => {
+      return currentPageParams < Math.ceil(currentPageData.total / params.limit)
+        ? currentPageParams + 1
+        : undefined;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 5000,
   });
 };
 

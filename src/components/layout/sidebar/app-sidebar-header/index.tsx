@@ -6,7 +6,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import React from "react";
 
 const AppSidebarHeaderComponent = () => {
   const { open } = useSidebar();

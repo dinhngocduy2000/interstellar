@@ -13,7 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { Clipboard, ThumbsDown, ThumbsUp } from "lucide-react";
 import { usePathname } from "next/navigation";
-import React from "react";
+
 import { toast } from "react-toastify";
 
 type Props = {

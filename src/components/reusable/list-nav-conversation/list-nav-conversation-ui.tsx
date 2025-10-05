@@ -2,7 +2,7 @@ import ConversationItemComponent from "@/components/reusable/list-nav-conversati
 import { CollapsibleContent } from "@/components/ui/collapsible";
 import { SidebarMenuSub } from "@/components/ui/sidebar";
 import { Conversation } from "@/lib/interfaces/conversations";
-import React from "react";
+
 import NoDataComponent from "../no-data-component";
 import { getErrorMessage } from "@/lib/utils";
 import { AxiosError } from "axios";
