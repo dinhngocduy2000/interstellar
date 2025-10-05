@@ -32,7 +32,7 @@ const ListConversationHistory = () => {
     isFetchingData: isFetchingNextPage,
   });
   return (
-    <div className="flex flex-col w-full max-h-full overflow-auto">
+    <div className="flex flex-col w-full max-h-full overflow-auto pr-2">
       {listConversations?.pages.map((page, index) => (
         <Fragment key={index}>
           {page.data.map((conversation) => (

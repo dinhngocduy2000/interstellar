@@ -51,7 +51,9 @@ const AlertDialogComponent = ({
         </AlertDialogHeader>
         {children}
         <AlertDialogFooter>
-          <AlertDialogCancel ref={alertCancelRef}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel type="button" ref={alertCancelRef}>
+            Cancel
+          </AlertDialogCancel>
           <Button
             className="max-h-full"
             disabled={loading}

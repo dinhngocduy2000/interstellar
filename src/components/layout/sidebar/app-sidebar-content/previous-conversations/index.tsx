@@ -24,7 +24,7 @@ const PreviousConversations = async () => {
         <CollapsibleTrigger asChild>
           <SidebarMenuButton className="hover:cursor-pointer">
             <Clock />
-            <Link href={ROUTE_PATH.HISTORY}>History</Link>
+            <Link href={`${ROUTE_PATH.HISTORY}?search=${""}`}>History</Link>
             <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
           </SidebarMenuButton>
         </CollapsibleTrigger>
