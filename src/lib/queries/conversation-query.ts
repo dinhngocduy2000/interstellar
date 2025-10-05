@@ -21,7 +21,10 @@ type ICreateConversationMutation = Omit<IMutation, "onSuccess"> & {
 export const useConversationListQuery = ({
   queryKey,
   params,
-}: ReactQueryHookParams<IConversationQuery>) => {
+  enabled,
+}: ReactQueryHookParams<IConversationQuery> & {
+  enabled?: boolean;
+}) => {
   return useQuery({
     queryKey: [
       CONVERSATIONS_ENDPOINTS.LIST,
@@ -29,6 +32,7 @@ export const useConversationListQuery = ({
       ...queryKey,
     ],
     queryFn: () => getListConversations(params),
+    enabled: enabled,
   });
 };
 
@@ -113,3 +117,23 @@ export const usePinConversationMutation = ({
       onMutate?.();
     },
   });
+
+export const useGetPinnedConversationsQuery = ({
+  queryKey,
+  params,
+  enabled,
+}: ReactQueryHookParams<IConversationQuery> & {
+  enabled?: boolean;
+}) => {
+  return useQuery({
+    queryKey: [CONVERSATIONS_ENDPOINTS.PIN, params, ...queryKey],
+    queryFn: async ({ signal }) =>
+      await getConversations().conversationControllerGetPinnedConversations(
+        params,
+        {
+          signal: signal,
+        },
+      ),
+    enabled: enabled,
+  });
+};

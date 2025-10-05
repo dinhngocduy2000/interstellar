@@ -1,18 +1,19 @@
 "use client";
-import { useConversationListQuery } from "@/lib/queries/conversation-query";
+import { useGetPinnedConversationsQuery } from "@/lib/queries/conversation-query";
 import React from "react";
 import ListNavConversationUI from "@/components/reusable/list-nav-conversation/list-nav-conversation-ui";
 
-const ListConversationComponent = () => {
-  const { data, error } = useConversationListQuery({
+const ListPinnedConversationComponent = () => {
+  const { data, error } = useGetPinnedConversationsQuery({
     params: {
       page: 1,
       limit: 10,
     },
+
     queryKey: [],
   });
 
   return <ListNavConversationUI listConversation={data?.data} error={error} />;
 };
 
-export default ListConversationComponent;
+export default ListPinnedConversationComponent;

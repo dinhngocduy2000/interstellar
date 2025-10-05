@@ -13,7 +13,9 @@ export const customInstance = <T>(
     ...config,
     ...options,
     cancelToken: source.token,
-  }).then(({ data }) => data);
+  }).then((data) => {
+    return data;
+  }) as Promise<T>;
 
   // @ts-expect-error test
   promise.cancel = () => {
