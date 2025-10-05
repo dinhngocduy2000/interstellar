@@ -1,7 +1,7 @@
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { ChevronRight, Pin } from "lucide-react";
-import React from "react";
+
 import { getQueryClient } from "@/lib/queries/query-client";
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";

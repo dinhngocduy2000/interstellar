@@ -1,4 +1,3 @@
-import React from "react";
 import { NavUser } from "./nav-user";
 import { ThemeToggle } from "./theme-toggle";
 import { getQueryClient } from "@/lib/queries/query-client";

@@ -2,7 +2,7 @@ import ChatTypingComponent from "@/components/reusable/chat-typing-component";
 import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { IConversationMessage } from "@/lib/interfaces/message";
 import { cn, isStringUUID } from "@/lib/utils";
-import React from "react";
+
 import MessageItemActionComponent from "./message-item-action";
 
 type Props = {

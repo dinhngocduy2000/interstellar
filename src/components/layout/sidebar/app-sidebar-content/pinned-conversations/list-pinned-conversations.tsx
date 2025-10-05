@@ -1,6 +1,6 @@
 "use client";
 import { useGetPinnedConversationsQuery } from "@/lib/queries/conversation-query";
-import React from "react";
+
 import ListNavConversationUI from "@/components/reusable/list-nav-conversation/list-nav-conversation-ui";
 
 const ListPinnedConversationComponent = () => {

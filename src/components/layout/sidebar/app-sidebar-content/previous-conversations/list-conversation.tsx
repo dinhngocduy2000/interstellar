@@ -1,6 +1,6 @@
 "use client";
 import { useConversationListQuery } from "@/lib/queries/conversation-query";
-import React from "react";
+
 import ListNavConversationUI from "@/components/reusable/list-nav-conversation/list-nav-conversation-ui";
 
 const ListConversationComponent = () => {

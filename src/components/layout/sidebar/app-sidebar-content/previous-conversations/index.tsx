@@ -1,7 +1,7 @@
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { ChevronRight, Clock } from "lucide-react";
-import React from "react";
+
 import ListConversationComponent from "./list-conversation";
 import { getQueryClient } from "@/lib/queries/query-client";
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
