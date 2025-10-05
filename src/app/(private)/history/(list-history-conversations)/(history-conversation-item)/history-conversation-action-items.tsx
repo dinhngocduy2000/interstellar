@@ -1,27 +1,33 @@
 import AlertDialogComponent from "@/components/reusable/app-alert-dialog";
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import { Button } from "@/components/ui/button";
+import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { Conversation } from "@/lib/interfaces/conversations";
 import { AxiosErrorPayload } from "@/lib/interfaces/utils";
 import { useDeleteConversationQuery } from "@/lib/queries/conversation-query";
 import { getErrorMessage } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { ArrowUpRightFromSquareIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 type Props = {
   conversation: Conversation;
 };
 const HistoryConversationActionItems = ({ conversation }: Props) => {
+  const queryClient = useQueryClient();
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
   const { mutateAsync: deleteConversation, isPending: isDeletingConversation } =
     useDeleteConversationQuery({
       onSuccess: () => {
         toast.success("Conversation deleted successfully");
         setOpenConfirmDelete(false);
+        queryClient.invalidateQueries({
+          queryKey: [CONVERSATIONS_ENDPOINTS.LIST],
+        });
       },
       onError: (error) => {
         toast.error(
