@@ -8,7 +8,7 @@ const HistoryPage = async () => {
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
     queryKey: [CONVERSATIONS_ENDPOINTS.LIST],
-    queryFn: () => getListConversations({ page: 1, limit: 10, title: "" }),
+    queryFn: () => getListConversations({ page: 1, limit: 20, title: "" }),
   });
   return (
     <div className="h-full md:w-4xl md:max-w-4xl max-h-full max-w-full mx-auto p-4 flex flex-col gap-4">
