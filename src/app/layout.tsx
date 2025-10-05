@@ -41,12 +41,7 @@ export default function RootLayout({
       >
         <main className="flex h-screen w-screen items-center justify-center bg-muted">
           <ReactQueryProviders>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <ToastProvider>{children}</ToastProvider>
             </ThemeProvider>
           </ReactQueryProviders>
