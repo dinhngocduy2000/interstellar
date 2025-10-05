@@ -1,3 +1,4 @@
+"use client";
 import { PropsWithChildren, ReactNode, useRef } from "react";
 import {
   AlertDialog,

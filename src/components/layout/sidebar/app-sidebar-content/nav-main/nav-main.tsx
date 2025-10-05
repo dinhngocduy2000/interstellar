@@ -16,7 +16,6 @@ import {
   SquarePen,
   ClipboardList,
   ArchiveIcon,
-  Pin,
 } from "lucide-react";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 export function NavMain({ children }: PropsWithChildren) {
@@ -33,11 +32,6 @@ export function NavMain({ children }: PropsWithChildren) {
       title: "Calendar",
       url: ROUTE_PATH.CALENDAR,
       icon: BookOpen,
-    },
-    {
-      title: "Pinned",
-      url: "#",
-      icon: Pin,
     },
   ];
   const pathname = usePathname();

@@ -1,3 +1,4 @@
+"use client";
 import AlertDialogComponent from "@/components/reusable/app-alert-dialog";
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import AppDropdownMenu from "@/components/reusable/dropdown-menu";

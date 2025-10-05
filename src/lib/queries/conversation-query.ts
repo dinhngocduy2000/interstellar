@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Conversation,
   ConversationPinRequestDTO,
@@ -21,7 +21,10 @@ type ICreateConversationMutation = Omit<IMutation, "onSuccess"> & {
 export const useConversationListQuery = ({
   queryKey,
   params,
-}: ReactQueryHookParams<IConversationQuery>) => {
+  enabled,
+}: ReactQueryHookParams<IConversationQuery> & {
+  enabled?: boolean;
+}) => {
   return useQuery({
     queryKey: [
       CONVERSATIONS_ENDPOINTS.LIST,
@@ -29,6 +32,7 @@ export const useConversationListQuery = ({
       ...queryKey,
     ],
     queryFn: () => getListConversations(params),
+    enabled: enabled,
   });
 };
 
@@ -93,8 +97,9 @@ export const usePinConversationMutation = ({
   onSuccess,
   onError,
   onMutate,
-}: IMutation) =>
-  useMutation({
+}: IMutation) => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: async (params: {
       conversationID: string;
       conversationPinRequestDTO: ConversationPinRequestDTO;
@@ -104,6 +109,15 @@ export const usePinConversationMutation = ({
         params.conversationPinRequestDTO,
       ),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          CONVERSATIONS_ENDPOINTS.PIN,
+          {
+            page: 1,
+            limit: 10,
+          },
+        ],
+      });
       onSuccess?.();
     },
     onError: (error) => {
@@ -113,3 +127,24 @@ export const usePinConversationMutation = ({
       onMutate?.();
     },
   });
+};
+
+export const useGetPinnedConversationsQuery = ({
+  queryKey,
+  params,
+  enabled,
+}: ReactQueryHookParams<IConversationQuery> & {
+  enabled?: boolean;
+}) => {
+  return useQuery({
+    queryKey: [CONVERSATIONS_ENDPOINTS.PIN, params, ...queryKey],
+    queryFn: async ({ signal }) =>
+      await getConversations().conversationControllerGetPinnedConversations(
+        params,
+        {
+          signal: signal,
+        },
+      ),
+    enabled: enabled,
+  });
+};
