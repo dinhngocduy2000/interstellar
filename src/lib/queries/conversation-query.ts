@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Conversation,
   ConversationPinRequestDTO,
@@ -97,8 +97,9 @@ export const usePinConversationMutation = ({
   onSuccess,
   onError,
   onMutate,
-}: IMutation) =>
-  useMutation({
+}: IMutation) => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: async (params: {
       conversationID: string;
       conversationPinRequestDTO: ConversationPinRequestDTO;
@@ -108,6 +109,15 @@ export const usePinConversationMutation = ({
         params.conversationPinRequestDTO,
       ),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          CONVERSATIONS_ENDPOINTS.PIN,
+          {
+            page: 1,
+            limit: 10,
+          },
+        ],
+      });
       onSuccess?.();
     },
     onError: (error) => {
@@ -117,6 +127,7 @@ export const usePinConversationMutation = ({
       onMutate?.();
     },
   });
+};
 
 export const useGetPinnedConversationsQuery = ({
   queryKey,
