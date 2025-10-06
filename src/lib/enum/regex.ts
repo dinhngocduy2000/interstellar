@@ -3,3 +3,7 @@ export const REGEX_PREVENT_ONLY_WHITESPACES = /\S+/;
 
 export const REGEX_PASSWORD =
   /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/;
+
+export const REGEX_NUMBER_FOLLOWED_BY_CHARACTERS =
+  // eslint-disable-next-line no-useless-escape
+  /^[0-9]+[a-zA-Z!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]+$/;
