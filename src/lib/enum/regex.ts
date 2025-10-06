@@ -6,4 +6,4 @@ export const REGEX_PASSWORD =
 
 export const REGEX_NUMBER_FOLLOWED_BY_CHARACTERS =
   // eslint-disable-next-line no-useless-escape
-  /^[0-9]+[a-zA-Z!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]+$/;
+  /^([0-9]+)[a-zA-Z!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]+$/;
