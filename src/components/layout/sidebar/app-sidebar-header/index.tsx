@@ -7,44 +7,15 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
+import { useKeyboardShortcut } from "@/lib/hooks/use-keyboard-shortcut";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 
 const AppSidebarHeaderComponent = ({ children }: PropsWithChildren) => {
   const { open } = useSidebar();
-  const router = useRouter();
-  useEffect(() => {
-    const isMac = /Mac|iPhone|iPod|iPad/i.test(navigator.platform);
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const cmdOrCtrl = isMac ? event.metaKey : event.ctrlKey;
-      // Listen for Ctrl + K
-      if (cmdOrCtrl && event.key.toLowerCase() === "k") {
-        event.preventDefault(); // Prevent default browser behavior
-        router.push(`${ROUTE_PATH.HISTORY}?search=`);
-      }
-
-      if (cmdOrCtrl && event.shiftKey && event.key.toLowerCase() === "j") {
-        event.preventDefault(); // Prevent default browser behavior
-        router.push(`${ROUTE_PATH.HOME}?private=true`);
-      }
-
-      // Listen for Ctrl + J
-      if (cmdOrCtrl && !event.shiftKey && event.key.toLowerCase() === "j") {
-        event.preventDefault(); // Prevent default browser behavior
-        router.push(`${ROUTE_PATH.HOME}`);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
+  useKeyboardShortcut();
   return (
     <>
       <SidebarHeader

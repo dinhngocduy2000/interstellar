@@ -35,7 +35,6 @@ type Props = {
 const ConversationItemComponent = ({ conversation }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [isHovering, setIsHovering] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
   const { mutateAsync: pinConversation, isPending: isPinningConversation } =
@@ -138,15 +137,11 @@ const ConversationItemComponent = ({ conversation }: Props) => {
       <SidebarMenuSubButton
         isActive={pathname.includes(conversation.id)}
         className={cn(
-          "w-full justify-between gap-2 py-4 relative",
-          isHovering ? "pr-0" : "pr-0",
+          "w-full justify-between gap-2 py-4 relative group/conversation",
         )}
         asChild
       >
-        <SidebarMenuSubItem
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-        >
+        <SidebarMenuSubItem>
           <AppTooltipComponent content={conversation.title}>
             <Link
               className="flex-1 truncate"
@@ -160,8 +155,8 @@ const ConversationItemComponent = ({ conversation }: Props) => {
             items={chatMenuItems}
             contentAlign="start"
             dropdownTriggerClassName={cn(
-              "w-fit absolute right-0 !px-2 bg-sidebar border-none hover:bg-gray-700 data-[state=open]:bg-gray-700",
-              isHovering ? "opacity-100" : "opacity-0",
+              "w-fit absolute right-0 !px-2 bg-sidebar border-none hover:bg-gray-700",
+              "data-[state=open]:bg-gray-700 hidden group-hover/conversation:block data-[state=open]:block",
             )}
             trigger={
               isDeletingConversation ? <LoadingSpinner /> : <EllipsisVertical />

@@ -1,14 +1,9 @@
 "use client";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
 import {
   BookOpen,
@@ -18,9 +13,11 @@ import {
   ArchiveIcon,
 } from "lucide-react";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
+import { NavMainItems } from "@/lib/interfaces/utils";
+import NavMainItemComponent from "./nav-main-item";
 export function NavMain({ children }: PropsWithChildren) {
-  const items = [
-    { title: "Ask", url: ROUTE_PATH.HOME, icon: SquarePen },
+  const items: NavMainItems[] = [
+    { title: "Ask", url: ROUTE_PATH.HOME, icon: SquarePen, shortcut: "⌘J" },
     { title: "Tasks", url: ROUTE_PATH.TASK, icon: ClipboardList },
     { title: "Files", url: ROUTE_PATH.FILES, icon: ArchiveIcon },
     {
@@ -34,28 +31,15 @@ export function NavMain({ children }: PropsWithChildren) {
       icon: BookOpen,
     },
   ];
-  const pathname = usePathname();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible key={item.title} asChild className="group/collapsible">
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton
-                  className="hover:cursor-pointer"
-                  tooltip={item.title}
-                  isActive={pathname === item.url}
-                >
-                  {item.icon && <item.icon />}
-                  <Link className=" w-full" href={item.url}>
-                    {item.title}
-                  </Link>
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-            </SidebarMenuItem>
-          </Collapsible>
+        {items.map((item, index) => (
+          <NavMainItemComponent
+            key={item.title + index.toString()}
+            item={item}
+          />
         ))}
         {children}
       </SidebarMenu>
