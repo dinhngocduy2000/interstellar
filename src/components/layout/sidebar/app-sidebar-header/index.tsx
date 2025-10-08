@@ -26,8 +26,14 @@ const AppSidebarHeaderComponent = ({ children }: PropsWithChildren) => {
         event.preventDefault(); // Prevent default browser behavior
         router.push(`${ROUTE_PATH.HISTORY}?search=`);
       }
+
+      if (cmdOrCtrl && event.shiftKey && event.key.toLowerCase() === "j") {
+        event.preventDefault(); // Prevent default browser behavior
+        router.push(`${ROUTE_PATH.HOME}?private=true`);
+      }
+
       // Listen for Ctrl + J
-      if (cmdOrCtrl && event.key.toLowerCase() === "j") {
+      if (cmdOrCtrl && !event.shiftKey && event.key.toLowerCase() === "j") {
         event.preventDefault(); // Prevent default browser behavior
         router.push(`${ROUTE_PATH.HOME}`);
       }
