@@ -7,6 +7,7 @@ import HistoryConversationItem from "./(history-conversation-item)";
 import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ListConversationHistory = () => {
   const params = useSearchParams();
@@ -16,6 +17,8 @@ const ListConversationHistory = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    isLoading,
+    isRefetching,
   } = useConversationListInfiniteQuery({
     queryKey: [],
     params: {
@@ -31,6 +34,15 @@ const ListConversationHistory = () => {
     hasMore: hasNextPage,
     isFetchingData: isFetchingNextPage,
   });
+  if (isLoading || isRefetching) {
+    return (
+      <div className="flex items-center h-full flex-col gap-4">
+        {Array.from({ length: 12 }).map((_, index) => (
+          <Skeleton key={index} className="h-8 w-full" />
+        ))}
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col w-full max-h-full overflow-auto pr-2">
       {listConversations?.pages.map((page, index) => (

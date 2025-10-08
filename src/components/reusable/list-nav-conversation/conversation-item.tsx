@@ -137,7 +137,10 @@ const ConversationItemComponent = ({ conversation }: Props) => {
     <>
       <SidebarMenuSubButton
         isActive={pathname.includes(conversation.id)}
-        className="w-full justify-between gap-2 py-4 pr-0"
+        className={cn(
+          "w-full justify-between gap-2 py-4 relative",
+          isHovering ? "pr-0" : "pr-0",
+        )}
         asChild
       >
         <SidebarMenuSubItem
@@ -157,7 +160,7 @@ const ConversationItemComponent = ({ conversation }: Props) => {
             items={chatMenuItems}
             contentAlign="start"
             dropdownTriggerClassName={cn(
-              "w-fit !px-2 bg-transparent border-none hover:bg-gray-700 data-[state=open]:bg-gray-700",
+              "w-fit absolute right-0 !px-2 bg-sidebar border-none hover:bg-gray-700 data-[state=open]:bg-gray-700",
               isHovering ? "opacity-100" : "opacity-0",
             )}
             trigger={
