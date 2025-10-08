@@ -57,3 +57,10 @@ export interface AxiosErrorPayload {
   error: string;
   statusCode: number;
 }
+
+export type NavMainItems = {
+  title: string;
+  url: string;
+  icon: React.ElementType;
+  shortcut?: string | ReactNode;
+};
