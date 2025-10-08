@@ -17,7 +17,7 @@ const HistoryConversationItem = ({ conversation }: Props) => {
         onClick={() => {
           router.push(`${ROUTE_PATH.CONVERSATIONS}/${conversation.id}`);
         }}
-        className="line-clamp-2 py-3 flex-1"
+        className="line-clamp-2 py-2 flex-1 text-base"
       >
         {conversation.title}
       </p>

@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import {
+  ArrowBigUp,
   Ghost,
   Image,
   Navigation2,
@@ -24,6 +25,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
 import { Conversation } from "@/lib/interfaces/conversations";
+import AppTooltipComponent from "./app-tooltip-component";
 const ChatInputComponent = ({
   handleSendMessage,
   closeSSEConnection,
@@ -172,21 +174,32 @@ const ChatInputComponent = ({
             <Image />
             Create Images
           </Button>
-          <Button
-            className={cn(
-              "rounded-2xl",
-              isPrivate
-                ? "text-[#A08CED] border border-[#A08CED]"
-                : "text-primary",
-            )}
-            variant={"outline"}
-            onClick={() => {
-              router.push(`${isPrivate ? "/" : "?private=true"}`);
-            }}
+          <AppTooltipComponent
+            content={
+              <p>
+                Switch to private chat{" "}
+                <span className="text-xs flex text-gray-500">
+                  ⌘<span>{<ArrowBigUp width={16} height={16} />}</span>K
+                </span>
+              </p>
+            }
           >
-            <Ghost />
-            Private
-          </Button>
+            <Button
+              className={cn(
+                "rounded-2xl",
+                isPrivate
+                  ? "text-[#A08CED] border border-[#A08CED]"
+                  : "text-primary",
+              )}
+              variant={"outline"}
+              onClick={() => {
+                router.push(`${isPrivate ? "/" : "?private=true"}`);
+              }}
+            >
+              <Ghost />
+              Private
+            </Button>
+          </AppTooltipComponent>
         </div>
       )}
     </div>
