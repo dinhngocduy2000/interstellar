@@ -1,4 +1,6 @@
-const FilesPage = () => {
+import React from "react";
+
+const FilesPage = async () => {
   return <div>FilesPage</div>;
 };
 

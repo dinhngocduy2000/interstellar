@@ -3,7 +3,7 @@ import HistoryHeaderComponent from "./(history-header)";
 import ListConversationHistory from "./(list-history-conversations)";
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { getListConversations } from "@/lib/api/conversations";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 
 const HistoryPage = async () => {
   const queryClient = getQueryClient();
