@@ -1,5 +1,5 @@
+import NoDataIcon from "@/assets/svgs/no-data-icon";
 import { cn } from "@/lib/utils";
-import NoDataIcon from "../../assets/svgs/no-data-icon.svg";
 import { PropsWithChildren } from "react";
 interface Props extends PropsWithChildren {
   text?: string;
