@@ -12,7 +12,7 @@ const HistoryPage = async () => {
     queryFn: () => getListConversations({ page: 1, limit: 20, title: "" }),
   });
   return (
-    <div className="h-full md:w-4xl md:max-w-4xl max-h-full max-w-full mx-auto p-4 flex flex-col gap-4">
+    <div className="h-full w-full md:max-w-4xl max-h-full max-w-full mx-auto p-4 flex flex-col gap-4">
       <Suspense>
         <HistoryHeaderComponent />
       </Suspense>
