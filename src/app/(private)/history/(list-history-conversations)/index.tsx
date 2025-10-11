@@ -15,8 +15,8 @@ const ListConversationHistory = () => {
     data: listConversations,
     isFetchingNextPage,
     fetchNextPage,
-    isLoading,
-    isRefetching,
+    isFetching,
+    isFetchedAfterMount,
   } = useConversationListInfiniteQuery({
     queryKey: [],
     params: {
@@ -30,7 +30,7 @@ const ListConversationHistory = () => {
     return listConversations?.pages.flatMap((page) => page.data) ?? [];
   }, [listConversations]);
 
-  if (isLoading || isRefetching) {
+  if (isFetching && !isFetchedAfterMount) {
     return (
       <div className="flex items-center h-full flex-col gap-4">
         {Array.from({ length: 12 }).map((_, index) => (
@@ -40,13 +40,10 @@ const ListConversationHistory = () => {
     );
   }
   return (
-    <div className="flex flex-col w-full h-full max-h-full overflow-auto pr-2">
+    <div className="flex flex-col w-full h-full max-h-full overflow-auto">
       <Virtuoso
         data={flatConversations}
-        style={{
-          height: "100%",
-          width: "100%",
-        }}
+        className="!h-full !w-full !pr-2"
         fixedItemHeight={40}
         endReached={() => {
           fetchNextPage();
