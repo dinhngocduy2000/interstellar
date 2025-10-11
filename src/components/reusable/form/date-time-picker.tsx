@@ -90,7 +90,7 @@ export function DateTimePicker({ field }: DateTimePickerProps) {
             initialFocus
           />
           <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-            <ScrollArea className="w-64 sm:w-auto">
+            <ScrollArea className="w-64 sm:w-auto h-[300px]">
               <div className="flex sm:flex-col p-2">
                 {hours.map((hour) => (
                   <Button
