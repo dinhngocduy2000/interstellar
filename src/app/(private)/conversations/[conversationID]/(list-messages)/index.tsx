@@ -55,6 +55,7 @@ const ListMessageComponent = ({
     isFetchingNextPage,
     isFetching,
     isFetchedAfterMount,
+    hasNextPage,
   } = useGetConversationMessagesInfiniteQuery({
     queryKey: [],
     params: conversationMessagesParams,
@@ -101,6 +102,11 @@ const ListMessageComponent = ({
     isAllowingAutoScrollRef.current = isAtBottom;
   };
 
+  const onFetchPreviousMessages = (atTop: boolean) => {
+    if (!atTop || !hasNextPage || !isFetchedAfterMount) return;
+    fetchNextPage();
+  };
+
   if (isFetching && !isFetchedAfterMount) {
     return (
       <div className="mt-6 h-full w-full flex flex-col gap-4 md:max-w-4xl max-w-full mx-auto">
@@ -136,9 +142,7 @@ const ListMessageComponent = ({
             </div>
           ),
         }}
-        startReached={() => {
-          fetchNextPage();
-        }}
+        atTopStateChange={onFetchPreviousMessages}
         itemContent={(_, message) => (
           <Fragment key={message.id}>
             {message.author === MESSAGE_AUTHOR.USER && (
