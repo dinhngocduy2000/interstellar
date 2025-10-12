@@ -5,7 +5,6 @@ import React, {
   use,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import MessageItem from "./(message-item)/message-item";
@@ -42,7 +41,6 @@ const ListMessageComponent = ({
 }: ListMessageComponentProps) => {
   const { conversationID } = use(params);
   const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
-  const listMessagesRef = useRef<HTMLDivElement | null>(null);
   const conversationMessagesParams: IPagination & { conversationID: string } = {
     conversationID: conversationID,
     page: 1,
@@ -74,6 +72,28 @@ const ListMessageComponent = ({
     [listMessagesData],
   );
 
+  const onHandleScroll = (isAtBottom: boolean) => {
+    setIsAtBottom(isAtBottom);
+    if (!isResponding) {
+      isAllowingAutoScrollRef.current = true;
+      return;
+    }
+    isAllowingAutoScrollRef.current = isAtBottom;
+  };
+
+  const onFetchPreviousMessages = async (atTop: boolean) => {
+    if (!atTop || !hasNextPage || !isFetchedAfterMount) return;
+    await fetchNextPage();
+  };
+
+  const handleScrollToBottom = () => {
+    virtuosoRef.current?.scrollToIndex({
+      index: "LAST",
+      behavior: "auto",
+      offset: 1000,
+    });
+  };
+
   useEffect(() => {
     if (conversationID === "private") {
       const privateMessage = localStorage.getItem(
@@ -100,28 +120,6 @@ const ListMessageComponent = ({
     });
   }, [isFetchedAfterMount]);
 
-  const onHandleScroll = (isAtBottom: boolean) => {
-    setIsAtBottom(isAtBottom);
-    if (!isResponding) {
-      isAllowingAutoScrollRef.current = true;
-      return;
-    }
-    isAllowingAutoScrollRef.current = isAtBottom;
-  };
-
-  const onFetchPreviousMessages = (atTop: boolean) => {
-    if (!atTop || !hasNextPage || !isFetchedAfterMount) return;
-    fetchNextPage();
-  };
-
-  const handleScrollToBottom = () => {
-    virtuosoRef.current?.scrollToIndex({
-      index: "LAST",
-      behavior: "auto",
-      offset: 1000,
-    });
-  };
-
   if (isFetching && !isFetchedAfterMount) {
     return (
       <div className="mt-6 h-full w-full flex flex-col gap-4 md:max-w-4xl max-w-full mx-auto">
@@ -140,16 +138,13 @@ const ListMessageComponent = ({
     );
   }
   return (
-    <div
-      ref={listMessagesRef}
-      className="w-full flex-1 h-full flex flex-col-reverse md:max-w-4xl max-w-full mx-auto gap-4"
-    >
+    <>
       <Virtuoso
         data={listMessages}
         ref={virtuosoRef}
         atBottomStateChange={onHandleScroll}
         atBottomThreshold={15}
-        className="!h-full !w-full !pr-2 !flex !flex-col"
+        className="flex-1 !h-full !w-full !pr-2 !flex !flex-col md:max-w-4xl max-w-full mx-auto gap-4"
         components={{
           Header: () => (
             <div className={cn("min-h-4 w-full flex justify-center py-2")}>
@@ -189,7 +184,7 @@ const ListMessageComponent = ({
           <ArrowDown />
         </Button>
       )}
-    </div>
+    </>
   );
 };
 
