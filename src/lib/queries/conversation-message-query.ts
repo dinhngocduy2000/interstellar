@@ -55,6 +55,10 @@ export const useGetConversationMessagesInfiniteQuery = ({
     refetchOnWindowFocus: false,
     staleTime: 5000,
     enabled: enabled,
+    select: (data) => ({
+      pages: [...data.pages].reverse(),
+      pageParams: [...data.pageParams].reverse(),
+    }),
   });
 
 export const useUpvoteMessageMutation = ({

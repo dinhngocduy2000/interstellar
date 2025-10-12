@@ -1,5 +1,12 @@
 "use client";
-import React, { Fragment, RefObject, use, useEffect, useRef } from "react";
+import React, {
+  Fragment,
+  RefObject,
+  use,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import MessageItem from "./(message-item)/message-item";
 import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
 import { useGetConversationMessagesInfiniteQuery } from "@/lib/queries/conversation-message-query";
@@ -8,29 +15,32 @@ import { cn, getErrorMessage } from "@/lib/utils";
 import { AxiosErrorPayload, IPagination } from "@/lib/interfaces/utils";
 import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
 import { AxiosError } from "axios";
-import { useInfiniteScroll } from "@/lib/hooks/use-infinite-scroll";
 import LoadingSpinner from "@/components/reusable/loading-spinner";
 import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { Button } from "@/components/ui/button";
+import { ArrowDown } from "lucide-react";
+
+type ListMessageComponentProps = {
+  params: Promise<{ conversationID: string }>;
+  handleSendMessage: (_message: string) => Promise<void>;
+  closeSSEConnection: VoidFunction;
+  isResponding: boolean;
+  isAllowingAutoScrollRef: RefObject<boolean>;
+  virtuosoRef: React.RefObject<VirtuosoHandle | null>;
+};
+
 const ListMessageComponent = ({
   params,
   handleSendMessage,
   closeSSEConnection,
   isResponding,
-  ref,
   isAllowingAutoScrollRef,
-  isScrolledOnce,
-}: {
-  params: Promise<{ conversationID: string }>;
-  handleSendMessage: (_message: string) => Promise<void>;
-  closeSSEConnection: VoidFunction;
-  isResponding: boolean;
-  ref?: RefObject<HTMLDivElement | null>;
-  isAllowingAutoScrollRef: RefObject<boolean>;
-  isScrolledOnce: RefObject<boolean>;
-}) => {
+  virtuosoRef,
+}: ListMessageComponentProps) => {
   const { conversationID } = use(params);
-  const listMessagesRef = useRef<HTMLDivElement | null>(null);
+  const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
   const conversationMessagesParams: IPagination & { conversationID: string } = {
     conversationID: conversationID,
     page: 1,
@@ -48,22 +58,42 @@ const ListMessageComponent = ({
     error,
     fetchNextPage,
     isFetchingNextPage,
-    hasNextPage,
     isFetching,
     isFetchedAfterMount,
+    hasNextPage,
   } = useGetConversationMessagesInfiniteQuery({
     queryKey: [],
     params: conversationMessagesParams,
     enabled: conversationDetail?.is_new === false,
   });
 
-  const { loaderRef: topScrollRef } = useInfiniteScroll({
-    onPageChange: () => {
-      fetchNextPage();
-    },
-    hasMore: hasNextPage,
-    isFetchingData: isFetchingNextPage,
-  });
+  const listMessages = useMemo(
+    () => listMessagesData?.pages.flatMap((page) => page.data),
+    [listMessagesData],
+  );
+
+  const onHandleScroll = (isAtBottom: boolean) => {
+    setIsAtBottom(isAtBottom);
+    if (!isResponding) {
+      isAllowingAutoScrollRef.current = true;
+      return;
+    }
+    isAllowingAutoScrollRef.current = isAtBottom;
+  };
+
+  const onFetchPreviousMessages = async (atTop: boolean) => {
+    if (!atTop || !hasNextPage || !isFetchedAfterMount) return;
+    await fetchNextPage();
+  };
+
+  const handleScrollToBottom = () => {
+    virtuosoRef.current?.scrollToIndex({
+      index: "LAST",
+      behavior: "auto",
+      offset: 1000,
+    });
+  };
+
   useEffect(() => {
     if (conversationID === "private") {
       const privateMessage = localStorage.getItem(
@@ -83,25 +113,12 @@ const ListMessageComponent = ({
   }, [conversationDetail, conversationID]);
 
   useEffect(() => {
-    if (!ref?.current) return;
-    ref?.current?.scrollIntoView({ behavior: "instant" });
-  }, [conversationID]);
-
-  const onHandleScroll = () => {
-    if (!listMessagesRef.current) return;
-    if (!isResponding) {
-      isAllowingAutoScrollRef.current = true;
-      return;
-    }
-    const { scrollTop, scrollHeight, clientHeight } = listMessagesRef.current;
-    if (scrollTop + clientHeight >= scrollHeight - 1) {
-      isAllowingAutoScrollRef.current = true;
-      return;
-    }
-    if (isScrolledOnce.current && scrollTop + clientHeight < scrollHeight - 1) {
-      isAllowingAutoScrollRef.current = false;
-    }
-  };
+    virtuosoRef.current?.scrollToIndex({
+      index: "LAST",
+      behavior: "auto",
+      offset: 1000,
+    });
+  }, [isFetchedAfterMount]);
 
   if (isFetching && !isFetchedAfterMount) {
     return (
@@ -121,46 +138,53 @@ const ListMessageComponent = ({
     );
   }
   return (
-    <div
-      onScroll={onHandleScroll}
-      ref={listMessagesRef}
-      className="w-full flex-1 overflow-auto h-full flex flex-col-reverse md:max-w-4xl max-w-full mx-auto gap-4 px-4"
-    >
-      <div ref={ref} className={cn(isResponding && "min-h-2")} />
-      {listMessagesData?.pages.map((page, index) => (
-        <div className="flex flex-col gap-4" key={index}>
-          <div
-            ref={topScrollRef}
-            className={cn("min-h-2 w-full flex justify-center py-2")}
-          >
-            {isFetchingNextPage && <LoadingSpinner />}
-          </div>
-          {page.data.map((message) => {
-            return (
-              <Fragment key={message.id}>
-                {message.author === MESSAGE_AUTHOR.USER && (
-                  <MessageItem
-                    key={message.id}
-                    message={message}
-                    containerProps={{ className: "self-end" }}
-                  />
-                )}
-                {message.author === MESSAGE_AUTHOR.BOT && (
-                  <MessageItem
-                    key={message.id}
-                    message={message}
-                    isResponding={isResponding}
-                    isLastMessage={
-                      message.id === `new_message_${page.data.length}`
-                    }
-                  />
-                )}
-              </Fragment>
-            );
-          })}
-        </div>
-      ))}
-    </div>
+    <>
+      <Virtuoso
+        data={listMessages}
+        ref={virtuosoRef}
+        atBottomStateChange={onHandleScroll}
+        atBottomThreshold={15}
+        className="flex-1 !h-full !w-full !pr-2 !flex !flex-col md:max-w-4xl max-w-full mx-auto gap-4"
+        components={{
+          Header: () => (
+            <div className={cn("min-h-4 w-full flex justify-center py-2")}>
+              {isFetchingNextPage && <LoadingSpinner />}
+            </div>
+          ),
+        }}
+        atTopStateChange={onFetchPreviousMessages}
+        itemContent={(_, message) => (
+          <Fragment key={message.id}>
+            {message.author === MESSAGE_AUTHOR.USER && (
+              <MessageItem
+                key={message.id}
+                message={message}
+                containerProps={{ className: "ml-auto mb-4 mr-2" }}
+              />
+            )}
+            {message.author === MESSAGE_AUTHOR.BOT && (
+              <MessageItem
+                key={message.id}
+                message={message}
+                isResponding={isResponding}
+                isLastMessage={
+                  message.id === `new_message_${listMessages?.length}`
+                }
+              />
+            )}
+          </Fragment>
+        )}
+      />
+      {!isAtBottom && (
+        <Button
+          className="absolute bottom-0 right-0 rounded-full size-12"
+          variant={"default"}
+          onClick={handleScrollToBottom}
+        >
+          <ArrowDown />
+        </Button>
+      )}
+    </>
   );
 };
 
