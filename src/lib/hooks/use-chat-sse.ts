@@ -10,6 +10,7 @@ import {
   updateNewBotReplyMessageData,
 } from "../queries/conversation-message-query";
 import { LOCAL_STORAGE_KEY } from "../enum/storage-keys";
+import { VirtuosoHandle } from "react-virtuoso";
 type SendChatMessageSSEProps = {
   conversationID: string;
 
@@ -19,7 +20,7 @@ export const useSendChatMessageSSE = ({
   conversationID,
 }: SendChatMessageSSEProps) => {
   const newMessageRef = useRef<string>("");
-  const lastMessageRef = useRef<HTMLDivElement | null>(null);
+  const virtuosoRef = useRef<VirtuosoHandle | null>(null);
   const queryClient = useQueryClient();
   const [isResponding, setIsResponding] = useState<boolean>(false);
   const eventSourceRef = useRef<EventSource | null>(null);
@@ -32,6 +33,14 @@ export const useSendChatMessageSSE = ({
     lastPageListMessageLengthRef.current = 0;
     setIsResponding(false);
     newMessageRef.current = "";
+  };
+
+  const scrollToLastMessage = () => {
+    virtuosoRef.current?.scrollToIndex({
+      index: "LAST",
+      behavior: "auto",
+      offset: 1000,
+    });
   };
 
   const handleSendMessage = async (message: string) => {
@@ -48,7 +57,8 @@ export const useSendChatMessageSSE = ({
 
     eventSourceRef.current.addEventListener("open", () => {
       localStorage.removeItem(LOCAL_STORAGE_KEY.PRIVATE_MESSAGE);
-      lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+      // lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+      scrollToLastMessage();
       setTimeout(() => {
         isScrolledOnce.current = true;
       }, 500);
@@ -102,7 +112,7 @@ export const useSendChatMessageSSE = ({
         index: lastPageListMessageLengthRef.current + 2,
       });
       if (isAllowingAutoScroll.current) {
-        lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+        scrollToLastMessage();
       }
     });
     eventSourceRef.current.addEventListener("end", () => {
@@ -141,8 +151,8 @@ export const useSendChatMessageSSE = ({
     handleSendMessage,
     eventSourceRef,
     isResponding,
-    lastMessageRef,
     isAllowingAutoScroll,
     isScrolledOnce,
+    virtuosoRef,
   };
 };

@@ -51,13 +51,12 @@ const ListConversationHistory = () => {
     );
   }
   return (
-    <div className="flex flex-col w-full h-full max-h-full relative">
+    <div className="flex flex-col w-full h-full relative">
       <Virtuoso
         ref={virtuosoRef}
         data={flatConversations}
         className="!h-full !w-full !pr-2"
         atTopStateChange={setIsAtTop}
-        fixedItemHeight={40}
         endReached={() => {
           fetchNextPage();
         }}
@@ -65,7 +64,7 @@ const ListConversationHistory = () => {
           Footer: () => (
             <div
               className={cn(
-                "min-h-2 flex max-w-fit max-h-fit items-center gap-2 mx-auto py-2",
+                "h-2 flex max-w-fit max-h-fit items-center gap-2 mx-auto py-2",
               )}
             >
               {isFetchingNextPage && (
