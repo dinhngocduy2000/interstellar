@@ -8,7 +8,7 @@ const ConversationPage = async ({
   params: Promise<{ conversationID: string }>;
 }) => {
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto">
+    <div className="flex relative flex-1 flex-col gap-4 p-4 pt-0">
       <ConversationClientComponent params={params} />
     </div>
   );

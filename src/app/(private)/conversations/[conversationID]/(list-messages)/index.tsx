@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import MessageItem from "./(message-item)/message-item";
 import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
@@ -19,6 +20,18 @@ import LoadingSpinner from "@/components/reusable/loading-spinner";
 import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { Button } from "@/components/ui/button";
+import { ArrowDown } from "lucide-react";
+
+type ListMessageComponentProps = {
+  params: Promise<{ conversationID: string }>;
+  handleSendMessage: (_message: string) => Promise<void>;
+  closeSSEConnection: VoidFunction;
+  isResponding: boolean;
+  isAllowingAutoScrollRef: RefObject<boolean>;
+  virtuosoRef: React.RefObject<VirtuosoHandle | null>;
+};
+
 const ListMessageComponent = ({
   params,
   handleSendMessage,
@@ -26,15 +39,9 @@ const ListMessageComponent = ({
   isResponding,
   isAllowingAutoScrollRef,
   virtuosoRef,
-}: {
-  params: Promise<{ conversationID: string }>;
-  handleSendMessage: (_message: string) => Promise<void>;
-  closeSSEConnection: VoidFunction;
-  isResponding: boolean;
-  isAllowingAutoScrollRef: RefObject<boolean>;
-  virtuosoRef: React.RefObject<VirtuosoHandle | null>;
-}) => {
+}: ListMessageComponentProps) => {
   const { conversationID } = use(params);
+  const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
   const listMessagesRef = useRef<HTMLDivElement | null>(null);
   const conversationMessagesParams: IPagination & { conversationID: string } = {
     conversationID: conversationID,
@@ -94,7 +101,7 @@ const ListMessageComponent = ({
   }, [isFetchedAfterMount]);
 
   const onHandleScroll = (isAtBottom: boolean) => {
-    if (!listMessagesRef.current) return;
+    setIsAtBottom(isAtBottom);
     if (!isResponding) {
       isAllowingAutoScrollRef.current = true;
       return;
@@ -105,6 +112,14 @@ const ListMessageComponent = ({
   const onFetchPreviousMessages = (atTop: boolean) => {
     if (!atTop || !hasNextPage || !isFetchedAfterMount) return;
     fetchNextPage();
+  };
+
+  const handleScrollToBottom = () => {
+    virtuosoRef.current?.scrollToIndex({
+      index: "LAST",
+      behavior: "auto",
+      offset: 1000,
+    });
   };
 
   if (isFetching && !isFetchedAfterMount) {
@@ -127,7 +142,7 @@ const ListMessageComponent = ({
   return (
     <div
       ref={listMessagesRef}
-      className="w-full flex-1 overflow-auto h-full flex flex-col-reverse md:max-w-4xl max-w-full mx-auto gap-4"
+      className="w-full flex-1 h-full flex flex-col-reverse md:max-w-4xl max-w-full mx-auto gap-4"
     >
       <Virtuoso
         data={listMessages}
@@ -165,6 +180,15 @@ const ListMessageComponent = ({
           </Fragment>
         )}
       />
+      {!isAtBottom && (
+        <Button
+          className="absolute bottom-0 right-0 rounded-full size-12"
+          variant={"default"}
+          onClick={handleScrollToBottom}
+        >
+          <ArrowDown />
+        </Button>
+      )}
     </div>
   );
 };
