@@ -116,7 +116,7 @@ const ListMessageComponent = ({
 		virtuosoRef.current?.scrollToIndex({
 			index: "LAST",
 			behavior: "auto",
-			offset: 900,
+			offset: 1000,
 		});
 	}, [isFetchedAfterMount]);
 
