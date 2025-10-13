@@ -8,32 +8,32 @@ import CalendarHeader from "./header/calendar-header";
 import CalendarHeaderDate from "./header/date/calendar-header-date";
 
 export default function Calendar({
-	events,
-	setEvents,
-	mode,
-	setMode,
-	date,
-	setDate,
-	calendarIconIsToday = true,
+  events,
+  setEvents,
+  mode,
+  setMode,
+  date,
+  setDate,
+  calendarIconIsToday = true,
 }: CalendarProps) {
-	return (
-		<CalendarProvider
-			events={events}
-			setEvents={setEvents}
-			mode={mode}
-			setMode={setMode}
-			date={date}
-			setDate={setDate}
-			calendarIconIsToday={calendarIconIsToday}
-		>
-			<CalendarHeader>
-				<CalendarHeaderDate />
-				<CalendarHeaderActions>
-					<CalendarHeaderActionsMode />
-					<CalendarHeaderActionsAdd />
-				</CalendarHeaderActions>
-			</CalendarHeader>
-			<CalendarBody />
-		</CalendarProvider>
-	);
+  return (
+    <CalendarProvider
+      events={events}
+      setEvents={setEvents}
+      mode={mode}
+      setMode={setMode}
+      date={date}
+      setDate={setDate}
+      calendarIconIsToday={calendarIconIsToday}
+    >
+      <CalendarHeader>
+        <CalendarHeaderDate />
+        <CalendarHeaderActions>
+          <CalendarHeaderActionsMode />
+          <CalendarHeaderActionsAdd />
+        </CalendarHeaderActions>
+      </CalendarHeader>
+      <CalendarBody />
+    </CalendarProvider>
+  );
 }

@@ -4,15 +4,15 @@ import ListNavConversationUI from "@/components/reusable/list-nav-conversation/l
 import { useConversationListQuery } from "@/lib/queries/conversation-query";
 
 const ListConversationComponent = () => {
-	const { data, error } = useConversationListQuery({
-		params: {
-			page: 1,
-			limit: 10,
-		},
-		queryKey: [],
-	});
+  const { data, error } = useConversationListQuery({
+    params: {
+      page: 1,
+      limit: 10,
+    },
+    queryKey: [],
+  });
 
-	return <ListNavConversationUI listConversation={data?.data} error={error} />;
+  return <ListNavConversationUI listConversation={data?.data} error={error} />;
 };
 
 export default ListConversationComponent;

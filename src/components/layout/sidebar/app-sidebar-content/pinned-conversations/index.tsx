@@ -9,32 +9,32 @@ import { getQueryClient } from "@/lib/queries/query-client";
 import ListPinnedConversationComponent from "./list-pinned-conversations";
 
 const PinnedConversations = async () => {
-	const conversationParams: IConversationQuery = { page: 1, limit: 10 };
-	const queryClient = getQueryClient();
-	await queryClient.prefetchQuery({
-		queryKey: [CONVERSATIONS_ENDPOINTS.PIN, conversationParams],
-		queryFn: async () =>
-			await getConversations().conversationControllerGetPinnedConversations(
-				conversationParams,
-			),
-	});
+  const conversationParams: IConversationQuery = { page: 1, limit: 10 };
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: [CONVERSATIONS_ENDPOINTS.PIN, conversationParams],
+    queryFn: async () =>
+      await getConversations().conversationControllerGetPinnedConversations(
+        conversationParams,
+      ),
+  });
 
-	return (
-		<Collapsible asChild defaultOpen={false} className="group/collapsible">
-			<SidebarMenuItem>
-				<CollapsibleTrigger asChild>
-					<SidebarMenuButton className="hover:cursor-pointer">
-						<Pin />
-						Pinned
-						<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-					</SidebarMenuButton>
-				</CollapsibleTrigger>
-				<HydrationBoundary state={dehydrate(queryClient)}>
-					<ListPinnedConversationComponent />
-				</HydrationBoundary>
-			</SidebarMenuItem>
-		</Collapsible>
-	);
+  return (
+    <Collapsible asChild defaultOpen={false} className="group/collapsible">
+      <SidebarMenuItem>
+        <CollapsibleTrigger asChild>
+          <SidebarMenuButton className="hover:cursor-pointer">
+            <Pin />
+            Pinned
+            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+          </SidebarMenuButton>
+        </CollapsibleTrigger>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <ListPinnedConversationComponent />
+        </HydrationBoundary>
+      </SidebarMenuItem>
+    </Collapsible>
+  );
 };
 
 export default PinnedConversations;

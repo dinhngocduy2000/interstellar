@@ -7,12 +7,12 @@
  */
 
 export interface UserResponseDto {
-	/** The ID of the user */
-	id: string;
-	/** The email of the user */
-	email: string;
-	/** The username of the user */
-	username: string;
-	/** The date and time the user was created */
-	createdAt: string;
+  /** The ID of the user */
+  id: string;
+  /** The email of the user */
+  email: string;
+  /** The username of the user */
+  username: string;
+  /** The date and time the user was created */
+  createdAt: string;
 }

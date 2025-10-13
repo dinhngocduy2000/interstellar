@@ -7,19 +7,19 @@ import AppSidebarContentComponent from "./app-sidebar-content";
 import AppSidebarHeaderComponent from "./app-sidebar-header";
 
 export function AppSidebarComponent({
-	...props
+  ...props
 }: React.ComponentProps<typeof Sidebar>) {
-	return (
-		<Sidebar collapsible="icon" {...props}>
-			<AppSidebarHeaderComponent>
-				<Link href={`${ROUTE_PATH.HISTORY}?search=`} className="px-4">
-					<Button variant={"outline"} className="justify-start w-full">
-						<Search />
-						Search <span className="text-xs text-gray-500">⌘K</span>
-					</Button>
-				</Link>
-			</AppSidebarHeaderComponent>
-			<AppSidebarContentComponent />
-		</Sidebar>
-	);
+  return (
+    <Sidebar collapsible="icon" {...props}>
+      <AppSidebarHeaderComponent>
+        <Link href={`${ROUTE_PATH.HISTORY}?search=`} className="px-4">
+          <Button variant={"outline"} className="w-full justify-start">
+            <Search />
+            Search <span className="text-gray-500 text-xs">⌘K</span>
+          </Button>
+        </Link>
+      </AppSidebarHeaderComponent>
+      <AppSidebarContentComponent />
+    </Sidebar>
+  );
 }

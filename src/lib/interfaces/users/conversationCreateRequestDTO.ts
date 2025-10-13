@@ -7,10 +7,10 @@
  */
 
 export interface ConversationCreateRequestDTO {
-	/** The title of the conversation */
-	title: string;
-	/** The model of the conversation */
-	model: string;
-	/** The description of the conversation */
-	description?: string;
+  /** The title of the conversation */
+  title: string;
+  /** The model of the conversation */
+  model: string;
+  /** The description of the conversation */
+  description?: string;
 }

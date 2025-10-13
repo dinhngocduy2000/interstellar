@@ -11,28 +11,28 @@ import { getQueryClient } from "@/lib/queries/query-client";
 import ListConversationComponent from "./list-conversation";
 
 const PreviousConversations = async () => {
-	const conversationParams: IConversationQuery = { page: 1, limit: 10 };
-	const queryClient = getQueryClient();
-	await queryClient.prefetchQuery({
-		queryKey: [CONVERSATIONS_ENDPOINTS.LIST, conversationParams],
-		queryFn: async () => await getListConversations(conversationParams),
-	});
-	return (
-		<Collapsible asChild defaultOpen={true} className="group/collapsible">
-			<SidebarMenuItem>
-				<CollapsibleTrigger asChild>
-					<SidebarMenuButton className="hover:cursor-pointer">
-						<Clock />
-						<Link href={`${ROUTE_PATH.HISTORY}?search=${""}`}>History</Link>
-						<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-					</SidebarMenuButton>
-				</CollapsibleTrigger>
-				<HydrationBoundary state={dehydrate(queryClient)}>
-					<ListConversationComponent />
-				</HydrationBoundary>
-			</SidebarMenuItem>
-		</Collapsible>
-	);
+  const conversationParams: IConversationQuery = { page: 1, limit: 10 };
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: [CONVERSATIONS_ENDPOINTS.LIST, conversationParams],
+    queryFn: async () => await getListConversations(conversationParams),
+  });
+  return (
+    <Collapsible asChild defaultOpen={true} className="group/collapsible">
+      <SidebarMenuItem>
+        <CollapsibleTrigger asChild>
+          <SidebarMenuButton className="hover:cursor-pointer">
+            <Clock />
+            <Link href={`${ROUTE_PATH.HISTORY}?search=${""}`}>History</Link>
+            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+          </SidebarMenuButton>
+        </CollapsibleTrigger>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <ListConversationComponent />
+        </HydrationBoundary>
+      </SidebarMenuItem>
+    </Collapsible>
+  );
 };
 
 export default PreviousConversations;

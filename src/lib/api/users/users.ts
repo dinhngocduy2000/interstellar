@@ -6,8 +6,8 @@
  * OpenAPI spec version: 1.0
  */
 import type {
-	RegisterDto,
-	UserResponseDto,
+  RegisterDto,
+  UserResponseDto,
 } from "../../interfaces/users/index";
 
 import { customInstance } from ".././mutator";
@@ -15,25 +15,25 @@ import { customInstance } from ".././mutator";
 type SecondParameter<T extends (..._args: never) => unknown> = Parameters<T>[1];
 
 export const getUsers = () => {
-	/**
-	 * @summary Register a new user
-	 */
-	const usersControllerRegister = (
-		registerDto: RegisterDto,
-		options?: SecondParameter<typeof customInstance<UserResponseDto>>,
-	) => {
-		return customInstance<UserResponseDto>(
-			{
-				url: `/api/v1/users/register`,
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				data: registerDto,
-			},
-			options,
-		);
-	};
-	return { usersControllerRegister };
+  /**
+   * @summary Register a new user
+   */
+  const usersControllerRegister = (
+    registerDto: RegisterDto,
+    options?: SecondParameter<typeof customInstance<UserResponseDto>>,
+  ) => {
+    return customInstance<UserResponseDto>(
+      {
+        url: `/api/v1/users/register`,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        data: registerDto,
+      },
+      options,
+    );
+  };
+  return { usersControllerRegister };
 };
 export type UsersControllerRegisterResult = NonNullable<
-	Awaited<ReturnType<ReturnType<typeof getUsers>["usersControllerRegister"]>>
+  Awaited<ReturnType<ReturnType<typeof getUsers>["usersControllerRegister"]>>
 >;

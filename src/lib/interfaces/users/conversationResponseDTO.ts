@@ -7,28 +7,28 @@
  */
 
 export interface ConversationResponseDTO {
-	/** The ID of the conversation */
-	id: string;
-	/** The title of the conversation */
-	title: string;
-	/** The description of the conversation */
-	description: string;
-	/** The created_at of the conversation */
-	created_at: string;
-	/** The updated_at of the conversation */
-	updated_at: string;
-	/** Whether the conversation is pinned */
-	is_pinned: boolean;
-	/** The model of the conversation */
-	model: string;
-	/** The user ID of the conversation */
-	user_id: string;
-	/** The messages of the conversation */
-	messages: string[];
-	/** The deleted_at of the conversation */
-	deleted_at: string;
-	/** The first_message of the conversation */
-	first_message: string;
-	/** The conversation is newly created or not */
-	is_new: boolean;
+  /** The ID of the conversation */
+  id: string;
+  /** The title of the conversation */
+  title: string;
+  /** The description of the conversation */
+  description: string;
+  /** The created_at of the conversation */
+  created_at: string;
+  /** The updated_at of the conversation */
+  updated_at: string;
+  /** Whether the conversation is pinned */
+  is_pinned: boolean;
+  /** The model of the conversation */
+  model: string;
+  /** The user ID of the conversation */
+  user_id: string;
+  /** The messages of the conversation */
+  messages: string[];
+  /** The deleted_at of the conversation */
+  deleted_at: string;
+  /** The first_message of the conversation */
+  first_message: string;
+  /** The conversation is newly created or not */
+  is_new: boolean;
 }

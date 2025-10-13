@@ -5,16 +5,16 @@ import type * as React from "react";
 import { getQueryClient } from "@/lib/queries/query-client";
 
 export default function ReactQueryProviders({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	const queryClient = getQueryClient();
+  const queryClient = getQueryClient();
 
-	return (
-		<QueryClientProvider client={queryClient}>
-			{children}
-			<ReactQueryDevtools />
-		</QueryClientProvider>
-	);
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+  );
 }

@@ -7,30 +7,30 @@ import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 
 const HistorySearchInput = () => {
-	const router = useRouter();
-	const params = useSearchParams();
-	const [search, setSearch] = useState<string>(params.get("search") ?? "");
+  const router = useRouter();
+  const params = useSearchParams();
+  const [search, setSearch] = useState<string>(params.get("search") ?? "");
 
-	const { isMounted } = useDebounce({
-		searchText: search,
-		func: () => {
-			router.push(`${ROUTE_PATH.HISTORY}?search=${search}`);
-		},
-	});
+  const { isMounted } = useDebounce({
+    searchText: search,
+    func: () => {
+      router.push(`${ROUTE_PATH.HISTORY}?search=${search}`);
+    },
+  });
 
-	useEffect(() => {
-		isMounted.current = true;
-	}, []);
+  useEffect(() => {
+    isMounted.current = true;
+  }, []);
 
-	return (
-		<Input
-			autoFocus
-			defaultValue={search}
-			placeholder="Search"
-			onChange={(e) => setSearch(e.target.value)}
-			prefixIcon={<SearchIcon stroke="gray" />}
-		/>
-	);
+  return (
+    <Input
+      autoFocus
+      defaultValue={search}
+      placeholder="Search"
+      onChange={(e) => setSearch(e.target.value)}
+      prefixIcon={<SearchIcon stroke="gray" />}
+    />
+  );
 };
 
 export default HistorySearchInput;

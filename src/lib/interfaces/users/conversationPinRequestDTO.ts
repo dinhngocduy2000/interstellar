@@ -7,6 +7,6 @@
  */
 
 export interface ConversationPinRequestDTO {
-	/** Whether the conversation is pinned */
-	is_pinned: boolean;
+  /** Whether the conversation is pinned */
+  is_pinned: boolean;
 }

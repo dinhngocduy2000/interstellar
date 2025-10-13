@@ -9,26 +9,26 @@ import { DefaultMetadata } from "@/lib/utils";
 export const metadata: Metadata = DefaultMetadata;
 
 export default function AuthenticatedLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	return (
-		<ReactQueryProviders>
-			<SidebarProvider>
-				<main className="box-border flex h-screen w-screen justify-center">
-					<AppSidebarComponent />
-					<SidebarInset>
-						<main className="flex h-full flex-1 flex-col overflow-auto rounded-lg bg-default">
-							<HeaderComponent />
-							<main className="flex overflow-auto flex-1 flex-col gap-4 p-4 pt-0">
-								{children}
-							</main>
-							{/* <FooterComponent /> */}
-						</main>
-					</SidebarInset>
-				</main>
-			</SidebarProvider>
-		</ReactQueryProviders>
-	);
+  return (
+    <ReactQueryProviders>
+      <SidebarProvider>
+        <main className="box-border flex h-screen w-screen justify-center">
+          <AppSidebarComponent />
+          <SidebarInset>
+            <main className="flex h-full flex-1 flex-col overflow-auto rounded-lg bg-default">
+              <HeaderComponent />
+              <main className="flex flex-1 flex-col gap-4 overflow-auto p-4 pt-0">
+                {children}
+              </main>
+              {/* <FooterComponent /> */}
+            </main>
+          </SidebarInset>
+        </main>
+      </SidebarProvider>
+    </ReactQueryProviders>
+  );
 }

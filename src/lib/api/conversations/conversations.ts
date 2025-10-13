@@ -7,12 +7,12 @@
  */
 import { ConversationPinRequestDTO } from "@/lib/interfaces/conversations";
 import type {
-	ConversationControllerGetListConversationsParams,
-	ConversationControllerGetPinnedConversationsParams,
-	ConversationCreateRequestDTO,
-	ConversationResponseDTO,
-	ListConversationResponseDTO,
-	SuccessResponse,
+  ConversationControllerGetListConversationsParams,
+  ConversationControllerGetPinnedConversationsParams,
+  ConversationCreateRequestDTO,
+  ConversationResponseDTO,
+  ListConversationResponseDTO,
+  SuccessResponse,
 } from "../../interfaces/conversations/";
 
 import { customInstance } from ".././mutator";
@@ -20,153 +20,153 @@ import { customInstance } from ".././mutator";
 type SecondParameter<T extends (..._args: never) => unknown> = Parameters<T>[1];
 
 export const getConversations = () => {
-	/**
-	 * @summary Get all pinned conversations
-	 */
-	const conversationControllerGetPinnedConversations = (
-		params?: ConversationControllerGetPinnedConversationsParams,
-		options?: SecondParameter<
-			typeof customInstance<ListConversationResponseDTO>
-		>,
-	) => {
-		return customInstance<ListConversationResponseDTO>(
-			{ url: `/api/v1/conversations/pinned`, method: "GET", params },
-			options,
-		);
-	};
-	/**
-	 * @summary Pin/unpin a conversation
-	 */
-	const conversationControllerPinConversation = (
-		id: string,
-		conversationPinRequestDTO: ConversationPinRequestDTO,
-		options?: SecondParameter<typeof customInstance<SuccessResponse>>,
-	) => {
-		return customInstance<SuccessResponse>(
-			{
-				url: `/api/v1/conversations/pinned/${id}`,
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				data: conversationPinRequestDTO,
-			},
-			options,
-		);
-	};
-	/**
-	 * @summary Get all conversations
-	 */
-	const conversationControllerGetListConversations = (
-		params?: ConversationControllerGetListConversationsParams,
-		options?: SecondParameter<
-			typeof customInstance<ListConversationResponseDTO>
-		>,
-	) => {
-		return customInstance<ListConversationResponseDTO>(
-			{ url: `/api/v1/conversations`, method: "GET", params },
-			options,
-		);
-	};
-	/**
-	 * @summary Create a conversation
-	 */
-	const conversationControllerCreateConversation = (
-		conversationCreateRequestDTO: ConversationCreateRequestDTO,
-		options?: SecondParameter<typeof customInstance<ConversationResponseDTO>>,
-	) => {
-		return customInstance<ConversationResponseDTO>(
-			{
-				url: `/api/v1/conversations`,
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				data: conversationCreateRequestDTO,
-			},
-			options,
-		);
-	};
-	/**
-	 * @summary Delete a conversation
-	 */
-	const conversationControllerDeleteConversation = (
-		id: string,
-		options?: SecondParameter<typeof customInstance<SuccessResponse>>,
-	) => {
-		return customInstance<SuccessResponse>(
-			{ url: `/api/v1/conversations/${id}`, method: "DELETE" },
-			options,
-		);
-	};
-	/**
-	 * @summary Get a conversation
-	 */
-	const conversationControllerGetConversation = (
-		id: string,
-		options?: SecondParameter<typeof customInstance<ConversationResponseDTO>>,
-	) => {
-		return customInstance<ConversationResponseDTO>(
-			{ url: `/api/v1/conversations/${id}`, method: "GET" },
-			options,
-		);
-	};
-	return {
-		conversationControllerGetPinnedConversations,
-		conversationControllerPinConversation,
-		conversationControllerGetListConversations,
-		conversationControllerCreateConversation,
-		conversationControllerDeleteConversation,
-		conversationControllerGetConversation,
-	};
+  /**
+   * @summary Get all pinned conversations
+   */
+  const conversationControllerGetPinnedConversations = (
+    params?: ConversationControllerGetPinnedConversationsParams,
+    options?: SecondParameter<
+      typeof customInstance<ListConversationResponseDTO>
+    >,
+  ) => {
+    return customInstance<ListConversationResponseDTO>(
+      { url: `/api/v1/conversations/pinned`, method: "GET", params },
+      options,
+    );
+  };
+  /**
+   * @summary Pin/unpin a conversation
+   */
+  const conversationControllerPinConversation = (
+    id: string,
+    conversationPinRequestDTO: ConversationPinRequestDTO,
+    options?: SecondParameter<typeof customInstance<SuccessResponse>>,
+  ) => {
+    return customInstance<SuccessResponse>(
+      {
+        url: `/api/v1/conversations/pinned/${id}`,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        data: conversationPinRequestDTO,
+      },
+      options,
+    );
+  };
+  /**
+   * @summary Get all conversations
+   */
+  const conversationControllerGetListConversations = (
+    params?: ConversationControllerGetListConversationsParams,
+    options?: SecondParameter<
+      typeof customInstance<ListConversationResponseDTO>
+    >,
+  ) => {
+    return customInstance<ListConversationResponseDTO>(
+      { url: `/api/v1/conversations`, method: "GET", params },
+      options,
+    );
+  };
+  /**
+   * @summary Create a conversation
+   */
+  const conversationControllerCreateConversation = (
+    conversationCreateRequestDTO: ConversationCreateRequestDTO,
+    options?: SecondParameter<typeof customInstance<ConversationResponseDTO>>,
+  ) => {
+    return customInstance<ConversationResponseDTO>(
+      {
+        url: `/api/v1/conversations`,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        data: conversationCreateRequestDTO,
+      },
+      options,
+    );
+  };
+  /**
+   * @summary Delete a conversation
+   */
+  const conversationControllerDeleteConversation = (
+    id: string,
+    options?: SecondParameter<typeof customInstance<SuccessResponse>>,
+  ) => {
+    return customInstance<SuccessResponse>(
+      { url: `/api/v1/conversations/${id}`, method: "DELETE" },
+      options,
+    );
+  };
+  /**
+   * @summary Get a conversation
+   */
+  const conversationControllerGetConversation = (
+    id: string,
+    options?: SecondParameter<typeof customInstance<ConversationResponseDTO>>,
+  ) => {
+    return customInstance<ConversationResponseDTO>(
+      { url: `/api/v1/conversations/${id}`, method: "GET" },
+      options,
+    );
+  };
+  return {
+    conversationControllerGetPinnedConversations,
+    conversationControllerPinConversation,
+    conversationControllerGetListConversations,
+    conversationControllerCreateConversation,
+    conversationControllerDeleteConversation,
+    conversationControllerGetConversation,
+  };
 };
 export type ConversationControllerGetPinnedConversationsResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<
-				typeof getConversations
-			>["conversationControllerGetPinnedConversations"]
-		>
-	>
+  Awaited<
+    ReturnType<
+      ReturnType<
+        typeof getConversations
+      >["conversationControllerGetPinnedConversations"]
+    >
+  >
 >;
 export type ConversationControllerPinConversationResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<
-				typeof getConversations
-			>["conversationControllerPinConversation"]
-		>
-	>
+  Awaited<
+    ReturnType<
+      ReturnType<
+        typeof getConversations
+      >["conversationControllerPinConversation"]
+    >
+  >
 >;
 export type ConversationControllerGetListConversationsResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<
-				typeof getConversations
-			>["conversationControllerGetListConversations"]
-		>
-	>
+  Awaited<
+    ReturnType<
+      ReturnType<
+        typeof getConversations
+      >["conversationControllerGetListConversations"]
+    >
+  >
 >;
 export type ConversationControllerCreateConversationResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<
-				typeof getConversations
-			>["conversationControllerCreateConversation"]
-		>
-	>
+  Awaited<
+    ReturnType<
+      ReturnType<
+        typeof getConversations
+      >["conversationControllerCreateConversation"]
+    >
+  >
 >;
 export type ConversationControllerDeleteConversationResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<
-				typeof getConversations
-			>["conversationControllerDeleteConversation"]
-		>
-	>
+  Awaited<
+    ReturnType<
+      ReturnType<
+        typeof getConversations
+      >["conversationControllerDeleteConversation"]
+    >
+  >
 >;
 export type ConversationControllerGetConversationResult = NonNullable<
-	Awaited<
-		ReturnType<
-			ReturnType<
-				typeof getConversations
-			>["conversationControllerGetConversation"]
-		>
-	>
+  Awaited<
+    ReturnType<
+      ReturnType<
+        typeof getConversations
+      >["conversationControllerGetConversation"]
+    >
+  >
 >;

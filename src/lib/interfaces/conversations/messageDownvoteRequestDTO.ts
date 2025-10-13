@@ -7,6 +7,6 @@
  */
 
 export interface MessageDownvoteRequestDTO {
-	/** Downvote */
-	downvote: boolean;
+  /** Downvote */
+  downvote: boolean;
 }

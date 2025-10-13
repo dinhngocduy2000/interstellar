@@ -7,9 +7,9 @@
  */
 
 export type ConversationControllerGetListConversationsSortDirection =
-	(typeof ConversationControllerGetListConversationsSortDirectionType)[keyof typeof ConversationControllerGetListConversationsSortDirectionType];
+  (typeof ConversationControllerGetListConversationsSortDirectionType)[keyof typeof ConversationControllerGetListConversationsSortDirectionType];
 
 export const ConversationControllerGetListConversationsSortDirectionType = {
-	asc: "asc",
-	desc: "desc",
+  asc: "asc",
+  desc: "desc",
 } as const;

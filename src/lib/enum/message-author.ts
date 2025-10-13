@@ -1,4 +1,4 @@
 export enum MESSAGE_AUTHOR {
-	USER = "user",
-	BOT = "bot",
+  USER = "user",
+  BOT = "bot",
 }
