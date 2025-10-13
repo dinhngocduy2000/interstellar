@@ -1,12 +1,10 @@
+import { CHAT_ENDPOINTS } from "@/lib/enum/endpoints";
+import { IConversationMessage, IVoteMessage } from "@/lib/interfaces/message";
 import {
   IPagination,
   IResponseDataWithPagination,
 } from "@/lib/interfaces/utils";
 import axiosConfig from "..";
-import { CHAT_ENDPOINTS } from "@/lib/enum/endpoints";
-import { IConversationMessage, IVoteMessage } from "@/lib/interfaces/message";
-
-export const sendChatMessage = async () => {};
 
 export const getConversationMessages = async (
   params: IPagination & { conversationID: string },

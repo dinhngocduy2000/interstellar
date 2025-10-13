@@ -1,3 +1,9 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { ArrowUpRightFromSquareIcon, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "react-toastify";
 import AlertDialogComponent from "@/components/reusable/app-alert-dialog";
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import { Button } from "@/components/ui/button";
@@ -7,12 +13,6 @@ import { Conversation } from "@/lib/interfaces/conversations";
 import { AxiosErrorPayload } from "@/lib/interfaces/utils";
 import { useDeleteConversationQuery } from "@/lib/queries/conversation-query";
 import { getErrorMessage } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { ArrowUpRightFromSquareIcon, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { toast } from "react-toastify";
 
 type Props = {
   conversation: Conversation;
@@ -41,7 +41,7 @@ const HistoryConversationActionItems = ({ conversation }: Props) => {
   return (
     <>
       <div
-        className="group-hover:flex hidden z-10"
+        className="z-10 hidden group-hover:flex"
         onClick={(e) => {
           e.stopPropagation();
         }}

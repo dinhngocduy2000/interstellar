@@ -1,13 +1,12 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { ChevronRight, Pin } from "lucide-react";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { ChevronRight, Pin } from "lucide-react";
-
-import { getQueryClient } from "@/lib/queries/query-client";
-import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { IConversationQuery } from "@/lib/interfaces/conversations";
-import ListPinnedConversationComponent from "./list-pinned-conversations";
 import { getConversations } from "@/lib/api/conversations/conversations";
+import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
+import { IConversationQuery } from "@/lib/interfaces/conversations";
+import { getQueryClient } from "@/lib/queries/query-client";
+import ListPinnedConversationComponent from "./list-pinned-conversations";
 
 const PinnedConversations = async () => {
   const conversationParams: IConversationQuery = { page: 1, limit: 10 };

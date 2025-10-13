@@ -1,11 +1,11 @@
 "use client";
 
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Mode, calendarModes } from "../../calendar-types";
+import { cn } from "@/lib/utils";
 import { useCalendarContext } from "../../calendar-context";
 import { calendarModeIconMap } from "../../calendar-mode-icon-map";
-import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { calendarModes, Mode } from "../../calendar-types";
 
 export default function CalendarHeaderActionsMode() {
   const { mode, setMode } = useCalendarContext();
@@ -13,7 +13,7 @@ export default function CalendarHeaderActionsMode() {
   return (
     <LayoutGroup>
       <ToggleGroup
-        className="flex gap-0 -space-x-px rounded-sm border overflow-hidden shadow-sm shadow-black/5 rtl:space-x-reverse"
+        className="-space-x-px flex gap-0 overflow-hidden rounded-sm border shadow-black/5 shadow-sm rtl:space-x-reverse"
         type="single"
         variant="outline"
         value={mode}
@@ -27,7 +27,7 @@ export default function CalendarHeaderActionsMode() {
             <motion.div
               key={modeValue}
               layout
-              className="flex-1 flex divide-x"
+              className="flex flex-1 divide-x"
               animate={{ flex: isSelected ? 1.6 : 1 }}
               transition={{
                 flex: {
@@ -40,13 +40,13 @@ export default function CalendarHeaderActionsMode() {
               <ToggleGroupItem
                 value={modeValue}
                 className={cn(
-                  "w-full rounded-none shadow-none focus-visible:z-10 text-base flex items-center justify-center gap-2 relative border-none",
+                  "relative flex w-full items-center justify-center gap-2 rounded-none border-none text-base shadow-none focus-visible:z-10",
                   isSelected && "z-10",
                 )}
               >
                 <motion.div
                   layout
-                  className="flex items-center justify-center gap-2 py-2 px-3"
+                  className="flex items-center justify-center gap-2 px-3 py-2"
                   initial={false}
                   animate={{
                     scale: isSelected ? 1 : 0.95,
@@ -85,7 +85,7 @@ export default function CalendarHeaderActionsMode() {
                       <motion.p
                         layout="position"
                         key={`text-${modeValue}`}
-                        className="font-medium origin-left whitespace-nowrap"
+                        className="origin-left whitespace-nowrap font-medium"
                         initial={{
                           opacity: 0,
                           x: -2,

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "../../assets/style/globals.css";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { DefaultMetadata } from "@/lib/utils";
 import HeaderComponent from "@/components/layout/header";
 import { AppSidebarComponent } from "@/components/layout/sidebar";
 import ReactQueryProviders from "@/components/providers/react-query-provider";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { DefaultMetadata } from "@/lib/utils";
 
 export const metadata: Metadata = DefaultMetadata;
 
@@ -21,7 +21,7 @@ export default function AuthenticatedLayout({
           <SidebarInset>
             <main className="flex h-full flex-1 flex-col overflow-auto rounded-lg bg-default">
               <HeaderComponent />
-              <main className="flex overflow-auto flex-1 flex-col gap-4 p-4 pt-0">
+              <main className="flex flex-1 flex-col gap-4 overflow-auto p-4 pt-0">
                 {children}
               </main>
               {/* <FooterComponent /> */}

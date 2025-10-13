@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { useCalendarContext } from "../../calendar-context";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
-  format,
   addDays,
   addMonths,
   addWeeks,
+  format,
   subDays,
   subMonths,
   subWeeks,
 } from "date-fns";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCalendarContext } from "../../calendar-context";
 
 export default function CalendarHeaderDateChevrons() {
   const { mode, date, setDate } = useCalendarContext();
@@ -49,7 +49,7 @@ export default function CalendarHeaderDateChevrons() {
         className="h-7 w-7 p-1"
         onClick={handleDateBackward}
       >
-        <ChevronLeft className="min-w-5 min-h-5" />
+        <ChevronLeft className="min-h-5 min-w-5" />
       </Button>
 
       <span className="min-w-[140px] text-center font-medium">
@@ -61,7 +61,7 @@ export default function CalendarHeaderDateChevrons() {
         className="h-7 w-7 p-1"
         onClick={handleDateForward}
       >
-        <ChevronRight className="min-w-5 min-h-5" />
+        <ChevronRight className="min-h-5 min-w-5" />
       </Button>
     </div>
   );

@@ -1,8 +1,8 @@
-import { CalendarEvent as CalendarEventType } from "@/components/reusable/calendar/calendar-types";
-import { useCalendarContext } from "@/components/reusable/calendar/calendar-context";
 import { format, isSameDay, isSameMonth } from "date-fns";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import { useCalendarContext } from "@/components/reusable/calendar/calendar-context";
+import { CalendarEvent as CalendarEventType } from "@/components/reusable/calendar/calendar-types";
 import { cn } from "@/lib/utils";
-import { motion, MotionConfig, AnimatePresence } from "framer-motion";
 
 interface EventPosition {
   left: string;
@@ -84,7 +84,7 @@ export default function CalendarEvent({
       <AnimatePresence mode="wait">
         <motion.div
           className={cn(
-            `px-3 py-1.5 rounded-md truncate cursor-pointer transition-all duration-300 bg-${event.color}-500/10 hover:bg-${event.color}-500/20 border border-${event.color}-500`,
+            `cursor-pointer truncate rounded-md px-3 py-1.5 transition-all duration-300 bg-${event.color}-500/10 hover:bg-${event.color}-500/20 border border-${event.color}-500`,
             !month && "absolute",
             className,
           )}
@@ -128,12 +128,12 @@ export default function CalendarEvent({
         >
           <motion.div
             className={cn(
-              `flex flex-col w-full text-${event.color}-500`,
+              `flex w-full flex-col text-${event.color}-500`,
               month && "flex-row items-center justify-between",
             )}
             layout="position"
           >
-            <p className={cn("font-bold truncate", month && "text-xs")}>
+            <p className={cn("truncate font-bold", month && "text-xs")}>
               {event.title}
             </p>
             <p className={cn("text-sm", month && "text-xs")}>

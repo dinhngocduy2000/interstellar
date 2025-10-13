@@ -1,15 +1,14 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { ChevronRight, Clock } from "lucide-react";
+import Link from "next/link";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { ChevronRight, Clock } from "lucide-react";
-
-import ListConversationComponent from "./list-conversation";
-import { getQueryClient } from "@/lib/queries/query-client";
-import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { IConversationQuery } from "@/lib/interfaces/conversations";
 import { getListConversations } from "@/lib/api/conversations";
-import Link from "next/link";
+import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
+import { IConversationQuery } from "@/lib/interfaces/conversations";
+import { getQueryClient } from "@/lib/queries/query-client";
+import ListConversationComponent from "./list-conversation";
 
 const PreviousConversations = async () => {
   const conversationParams: IConversationQuery = { page: 1, limit: 10 };

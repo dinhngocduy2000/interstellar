@@ -1,6 +1,6 @@
 import z from "zod";
-import { IPagination } from "./utils";
 import { CreateConversationSchema } from "../schemas/create-conversation-schema";
+import { IPagination } from "./utils";
 
 export type Conversation = {
   id: string;

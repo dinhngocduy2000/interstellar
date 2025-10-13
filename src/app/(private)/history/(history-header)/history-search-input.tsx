@@ -1,10 +1,10 @@
 "use client";
-import { Input } from "@/components/ui/input";
-import { ROUTE_PATH } from "@/lib/enum/route-path";
-import { useDebounce } from "@/lib/hooks/use-debounce";
 import { SearchIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { ROUTE_PATH } from "@/lib/enum/route-path";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 
 const HistorySearchInput = () => {
   const router = useRouter();

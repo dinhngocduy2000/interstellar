@@ -23,7 +23,7 @@ export function ColorPicker({ field }: ColorPickerProps) {
           value={color.value}
           id={color.value}
           className={cn(
-            "size-6 border-0 shadow-none transition-all duration-200 bg-red-400",
+            "size-6 border-0 bg-red-400 shadow-none transition-all duration-200",
             `bg-${color.value}-500 dark:bg-${color.value}-500`,
           )}
           aria-label={color.label}

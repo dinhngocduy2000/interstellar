@@ -1,10 +1,11 @@
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   getAccessTokenCookie,
   getRefreshTokenCookie,
   setCookiesAction,
 } from "@/actions/cookie";
 import { refreshTokenAction } from "@/actions/refresh-token";
-import axios, { AxiosError, AxiosResponse } from "axios";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; // Set in .env
 
 const axiosConfig = axios.create({
@@ -74,7 +75,6 @@ const handleRenewToken = async (error: unknown) => {
   });
 
   if (!newAccessToken.accessToken) {
-    console.log(`No Access token`);
     return;
   }
   await setCookiesAction({

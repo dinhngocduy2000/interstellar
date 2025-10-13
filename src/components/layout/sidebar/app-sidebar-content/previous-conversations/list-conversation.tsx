@@ -1,7 +1,7 @@
 "use client";
-import { useConversationListQuery } from "@/lib/queries/conversation-query";
 
 import ListNavConversationUI from "@/components/reusable/list-nav-conversation/list-nav-conversation-ui";
+import { useConversationListQuery } from "@/lib/queries/conversation-query";
 
 const ListConversationComponent = () => {
   const { data, error } = useConversationListQuery({

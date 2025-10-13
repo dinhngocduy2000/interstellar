@@ -4,7 +4,7 @@ import {
   Folder,
   Forward,
   Frame,
-  Map,
+  Map as MapIcon,
   MoreHorizontal,
   PieChart,
   Trash2,
@@ -43,7 +43,7 @@ export function NavProjects() {
     {
       name: "Feedbacks",
       url: "#",
-      icon: Map,
+      icon: MapIcon,
     },
   ];
 

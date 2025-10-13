@@ -1,11 +1,11 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { COOKIE_KEYS } from "@/lib/enum/cookie-keys";
 import { redirect } from "next/navigation";
+import { loginAPI } from "@/lib/api/auth";
+import { COOKIE_KEYS } from "@/lib/enum/cookie-keys";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { LoginForm } from "@/lib/interfaces/auth";
-import { loginAPI } from "@/lib/api/auth";
 
 export const logoutAction = async () => {
   const cookieStore = await cookies();

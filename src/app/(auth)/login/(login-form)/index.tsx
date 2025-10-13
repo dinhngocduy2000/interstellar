@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,14 +9,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
 import LoginFormComponent from "./login-form-component";
 
 const LoginFormContainerComponent = () => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1 text-center">
-        <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
+        <CardTitle className="font-bold text-2xl">Welcome back</CardTitle>
         <CardDescription>
           Enter your credentials to access your account
         </CardDescription>
@@ -69,11 +69,11 @@ const LoginFormContainerComponent = () => {
       </CardContent>
 
       <CardFooter>
-        <p className="text-center text-sm text-muted-foreground w-full">
+        <p className="w-full text-center text-muted-foreground text-sm">
           Don&apos;t have an account?{" "}
           <Link
             href="/signup"
-            className="text-primary hover:underline font-medium"
+            className="font-medium text-primary hover:underline"
           >
             Sign up
           </Link>

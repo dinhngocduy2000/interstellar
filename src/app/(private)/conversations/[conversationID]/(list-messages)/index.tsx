@@ -1,4 +1,6 @@
 "use client";
+import { AxiosError } from "axios";
+import { ArrowDown } from "lucide-react";
 import React, {
   Fragment,
   RefObject,
@@ -7,20 +9,18 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import MessageItem from "./(message-item)/message-item";
-import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
-import { useGetConversationMessagesInfiniteQuery } from "@/lib/queries/conversation-message-query";
-import NoDataComponent from "@/components/reusable/no-data-component";
-import { cn, getErrorMessage } from "@/lib/utils";
-import { AxiosErrorPayload, IPagination } from "@/lib/interfaces/utils";
-import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
-import { AxiosError } from "axios";
-import LoadingSpinner from "@/components/reusable/loading-spinner";
-import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import LoadingSpinner from "@/components/reusable/loading-spinner";
+import NoDataComponent from "@/components/reusable/no-data-component";
 import { Button } from "@/components/ui/button";
-import { ArrowDown } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { MESSAGE_AUTHOR } from "@/lib/enum/message-author";
+import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
+import { AxiosErrorPayload, IPagination } from "@/lib/interfaces/utils";
+import { useGetConversationMessagesInfiniteQuery } from "@/lib/queries/conversation-message-query";
+import { useGetConversationDetailQuery } from "@/lib/queries/conversation-query";
+import { cn, getErrorMessage } from "@/lib/utils";
+import MessageItem from "./(message-item)/message-item";
 
 type ListMessageComponentProps = {
   params: Promise<{ conversationID: string }>;
@@ -66,7 +66,6 @@ const ListMessageComponent = ({
     params: conversationMessagesParams,
     enabled: conversationDetail?.is_new === false,
   });
-
   const listMessages = useMemo(
     () => listMessagesData?.pages.flatMap((page) => page.data),
     [listMessagesData],
@@ -122,7 +121,7 @@ const ListMessageComponent = ({
 
   if (isFetching && !isFetchedAfterMount) {
     return (
-      <div className="mt-6 h-full w-full flex flex-col gap-4 md:max-w-4xl max-w-full mx-auto">
+      <div className="mx-auto mt-6 flex h-full w-full max-w-full flex-col gap-4 md:max-w-4xl">
         {Array.from({ length: 8 }).map((_, index) => (
           <Skeleton key={index} className="h-8 w-full" />
         ))}
@@ -144,10 +143,10 @@ const ListMessageComponent = ({
         ref={virtuosoRef}
         atBottomStateChange={onHandleScroll}
         atBottomThreshold={15}
-        className="flex-1 !h-full !w-full !pr-2 !flex !flex-col md:max-w-4xl max-w-full mx-auto gap-4"
+        className="!h-full !w-full !pr-2 !flex !flex-col mx-auto max-w-full flex-1 gap-4 md:max-w-4xl"
         components={{
           Header: () => (
-            <div className={cn("min-h-4 w-full flex justify-center py-2")}>
+            <div className={cn("flex min-h-4 w-full justify-center py-2")}>
               {isFetchingNextPage && <LoadingSpinner />}
             </div>
           ),
@@ -177,7 +176,7 @@ const ListMessageComponent = ({
       />
       {!isAtBottom && (
         <Button
-          className="absolute bottom-0 right-0 rounded-full size-12"
+          className="absolute right-0 bottom-0 size-12 rounded-full"
           variant={"default"}
           onClick={handleScrollToBottom}
         >

@@ -1,9 +1,6 @@
 "use client";
-import { ROUTE_PATH } from "@/lib/enum/route-path";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import {
   ArrowBigUp,
   Ghost,
@@ -14,25 +11,29 @@ import {
   PlusIcon,
   Square,
 } from "lucide-react";
-import { cn, getErrorMessage } from "@/lib/utils";
-import DropdownMenu from "./dropdown-menu";
-import { AxiosErrorPayload, IDropdownMenuItem } from "@/lib/interfaces/utils";
-import { useCreateConversationQuery } from "@/lib/queries/conversation-query";
-import { AxiosError } from "axios";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import LoadingSpinner from "./loading-spinner";
-import { useQueryClient } from "@tanstack/react-query";
 import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
+import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { LOCAL_STORAGE_KEY } from "@/lib/enum/storage-keys";
 import { Conversation } from "@/lib/interfaces/conversations";
+import { AxiosErrorPayload, IDropdownMenuItem } from "@/lib/interfaces/utils";
+import { useCreateConversationQuery } from "@/lib/queries/conversation-query";
+import { cn, getErrorMessage } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
 import AppTooltipComponent from "./app-tooltip-component";
+import DropdownMenu from "./dropdown-menu";
+import LoadingSpinner from "./loading-spinner";
+
 const ChatInputComponent = ({
   handleSendMessage,
   closeSSEConnection,
   isResponding,
   conversationID,
 }: {
-  handleSendMessage?: (_message: string) => Promise<void>;
+  handleSendMessage?: (message: string) => Promise<void>;
   closeSSEConnection?: VoidFunction;
   isResponding?: boolean;
   conversationID?: string;
@@ -59,11 +60,13 @@ const ChatInputComponent = ({
   const chatInputDropdownItems: IDropdownMenuItem[] = [
     {
       label: (
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Paperclip /> Upload a file
         </div>
       ),
-      onClick: () => {},
+      onClick: () => {
+        toast.error("Not implemented");
+      },
     },
   ];
 
@@ -107,16 +110,16 @@ const ChatInputComponent = ({
   return (
     <div
       className={cn(
-        "w-full p-8 flex flex-col gap-4 justify-center pt-0",
+        "flex w-full flex-col justify-center gap-4 p-8 pt-0",
         pathname.includes(ROUTE_PATH.CONVERSATIONS) && "mt-auto pb-0",
       )}
     >
       <form
         className={cn(
-          "min-h-[100px] h-[140px] md:max-w-4xl border rounded-xl max-w-full w-full mx-auto flex flex-col",
+          "mx-auto flex h-[140px] min-h-[100px] w-full max-w-full flex-col rounded-xl border md:max-w-4xl",
           isPrivate || conversationID === "private"
-            ? "bg-[#1B1B23] border-[#4B3B7C]"
-            : "bg-chat-foreground border-ring",
+            ? "border-[#4B3B7C] bg-[#1B1B23]"
+            : "border-ring bg-chat-foreground",
         )}
       >
         <Textarea
@@ -138,10 +141,10 @@ const ChatInputComponent = ({
           onChange={(e) => setChatText(e.target.value)}
           placeholder="Make yourself at home and ask away"
           className={cn(
-            "flex-1 resize-none md:text-base field-sizing-fixed p-4 border-none shadow-none dark:bg-transparent focus-visible:border-none focus-visible:ring-0",
+            "field-sizing-fixed flex-1 resize-none border-none p-4 shadow-none focus-visible:border-none focus-visible:ring-0 md:text-base dark:bg-transparent",
           )}
         />
-        <div className="flex w-full h-fit p-4">
+        <div className="flex h-fit w-full p-4">
           <DropdownMenu
             trigger={<PlusIcon />}
             contentAlign="start"
@@ -151,7 +154,7 @@ const ChatInputComponent = ({
           <Button
             type="button"
             disabled={(!chatText || isCreatingConversation) && !isResponding}
-            className="rounded-full ml-auto"
+            className="ml-auto rounded-full"
             onClick={onChatSubmit}
           >
             {isCreatingConversation ? (
@@ -178,7 +181,7 @@ const ChatInputComponent = ({
             content={
               <p>
                 Switch to private chat{" "}
-                <span className="text-xs flex text-gray-500">
+                <span className="flex text-gray-500 text-xs">
                   ⌘<span>{<ArrowBigUp width={16} height={16} />}</span>K
                 </span>
               </p>
@@ -188,7 +191,7 @@ const ChatInputComponent = ({
               className={cn(
                 "rounded-2xl",
                 isPrivate
-                  ? "text-[#A08CED] border border-[#A08CED]"
+                  ? "border border-[#A08CED] text-[#A08CED]"
                   : "text-primary",
               )}
               variant={"outline"}

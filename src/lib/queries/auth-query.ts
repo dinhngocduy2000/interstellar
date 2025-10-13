@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { IMutation } from "../interfaces/utils";
-import { LoginForm, LoginResponse } from "../interfaces/auth";
 import { loginAction } from "@/actions/auth";
 import { trackSession } from "../api/auth";
+import { LoginForm, LoginResponse } from "../interfaces/auth";
+import { IMutation } from "../interfaces/utils";
+
 type ILoginMutation = Omit<IMutation, "onSuccess"> & {
   onSuccess: (_res: LoginResponse, _data: LoginForm) => void;
 };

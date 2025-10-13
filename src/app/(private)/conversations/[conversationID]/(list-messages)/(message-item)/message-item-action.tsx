@@ -1,3 +1,8 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { Clipboard, ThumbsDown, ThumbsUp } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { toast } from "react-toastify";
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import LoadingSpinner from "@/components/reusable/loading-spinner";
 import { Button } from "@/components/ui/button";
@@ -9,12 +14,6 @@ import {
   useUpvoteMessageMutation,
 } from "@/lib/queries/conversation-message-query";
 import { cn, getErrorMessage } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { Clipboard, ThumbsDown, ThumbsUp } from "lucide-react";
-import { usePathname } from "next/navigation";
-
-import { toast } from "react-toastify";
 
 type Props = {
   message: IConversationMessage;
@@ -58,8 +57,7 @@ const MessageItemActionComponent = ({ message }: Props) => {
     try {
       await window.navigator.clipboard.writeText(string);
       toast.success("Response copied to clipboard");
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error("Failed to copy to clipboard");
     }
   };
@@ -119,7 +117,7 @@ const MessageItemActionComponent = ({ message }: Props) => {
             variant={"ghost"}
             onClick={action.onClick}
             disabled={action.isLoading}
-            className="rounded-full !px-2.5"
+            className="!px-2.5 rounded-full"
           >
             {action.isLoading ? <LoadingSpinner /> : action.icon}
           </Button>

@@ -1,12 +1,11 @@
+import { AxiosError } from "axios";
 import ConversationItemComponent from "@/components/reusable/list-nav-conversation/conversation-item";
 import { CollapsibleContent } from "@/components/ui/collapsible";
 import { SidebarMenuSub } from "@/components/ui/sidebar";
 import { Conversation } from "@/lib/interfaces/conversations";
-
-import NoDataComponent from "../no-data-component";
-import { getErrorMessage } from "@/lib/utils";
-import { AxiosError } from "axios";
 import { AxiosErrorPayload } from "@/lib/interfaces/utils";
+import { getErrorMessage } from "@/lib/utils";
+import NoDataComponent from "../no-data-component";
 
 type Props = {
   listConversation?: Conversation[];

@@ -1,18 +1,18 @@
-import { useCalendarContext } from "../../calendar-context";
 import {
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
   eachDayOfInterval,
-  isSameMonth,
-  isSameDay,
+  endOfMonth,
+  endOfWeek,
   format,
+  isSameDay,
+  isSameMonth,
   isWithinInterval,
+  startOfMonth,
+  startOfWeek,
 } from "date-fns";
-import { cn } from "@/lib/utils";
-import CalendarEvent from "../../calendar-event";
 import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { useCalendarContext } from "../../calendar-context";
+import CalendarEvent from "../../calendar-event";
 
 export default function CalendarBodyMonth() {
   const { date, events, setDate, setMode } = useCalendarContext();
@@ -46,12 +46,12 @@ export default function CalendarBodyMonth() {
   );
 
   return (
-    <div className="flex flex-col flex-grow overflow-hidden">
-      <div className="hidden md:grid grid-cols-7 border-border divide-x divide-border">
+    <div className="flex flex-grow flex-col overflow-hidden">
+      <div className="hidden grid-cols-7 divide-x divide-border border-border md:grid">
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
           <div
             key={day}
-            className="py-2 text-center text-sm font-medium text-muted-foreground border-b border-border"
+            className="border-border border-b py-2 text-center font-medium text-muted-foreground text-sm"
           >
             {day}
           </div>
@@ -61,7 +61,7 @@ export default function CalendarBodyMonth() {
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={monthStart.toISOString()}
-          className="grid md:grid-cols-7 flex-grow overflow-y-auto relative"
+          className="relative grid flex-grow overflow-y-auto md:grid-cols-7"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -81,8 +81,8 @@ export default function CalendarBodyMonth() {
               <div
                 key={day.toISOString()}
                 className={cn(
-                  "relative flex flex-col border-b border-r p-2 aspect-square cursor-pointer",
-                  !isCurrentMonth && "bg-muted/50 hidden md:flex",
+                  "relative flex aspect-square cursor-pointer flex-col border-r border-b p-2",
+                  !isCurrentMonth && "hidden bg-muted/50 md:flex",
                 )}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -92,14 +92,14 @@ export default function CalendarBodyMonth() {
               >
                 <div
                   className={cn(
-                    "text-sm font-medium w-fit p-1 flex flex-col items-center justify-center rounded-full aspect-square",
+                    "flex aspect-square w-fit flex-col items-center justify-center rounded-full p-1 font-medium text-sm",
                     isToday && "bg-primary text-background",
                   )}
                 >
                   {format(day, "d")}
                 </div>
                 <AnimatePresence mode="wait">
-                  <div className="flex flex-col gap-1 mt-1">
+                  <div className="mt-1 flex flex-col gap-1">
                     {dayEvents.slice(0, 3).map((event) => (
                       <CalendarEvent
                         key={event.id}
@@ -117,7 +117,7 @@ export default function CalendarBodyMonth() {
                         transition={{
                           duration: 0.2,
                         }}
-                        className="text-xs text-muted-foreground"
+                        className="text-muted-foreground text-xs"
                         onClick={(e) => {
                           e.stopPropagation();
                           setDate(day);

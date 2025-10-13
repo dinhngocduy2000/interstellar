@@ -1,3 +1,5 @@
+import { ErrorMessage } from "@hookform/error-message";
+import { MessageCircleWarning } from "lucide-react";
 import { ReactNode } from "react";
 import {
   Control,
@@ -10,9 +12,7 @@ import {
   RegisterOptions,
   UseFormStateReturn,
 } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
 import { cn } from "@/lib/utils";
-import { MessageCircleWarning } from "lucide-react";
 import { Label } from "../ui/label";
 
 interface Props<T extends FieldValues> {
@@ -26,7 +26,7 @@ interface Props<T extends FieldValues> {
   containerClassName?: string;
   control: Control<T, Path<T>>; //control the form item with react hook form
   rules?: // rules to validate
-  | Omit<
+    | Omit<
         RegisterOptions<T>,
         "disabled" | "valueAsNumber" | "valueAsDate" | "setValueAs"
       >
@@ -61,7 +61,7 @@ const FormInputContainer = <T extends FieldValues>({
     >
       <p
         className={cn(
-          "mb-0 text-sm font-semibold text-black flex gap-1",
+          "mb-0 flex gap-1 font-semibold text-black text-sm",
           vertialAlign ? "w-fit" : "mt-0",
         )}
       >
@@ -87,7 +87,7 @@ const FormInputContainer = <T extends FieldValues>({
                 aria-hidden="true"
                 color="red"
                 fill="red"
-                className="h-5 w-5 text-red-500 stroke-white"
+                className="h-5 w-5 stroke-white text-red-500"
               />
             </div>
           )}
@@ -104,11 +104,11 @@ const FormInputContainer = <T extends FieldValues>({
               errors={errors}
               name={name as string}
               render={({ message }) => {
-                return <p className="w-full text-xs text-red-400">{message}</p>;
+                return <p className="w-full text-red-400 text-xs">{message}</p>;
               }}
             />
             {maxCharactersText && (
-              <p className="w-full text-end text-xs font-semibold text-gray-400">
+              <p className="w-full text-end font-semibold text-gray-400 text-xs">
                 {" "}
                 {maxCharactersText}
               </p>

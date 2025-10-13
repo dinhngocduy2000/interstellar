@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+
 type Props = {
   onPageChange: VoidFunction;
   hasMore: boolean;

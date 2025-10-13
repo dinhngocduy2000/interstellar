@@ -1,10 +1,10 @@
 "use client";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { NavMainItems } from "@/lib/interfaces/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { NavMainItems } from "@/lib/interfaces/utils";
 
 type Props = {
   item: NavMainItems;
@@ -22,11 +22,11 @@ const NavMainItemComponent = ({ item }: Props) => {
             isActive={pathname === item.url}
           >
             {item.icon && <item.icon />}
-            <Link className=" w-full" href={item.url}>
+            <Link className="w-full" href={item.url}>
               {item.title}
             </Link>
             {item.shortcut && (
-              <p className="text-xs text-gray-500 group-hover/collapsible:flex hidden">
+              <p className="hidden text-gray-500 text-xs group-hover/collapsible:flex">
                 {item.shortcut}
               </p>
             )}

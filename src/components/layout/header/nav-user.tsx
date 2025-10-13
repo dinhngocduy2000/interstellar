@@ -8,7 +8,8 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
-
+import { useTransition } from "react";
+import { logoutAction } from "@/actions/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -24,10 +25,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { logoutAction } from "@/actions/auth";
-import { useTransition } from "react";
-import { cn } from "@/lib/utils";
 import { useTrackSessionQuery } from "@/lib/queries/auth-query";
+import { cn } from "@/lib/utils";
 
 export function NavUser({
   user,

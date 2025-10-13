@@ -1,9 +1,9 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Suspense } from "react";
 import { getConversationDetail } from "@/lib/api/conversations";
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
 import { getQueryClient } from "@/lib/queries/query-client";
 import ConversationLayoutHeader from "./(conversation-layout-header)";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { Suspense } from "react";
 
 export default async function ConversationLayout({
   children,

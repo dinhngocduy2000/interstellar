@@ -1,6 +1,6 @@
+import { addDays, startOfMonth } from "date-fns";
 import { colorOptions } from "@/components/reusable/calendar/calendar-tailwind-classes";
 import { CalendarEvent } from "@/components/reusable/calendar/calendar-types";
-import { addDays, startOfMonth } from "date-fns";
 
 const EVENT_TITLES = [
   "Team Standup",

@@ -1,5 +1,4 @@
 import { CONVERSATIONS_ENDPOINTS } from "@/lib/enum/endpoints";
-import axiosConfig from "..";
 import {
   Conversation,
   ConversationPinRequestDTO,
@@ -7,6 +6,7 @@ import {
   ICreateConversation,
 } from "@/lib/interfaces/conversations";
 import { IResponseDataWithPagination } from "@/lib/interfaces/utils";
+import axiosConfig from "..";
 
 export const getListConversations = async (
   params: IConversationQuery,

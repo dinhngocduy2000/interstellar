@@ -1,8 +1,8 @@
-import { useCalendarContext } from "../../calendar-context";
 import { isSameDay } from "date-fns";
-import { hours } from "./calendar-body-margin-day-margin";
-import CalendarBodyHeader from "../calendar-body-header";
+import { useCalendarContext } from "../../calendar-context";
 import CalendarEvent from "../../calendar-event";
+import CalendarBodyHeader from "../calendar-body-header";
+import { hours } from "./calendar-body-margin-day-margin";
 
 export default function CalendarBodyDayContent({ date }: { date: Date }) {
   const { events } = useCalendarContext();
@@ -10,12 +10,12 @@ export default function CalendarBodyDayContent({ date }: { date: Date }) {
   const dayEvents = events.filter((event) => isSameDay(event.start, date));
 
   return (
-    <div className="flex flex-col flex-grow">
+    <div className="flex flex-grow flex-col">
       <CalendarBodyHeader date={date} />
 
-      <div className="flex-1 relative">
+      <div className="relative flex-1">
         {hours.map((hour) => (
-          <div key={hour} className="h-32 border-b border-border/50 group" />
+          <div key={hour} className="group h-32 border-border/50 border-b" />
         ))}
 
         {dayEvents.map((event) => (

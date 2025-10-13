@@ -6,18 +6,18 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import {
+  downvoteMessage,
+  getConversationMessages,
+  upvoteMessage,
+} from "../api/chat";
+import { CHAT_ENDPOINTS } from "../enum/endpoints";
+import { IConversationMessage, IVoteMessage } from "../interfaces/message";
+import {
   IMutation,
   IPagination,
   IResponseDataWithPagination,
   ReactQueryHookParams,
 } from "../interfaces/utils";
-import { CHAT_ENDPOINTS } from "../enum/endpoints";
-import {
-  downvoteMessage,
-  getConversationMessages,
-  upvoteMessage,
-} from "../api/chat";
-import { IConversationMessage, IVoteMessage } from "../interfaces/message";
 
 export const useGetConversationMessageQuery = ({
   params,

@@ -5,19 +5,19 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  createConversation,
+  getConversationDetail,
+  getListConversations,
+} from "../api/conversations";
+import { getConversations } from "../api/conversations/conversations";
+import { CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
+import {
   Conversation,
   ConversationPinRequestDTO,
   IConversationQuery,
   ICreateConversation,
 } from "../interfaces/conversations";
 import { IMutation, ReactQueryHookParams } from "../interfaces/utils";
-import { CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
-import {
-  createConversation,
-  getConversationDetail,
-  getListConversations,
-} from "../api/conversations";
-import { getConversations } from "../api/conversations/conversations";
 
 type ICreateConversationMutation = Omit<IMutation, "onSuccess"> & {
   onSuccess?: (_res: Conversation, _data: ICreateConversation) => void;

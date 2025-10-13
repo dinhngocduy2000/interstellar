@@ -1,15 +1,15 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useForm } from "react-hook-form";
-import { useCalendarContext } from "../calendar-context";
-import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
-import { format } from "date-fns";
 import {
   Form,
   FormControl,
@@ -19,9 +19,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { DateTimePicker } from "../../form/date-time-picker";
 import { ColorPicker } from "../../form/color-picker";
-import { Button } from "@/components/ui/button";
+import { DateTimePicker } from "../../form/date-time-picker";
+import { useCalendarContext } from "../calendar-context";
 
 const formSchema = z
   .object({

@@ -1,10 +1,10 @@
+import { AUTH_ENDPOINTS } from "@/lib/enum/endpoints";
 import {
   LoginForm,
   LoginResponse,
   RefreshTokenPayload,
 } from "@/lib/interfaces/auth";
 import axiosConfig from "..";
-import { AUTH_ENDPOINTS } from "@/lib/enum/endpoints";
 
 export const loginAPI = async (
   data: LoginForm,

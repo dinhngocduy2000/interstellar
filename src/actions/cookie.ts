@@ -1,8 +1,8 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { COOKIE_KEYS } from "@/lib/enum/cookie-keys";
 import { LoginResponse } from "@/lib/interfaces/auth";
-import { cookies } from "next/headers";
 
 export const getAccessTokenCookie = async () => {
   const cookieStore = await cookies();

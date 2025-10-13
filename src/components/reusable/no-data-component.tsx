@@ -1,6 +1,7 @@
+import { PropsWithChildren } from "react";
 import NoDataIcon from "@/assets/svgs/no-data-icon";
 import { cn } from "@/lib/utils";
-import { PropsWithChildren } from "react";
+
 interface Props extends PropsWithChildren {
   text?: string;
   props?: React.HTMLAttributes<HTMLDivElement>;

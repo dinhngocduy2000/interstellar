@@ -1,27 +1,8 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useCalendarContext } from "../calendar-context";
-import z from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { format } from "date-fns";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { DateTimePicker } from "../../form/date-time-picker";
-import { ColorPicker } from "../../form/color-picker";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import z from "zod";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,6 +15,25 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ColorPicker } from "../../form/color-picker";
+import { DateTimePicker } from "../../form/date-time-picker";
+import { useCalendarContext } from "../calendar-context";
 
 const formSchema = z
   .object({

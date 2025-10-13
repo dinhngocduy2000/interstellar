@@ -23,7 +23,7 @@ const MessageItem = ({
       <div
         {...containerProps}
         className={cn(
-          "max-w-xl w-fit bg-primary-foreground rounded-lg p-4 flex flex-col gap-4",
+          "flex w-fit max-w-xl flex-col gap-4 rounded-lg bg-primary-foreground p-4",
           containerProps?.className && containerProps?.className,
         )}
       >

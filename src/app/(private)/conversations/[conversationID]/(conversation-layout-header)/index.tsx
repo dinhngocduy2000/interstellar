@@ -1,4 +1,11 @@
 "use client";
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { EllipsisVertical, PenSquare, Pin, Share, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 import AlertDialogComponent from "@/components/reusable/app-alert-dialog";
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import AppDropdownMenu from "@/components/reusable/dropdown-menu";
@@ -19,13 +26,6 @@ import {
   usePinConversationMutation,
 } from "@/lib/queries/conversation-query";
 import { cn, getErrorMessage } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { EllipsisVertical, PenSquare, Pin, Share, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { toast } from "react-toastify";
 
 type Props = {
   conversationID: string;
@@ -106,7 +106,7 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
   const chatMenuItems: IDropdownMenuItem[] = [
     {
       label: (
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Pin
             className={cn(
               conversation?.is_pinned ? "fill-primary" : "fill-none",
@@ -126,7 +126,7 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
     },
     {
       label: (
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Trash2 />
           Delete
         </div>
@@ -141,8 +141,7 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
       toast.success(
         "Copied link to clipboard. Shared links can be viewed by anyone with the links",
       );
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.error("Failed to copy link to clipboard");
     }
   };
@@ -152,16 +151,16 @@ const ConversationLayoutHeader = ({ conversationID }: Props) => {
   };
   if (isFetching) {
     return (
-      <div className="w-full flex gap-4 justify-between px-4 pt-2">
-        <Skeleton className="w-full h-7" />
+      <div className="flex w-full justify-between gap-4 px-4 pt-2">
+        <Skeleton className="h-7 w-full" />
       </div>
     );
   }
 
   return (
     <>
-      <div className="w-full flex gap-4 justify-between px-4 pt-2">
-        <p className="text-lg font-semibold">
+      <div className="flex w-full justify-between gap-4 px-4 pt-2">
+        <p className="font-semibold text-lg">
           {conversation?.title ?? "Private chat"}
         </p>
         <div className="flex gap-2">

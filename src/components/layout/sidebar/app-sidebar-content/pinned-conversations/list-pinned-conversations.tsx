@@ -1,7 +1,7 @@
 "use client";
-import { useGetPinnedConversationsQuery } from "@/lib/queries/conversation-query";
 
 import ListNavConversationUI from "@/components/reusable/list-nav-conversation/list-nav-conversation-ui";
+import { useGetPinnedConversationsQuery } from "@/lib/queries/conversation-query";
 
 const ListPinnedConversationComponent = () => {
   const { data, error } = useGetPinnedConversationsQuery({

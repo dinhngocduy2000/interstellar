@@ -1,17 +1,17 @@
 "use client";
 import {
+  ArchiveIcon,
+  BookOpen,
+  ClipboardList,
+  Settings2,
+  SquarePen,
+} from "lucide-react";
+import { PropsWithChildren } from "react";
+import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
 } from "@/components/ui/sidebar";
-import { PropsWithChildren } from "react";
-import {
-  BookOpen,
-  Settings2,
-  SquarePen,
-  ClipboardList,
-  ArchiveIcon,
-} from "lucide-react";
 import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { NavMainItems } from "@/lib/interfaces/utils";
 import NavMainItemComponent from "./nav-main-item";

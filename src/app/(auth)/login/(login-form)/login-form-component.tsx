@@ -1,21 +1,21 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { LoginForm } from "@/lib/interfaces/auth";
-import { LoginSchema } from "@/lib/schemas/login-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import FormInputContainer from "@/components/reusable/form-input-container";
-import { useLoginMutation } from "@/lib/queries/auth-query";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import { ROUTE_PATH } from "@/lib/enum/route-path";
 import { setCookiesAction } from "@/actions/cookie";
-import { AxiosError } from "axios";
+import FormInputContainer from "@/components/reusable/form-input-container";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ROUTE_PATH } from "@/lib/enum/route-path";
+import { LoginForm } from "@/lib/interfaces/auth";
 import { AxiosErrorPayload } from "@/lib/interfaces/utils";
+import { useLoginMutation } from "@/lib/queries/auth-query";
+import { LoginSchema } from "@/lib/schemas/login-schema";
 import { getErrorMessage } from "@/lib/utils";
 
 const LoginFormComponent = () => {
@@ -48,7 +48,7 @@ const LoginFormComponent = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 flex flex-col gap-2"
+      className="flex flex-col gap-2 space-y-4"
     >
       <FormInputContainer
         control={control}
@@ -81,7 +81,7 @@ const LoginFormComponent = () => {
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+            className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
@@ -124,7 +124,7 @@ const LoginFormComponent = () => {
         </div>
         <Link
           href="/auth/forgot-password"
-          className="text-sm text-primary hover:underline"
+          className="text-primary text-sm hover:underline"
         >
           Forgot password?
         </Link>

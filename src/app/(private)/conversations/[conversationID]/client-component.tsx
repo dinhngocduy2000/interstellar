@@ -1,8 +1,8 @@
 "use client";
 import { Suspense, use } from "react";
-import ListMessageComponent from "./(list-messages)";
 import ChatInputComponent from "@/components/reusable/chat-input-component";
 import { useSendChatMessageSSE } from "@/lib/hooks/use-chat-sse";
+import ListMessageComponent from "./(list-messages)";
 
 const ConversationClientComponent = ({
   params,

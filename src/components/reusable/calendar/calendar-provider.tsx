@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { CalendarContext } from "./calendar-context";
 import { CalendarEvent, Mode } from "./calendar-types";
-import { useState } from "react";
-import CalendarNewEventDialog from "./dialog/calendar-new-event-dialog";
 import CalendarManageEventDialog from "./dialog/calendar-manage-event-dialog";
+import CalendarNewEventDialog from "./dialog/calendar-new-event-dialog";
 
 export default function CalendarProvider({
   events,

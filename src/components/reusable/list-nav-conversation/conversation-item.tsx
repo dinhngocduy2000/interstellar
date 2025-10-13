@@ -1,4 +1,11 @@
 "use client";
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { EllipsisVertical, Pin, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 import AlertDialogComponent from "@/components/reusable/app-alert-dialog";
 import AppTooltipComponent from "@/components/reusable/app-tooltip-component";
 import AppDropdownMenu from "@/components/reusable/dropdown-menu";
@@ -20,13 +27,6 @@ import {
   usePinConversationMutation,
 } from "@/lib/queries/conversation-query";
 import { cn, getErrorMessage } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { EllipsisVertical, Pin, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { toast } from "react-toastify";
 
 type Props = {
   conversation: Conversation;
@@ -101,7 +101,7 @@ const ConversationItemComponent = ({ conversation }: Props) => {
   const chatMenuItems: IDropdownMenuItem[] = [
     {
       label: (
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Pin
             className={cn(
               conversation?.is_pinned ? "fill-primary" : "fill-none",
@@ -121,7 +121,7 @@ const ConversationItemComponent = ({ conversation }: Props) => {
     },
     {
       label: (
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Trash2 />
           Delete
         </div>
@@ -137,7 +137,7 @@ const ConversationItemComponent = ({ conversation }: Props) => {
       <SidebarMenuSubButton
         isActive={pathname.includes(conversation.id)}
         className={cn(
-          "w-full justify-between gap-2 py-4 relative group/conversation",
+          "group/conversation relative w-full justify-between gap-2 py-4",
         )}
         asChild
       >

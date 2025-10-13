@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
 import { AxiosErrorPayload } from "./interfaces/utils";

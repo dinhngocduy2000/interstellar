@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { setCookiesAction } from "./actions/cookie";
+import { refreshTokenAction } from "./actions/refresh-token";
 import { COOKIE_KEYS } from "./lib/enum/cookie-keys";
 import { ROUTE_PATH } from "./lib/enum/route-path";
-import { refreshTokenAction } from "./actions/refresh-token";
-import { setCookiesAction } from "./actions/cookie";
 
 const publicRoutes = ["/login", "/signup"];
 
@@ -13,7 +13,6 @@ export async function middleware(request: NextRequest) {
     request.cookies.get(COOKIE_KEYS.REFRESH_TOKEN)?.value ?? "";
   const saveSession = request.cookies.get(COOKIE_KEYS.SAVE_SESSION)?.value;
   const { pathname } = request.nextUrl;
-  console.log(`CHECKING PATHNAME: ${pathname}`);
   // Allow public routes
   if (publicRoutes.includes(pathname)) {
     if (token) {
@@ -22,10 +21,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  console.log(`CHECK TOKEN: ${token}`);
   // Check if token is missing or expired
   if (!token) {
-    console.log("NO TOKEN or EXPIRED for:", pathname);
     if (!refreshToken) {
       return NextResponse.redirect(new URL(ROUTE_PATH.LOGIN, request.url));
     }
@@ -41,8 +38,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Token is valid, proceed
-  console.log("Valid token for:", pathname);
   return NextResponse.next();
 }
 

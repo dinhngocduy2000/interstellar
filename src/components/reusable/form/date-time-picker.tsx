@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -12,6 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 interface DateTimePickerProps {
   field: {
@@ -89,9 +89,9 @@ export function DateTimePicker({ field }: DateTimePickerProps) {
             onSelect={handleDateSelect}
             initialFocus
           />
-          <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-            <ScrollArea className="w-64 sm:w-auto h-[300px]">
-              <div className="flex sm:flex-col p-2">
+          <div className="flex flex-col divide-y sm:h-[300px] sm:flex-row sm:divide-x sm:divide-y-0">
+            <ScrollArea className="h-[300px] w-64 sm:w-auto">
+              <div className="flex p-2 sm:flex-col">
                 {hours.map((hour) => (
                   <Button
                     key={hour}
@@ -101,7 +101,7 @@ export function DateTimePicker({ field }: DateTimePickerProps) {
                         ? "default"
                         : "ghost"
                     }
-                    className="sm:w-full shrink-0 aspect-square"
+                    className="aspect-square shrink-0 sm:w-full"
                     onClick={() => handleTimeChange("hour", hour.toString())}
                   >
                     {hour}
@@ -111,7 +111,7 @@ export function DateTimePicker({ field }: DateTimePickerProps) {
               <ScrollBar orientation="horizontal" className="sm:hidden" />
             </ScrollArea>
             <ScrollArea className="w-64 sm:w-auto">
-              <div className="flex sm:flex-col p-2">
+              <div className="flex p-2 sm:flex-col">
                 {Array.from({ length: 12 }, (_, i) => i * 5).map((minute) => (
                   <Button
                     key={minute}
@@ -119,7 +119,7 @@ export function DateTimePicker({ field }: DateTimePickerProps) {
                     variant={
                       date && date.getMinutes() === minute ? "default" : "ghost"
                     }
-                    className="sm:w-full shrink-0 aspect-square"
+                    className="aspect-square shrink-0 sm:w-full"
                     onClick={() =>
                       handleTimeChange("minute", minute.toString())
                     }
@@ -131,7 +131,7 @@ export function DateTimePicker({ field }: DateTimePickerProps) {
               <ScrollBar orientation="horizontal" className="sm:hidden" />
             </ScrollArea>
             <ScrollArea>
-              <div className="flex sm:flex-col p-2">
+              <div className="flex p-2 sm:flex-col">
                 {["AM", "PM"].map((ampm) => (
                   <Button
                     key={ampm}
@@ -143,7 +143,7 @@ export function DateTimePicker({ field }: DateTimePickerProps) {
                         ? "default"
                         : "ghost"
                     }
-                    className="sm:w-full shrink-0 aspect-square"
+                    className="aspect-square shrink-0 sm:w-full"
                     onClick={() => handleTimeChange("ampm", ampm)}
                   >
                     {ampm}

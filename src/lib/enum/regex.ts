@@ -6,6 +6,6 @@ export const REGEX_PASSWORD =
 
 export const REGEX_NUMBER_FOLLOWED_BY_CHARACTERS =
   // eslint-disable-next-line no-useless-escape
-  /^[0-9]+[a-zA-Z\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]+$/;
+  /^[0-9]+[a-zA-Z\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/;
 
 export const REGEX_NUMBER_FOLLOWED_BY_PERCENT = /^\d+(?:[.,]\d+)*%$/;

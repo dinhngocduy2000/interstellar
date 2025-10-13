@@ -1,16 +1,17 @@
-import { useEffect, useRef, useState } from "react";
-import { IConversationMessage } from "../interfaces/message";
-import { MESSAGE_AUTHOR } from "../enum/message-author";
-import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
-import { IPagination, IResponseDataWithPagination } from "../interfaces/utils";
+import { useEffect, useRef, useState } from "react";
+import { VirtuosoHandle } from "react-virtuoso";
+import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
+import { MESSAGE_AUTHOR } from "../enum/message-author";
+import { LOCAL_STORAGE_KEY } from "../enum/storage-keys";
 import { Conversation } from "../interfaces/conversations";
+import { IConversationMessage } from "../interfaces/message";
+import { IPagination, IResponseDataWithPagination } from "../interfaces/utils";
 import {
   addNewUserMessageData,
   updateNewBotReplyMessageData,
 } from "../queries/conversation-message-query";
-import { LOCAL_STORAGE_KEY } from "../enum/storage-keys";
-import { VirtuosoHandle } from "react-virtuoso";
+
 type SendChatMessageSSEProps = {
   conversationID: string;
 
