@@ -66,7 +66,6 @@ const ListMessageComponent = ({
     params: conversationMessagesParams,
     enabled: conversationDetail?.is_new === false,
   });
-
   const listMessages = useMemo(
     () => listMessagesData?.pages.flatMap((page) => page.data),
     [listMessagesData],
