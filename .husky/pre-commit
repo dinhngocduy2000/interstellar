@@ -1,1 +1,1 @@
-npx biome check --write src
+npx biome check src
