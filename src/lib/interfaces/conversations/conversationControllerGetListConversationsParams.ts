@@ -8,44 +8,44 @@
 import type { ConversationControllerGetListConversationsSortDirection } from "./conversationControllerGetListConversationsSortDirection";
 
 export type ConversationControllerGetListConversationsParams = {
-  /**
-   * Page number for pagination
-   */
-  page?: number;
-  /**
-   * Number of items per page
-   */
-  limit?: number;
-  /**
-   * The field to sort by
-   */
-  sort_by?: string;
-  /**
-   * The direction to sort by
-   */
-  sort_direction?: ConversationControllerGetListConversationsSortDirection;
-  /**
-   * Whether to filter by pinned conversations
-   */
-  is_pinned?: boolean;
-  /**
-   * The user ID
-   */
-  user_id?: string;
-  /**
-   * The title of the conversation
-   */
-  title?: string;
-  /**
-   * The description of the conversation
-   */
-  description?: string;
-  /**
-   * The created_at of the conversation
-   */
-  created_at?: string;
-  /**
-   * The updated_at of the conversation
-   */
-  updated_at?: string;
+	/**
+	 * Page number for pagination
+	 */
+	page?: number;
+	/**
+	 * Number of items per page
+	 */
+	limit?: number;
+	/**
+	 * The field to sort by
+	 */
+	sort_by?: string;
+	/**
+	 * The direction to sort by
+	 */
+	sort_direction?: ConversationControllerGetListConversationsSortDirection;
+	/**
+	 * Whether to filter by pinned conversations
+	 */
+	is_pinned?: boolean;
+	/**
+	 * The user ID
+	 */
+	user_id?: string;
+	/**
+	 * The title of the conversation
+	 */
+	title?: string;
+	/**
+	 * The description of the conversation
+	 */
+	description?: string;
+	/**
+	 * The created_at of the conversation
+	 */
+	created_at?: string;
+	/**
+	 * The updated_at of the conversation
+	 */
+	updated_at?: string;
 };

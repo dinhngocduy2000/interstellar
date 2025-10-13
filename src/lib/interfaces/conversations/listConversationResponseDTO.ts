@@ -8,8 +8,8 @@
 import type { ConversationResponseDTO } from "./conversationResponseDTO";
 
 export interface ListConversationResponseDTO {
-  /** The conversations */
-  data: ConversationResponseDTO[];
-  /** The total number of conversations */
-  total: number;
+	/** The conversations */
+	data: ConversationResponseDTO[];
+	/** The total number of conversations */
+	total: number;
 }

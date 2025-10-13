@@ -8,22 +8,22 @@
 import type { MessageResponseDTOConversation } from "./messageResponseDTOConversation";
 
 export interface MessageResponseDTO {
-  /** The ID of the message */
-  id: string;
-  /** The created_at of the message */
-  created_at: string;
-  /** The updated_at of the message */
-  updated_at: string;
-  /** Whether the message is upvoted */
-  is_upvote: boolean;
-  /** Whether the message is downvoted */
-  is_downvote: boolean;
-  /** The conversation of the message */
-  conversation: MessageResponseDTOConversation;
-  /** The author of the message */
-  author: string;
-  /** The conversation_id of the message */
-  conversation_id: string;
-  /** The content of the message */
-  content: string;
+	/** The ID of the message */
+	id: string;
+	/** The created_at of the message */
+	created_at: string;
+	/** The updated_at of the message */
+	updated_at: string;
+	/** Whether the message is upvoted */
+	is_upvote: boolean;
+	/** Whether the message is downvoted */
+	is_downvote: boolean;
+	/** The conversation of the message */
+	conversation: MessageResponseDTOConversation;
+	/** The author of the message */
+	author: string;
+	/** The conversation_id of the message */
+	conversation_id: string;
+	/** The content of the message */
+	content: string;
 }

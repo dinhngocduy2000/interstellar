@@ -7,16 +7,16 @@
  */
 
 export interface LoginResponseDto {
-  /** The access token of the user */
-  accessToken: string;
-  /** The refresh token of the user */
-  refreshToken: string;
-  /** Token expire time */
-  expiresIn: number;
-  /** User's email */
-  email: string;
-  /** User's username */
-  username: string;
-  /** User's role */
-  role: string;
+	/** The access token of the user */
+	accessToken: string;
+	/** The refresh token of the user */
+	refreshToken: string;
+	/** Token expire time */
+	expiresIn: number;
+	/** User's email */
+	email: string;
+	/** User's username */
+	username: string;
+	/** User's role */
+	role: string;
 }

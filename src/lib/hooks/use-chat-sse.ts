@@ -1,158 +1,159 @@
-import { useEffect, useRef, useState } from "react";
-import { IConversationMessage } from "../interfaces/message";
-import { MESSAGE_AUTHOR } from "../enum/message-author";
-import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
-import { IPagination, IResponseDataWithPagination } from "../interfaces/utils";
-import { Conversation } from "../interfaces/conversations";
-import {
-  addNewUserMessageData,
-  updateNewBotReplyMessageData,
-} from "../queries/conversation-message-query";
-import { LOCAL_STORAGE_KEY } from "../enum/storage-keys";
+import { useEffect, useRef, useState } from "react";
 import { VirtuosoHandle } from "react-virtuoso";
-type SendChatMessageSSEProps = {
-  conversationID: string;
+import { CHAT_ENDPOINTS, CONVERSATIONS_ENDPOINTS } from "../enum/endpoints";
+import { MESSAGE_AUTHOR } from "../enum/message-author";
+import { LOCAL_STORAGE_KEY } from "../enum/storage-keys";
+import { Conversation } from "../interfaces/conversations";
+import { IConversationMessage } from "../interfaces/message";
+import { IPagination, IResponseDataWithPagination } from "../interfaces/utils";
+import {
+	addNewUserMessageData,
+	updateNewBotReplyMessageData,
+} from "../queries/conversation-message-query";
 
-  conversationMessagesParams: IPagination & { conversationID: string };
+type SendChatMessageSSEProps = {
+	conversationID: string;
+
+	conversationMessagesParams: IPagination & { conversationID: string };
 };
 export const useSendChatMessageSSE = ({
-  conversationID,
+	conversationID,
 }: SendChatMessageSSEProps) => {
-  const newMessageRef = useRef<string>("");
-  const virtuosoRef = useRef<VirtuosoHandle | null>(null);
-  const queryClient = useQueryClient();
-  const [isResponding, setIsResponding] = useState<boolean>(false);
-  const eventSourceRef = useRef<EventSource | null>(null);
-  const isScrolledOnce = useRef<boolean>(false);
-  const isAllowingAutoScroll = useRef<boolean>(true);
-  const lastPageListMessageLengthRef = useRef<number>(0);
-  const closeSSEConnection = () => {
-    eventSourceRef.current?.close();
-    eventSourceRef.current = null;
-    lastPageListMessageLengthRef.current = 0;
-    setIsResponding(false);
-    newMessageRef.current = "";
-  };
+	const newMessageRef = useRef<string>("");
+	const virtuosoRef = useRef<VirtuosoHandle | null>(null);
+	const queryClient = useQueryClient();
+	const [isResponding, setIsResponding] = useState<boolean>(false);
+	const eventSourceRef = useRef<EventSource | null>(null);
+	const isScrolledOnce = useRef<boolean>(false);
+	const isAllowingAutoScroll = useRef<boolean>(true);
+	const lastPageListMessageLengthRef = useRef<number>(0);
+	const closeSSEConnection = () => {
+		eventSourceRef.current?.close();
+		eventSourceRef.current = null;
+		lastPageListMessageLengthRef.current = 0;
+		setIsResponding(false);
+		newMessageRef.current = "";
+	};
 
-  const scrollToLastMessage = () => {
-    virtuosoRef.current?.scrollToIndex({
-      index: "LAST",
-      behavior: "auto",
-      offset: 1000,
-    });
-  };
+	const scrollToLastMessage = () => {
+		virtuosoRef.current?.scrollToIndex({
+			index: "LAST",
+			behavior: "auto",
+			offset: 1000,
+		});
+	};
 
-  const handleSendMessage = async (message: string) => {
-    if (eventSourceRef.current) {
-      return;
-    }
-    setIsResponding(true);
-    eventSourceRef.current = new EventSource(
-      `http://localhost:3000/api/v1/chat/sse/${conversationID}?content=${message}${conversationID === "private" ? "&isPrivate=true" : ""}`,
-      {
-        withCredentials: true,
-      },
-    );
+	const handleSendMessage = async (message: string) => {
+		if (eventSourceRef.current) {
+			return;
+		}
+		setIsResponding(true);
+		eventSourceRef.current = new EventSource(
+			`http://localhost:3000/api/v1/chat/sse/${conversationID}?content=${message}${conversationID === "private" ? "&isPrivate=true" : ""}`,
+			{
+				withCredentials: true,
+			},
+		);
 
-    eventSourceRef.current.addEventListener("open", () => {
-      localStorage.removeItem(LOCAL_STORAGE_KEY.PRIVATE_MESSAGE);
-      // lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
-      scrollToLastMessage();
-      setTimeout(() => {
-        isScrolledOnce.current = true;
-      }, 500);
-      const listMessageData:
-        | InfiniteData<
-            IResponseDataWithPagination<IConversationMessage>,
-            unknown
-          >
-        | undefined = queryClient.getQueryData([
-        CHAT_ENDPOINTS.GET_MESSAGES,
-        conversationID,
-      ]);
-      lastPageListMessageLengthRef.current =
-        listMessageData?.pages[listMessageData?.pages.length - 1]?.data
-          ?.length ?? 0;
-      const userMessage: IConversationMessage = {
-        id: `new_user_message_${lastPageListMessageLengthRef.current + 1}`,
-        author: MESSAGE_AUTHOR.USER,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        is_upvote: false,
-        is_downvote: false,
-        content: message,
-        conversation_id: conversationID,
-      };
+		eventSourceRef.current.addEventListener("open", () => {
+			localStorage.removeItem(LOCAL_STORAGE_KEY.PRIVATE_MESSAGE);
+			// lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+			scrollToLastMessage();
+			setTimeout(() => {
+				isScrolledOnce.current = true;
+			}, 500);
+			const listMessageData:
+				| InfiniteData<
+						IResponseDataWithPagination<IConversationMessage>,
+						unknown
+				  >
+				| undefined = queryClient.getQueryData([
+				CHAT_ENDPOINTS.GET_MESSAGES,
+				conversationID,
+			]);
+			lastPageListMessageLengthRef.current =
+				listMessageData?.pages[listMessageData?.pages.length - 1]?.data
+					?.length ?? 0;
+			const userMessage: IConversationMessage = {
+				id: `new_user_message_${lastPageListMessageLengthRef.current + 1}`,
+				author: MESSAGE_AUTHOR.USER,
+				created_at: new Date().toISOString(),
+				updated_at: new Date().toISOString(),
+				is_upvote: false,
+				is_downvote: false,
+				content: message,
+				conversation_id: conversationID,
+			};
 
-      addNewUserMessageData({
-        userMessage,
-        queryClient,
-        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
-      });
-    });
+			addNewUserMessageData({
+				userMessage,
+				queryClient,
+				queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
+			});
+		});
 
-    eventSourceRef.current.addEventListener("message", function (event) {
-      // Use the setMessages function to update state
-      const newMessage: IConversationMessage = {
-        id: `new_message_${lastPageListMessageLengthRef.current + 2}`,
-        author: MESSAGE_AUTHOR.BOT,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        is_upvote: false,
-        is_downvote: false,
-        content: newMessageRef.current + event.data,
-        conversation_id: conversationID,
-      };
-      newMessageRef.current = newMessage.content;
-      updateNewBotReplyMessageData({
-        newMessage,
-        queryClient,
-        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
-        index: lastPageListMessageLengthRef.current + 2,
-      });
-      if (isAllowingAutoScroll.current) {
-        scrollToLastMessage();
-      }
-    });
-    eventSourceRef.current.addEventListener("end", () => {
-      newMessageRef.current = "";
-      isScrolledOnce.current = false;
-      closeSSEConnection();
-      if (conversationID === "private") {
-        return;
-      }
-      queryClient.invalidateQueries({
-        queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
-      });
+		eventSourceRef.current.addEventListener("message", function (event) {
+			// Use the setMessages function to update state
+			const newMessage: IConversationMessage = {
+				id: `new_message_${lastPageListMessageLengthRef.current + 2}`,
+				author: MESSAGE_AUTHOR.BOT,
+				created_at: new Date().toISOString(),
+				updated_at: new Date().toISOString(),
+				is_upvote: false,
+				is_downvote: false,
+				content: newMessageRef.current + event.data,
+				conversation_id: conversationID,
+			};
+			newMessageRef.current = newMessage.content;
+			updateNewBotReplyMessageData({
+				newMessage,
+				queryClient,
+				queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
+				index: lastPageListMessageLengthRef.current + 2,
+			});
+			if (isAllowingAutoScroll.current) {
+				scrollToLastMessage();
+			}
+		});
+		eventSourceRef.current.addEventListener("end", () => {
+			newMessageRef.current = "";
+			isScrolledOnce.current = false;
+			closeSSEConnection();
+			if (conversationID === "private") {
+				return;
+			}
+			queryClient.invalidateQueries({
+				queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
+			});
 
-      queryClient.setQueryData(
-        [CONVERSATIONS_ENDPOINTS.GET, conversationID],
-        (oldData: Conversation): Conversation => ({
-          ...oldData,
-          is_new: false,
-        }),
-      );
-    });
-  };
+			queryClient.setQueryData(
+				[CONVERSATIONS_ENDPOINTS.GET, conversationID],
+				(oldData: Conversation): Conversation => ({
+					...oldData,
+					is_new: false,
+				}),
+			);
+		});
+	};
 
-  useEffect(() => {
-    return () => {
-      if (conversationID === "private") {
-        queryClient.resetQueries({
-          queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
-        });
-      }
-    };
-  }, []);
+	useEffect(() => {
+		return () => {
+			if (conversationID === "private") {
+				queryClient.resetQueries({
+					queryKey: [CHAT_ENDPOINTS.GET_MESSAGES, conversationID],
+				});
+			}
+		};
+	}, []);
 
-  return {
-    closeSSEConnection,
-    handleSendMessage,
-    eventSourceRef,
-    isResponding,
-    isAllowingAutoScroll,
-    isScrolledOnce,
-    virtuosoRef,
-  };
+	return {
+		closeSSEConnection,
+		handleSendMessage,
+		eventSourceRef,
+		isResponding,
+		isAllowingAutoScroll,
+		isScrolledOnce,
+		virtuosoRef,
+	};
 };

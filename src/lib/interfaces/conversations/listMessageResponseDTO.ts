@@ -8,8 +8,8 @@
 import type { MessageResponseDTO } from "./messageResponseDTO";
 
 export interface ListMessageResponseDTO {
-  /** The messages */
-  data: MessageResponseDTO[];
-  /** The total number of messages */
-  total: number;
+	/** The messages */
+	data: MessageResponseDTO[];
+	/** The total number of messages */
+	total: number;
 }

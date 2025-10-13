@@ -1,27 +1,27 @@
+import { AUTH_ENDPOINTS } from "@/lib/enum/endpoints";
 import {
-  LoginForm,
-  LoginResponse,
-  RefreshTokenPayload,
+	LoginForm,
+	LoginResponse,
+	RefreshTokenPayload,
 } from "@/lib/interfaces/auth";
 import axiosConfig from "..";
-import { AUTH_ENDPOINTS } from "@/lib/enum/endpoints";
 
 export const loginAPI = async (
-  data: LoginForm,
-  signal?: AbortSignal,
+	data: LoginForm,
+	signal?: AbortSignal,
 ): Promise<LoginResponse> => {
-  return await axiosConfig.post(AUTH_ENDPOINTS.LOGIN, data, { signal });
+	return await axiosConfig.post(AUTH_ENDPOINTS.LOGIN, data, { signal });
 };
 
 export const refreshToken = async (
-  params: RefreshTokenPayload,
-  signal?: AbortSignal,
+	params: RefreshTokenPayload,
+	signal?: AbortSignal,
 ): Promise<LoginResponse> => {
-  return await axiosConfig.post(AUTH_ENDPOINTS.REFRESH_TOKEN, params, {
-    signal,
-  });
+	return await axiosConfig.post(AUTH_ENDPOINTS.REFRESH_TOKEN, params, {
+		signal,
+	});
 };
 
 export const trackSession = async (signal?: AbortSignal): Promise<unknown> => {
-  return await axiosConfig.get(AUTH_ENDPOINTS.TRACK_SESSION, { signal });
+	return await axiosConfig.get(AUTH_ENDPOINTS.TRACK_SESSION, { signal });
 };

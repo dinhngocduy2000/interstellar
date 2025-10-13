@@ -7,8 +7,8 @@
  */
 
 export interface SuccessResponse {
-  /** The message of the response */
-  message: string;
-  /** The code of the response */
-  code: number;
+	/** The message of the response */
+	message: string;
+	/** The code of the response */
+	code: number;
 }
