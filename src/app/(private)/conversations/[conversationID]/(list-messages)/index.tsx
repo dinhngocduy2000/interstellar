@@ -108,10 +108,9 @@ const ListMessageComponent = ({
 			handleSendMessage(conversationDetail.first_message);
 		}
 		return () => {
-			// closeSSEConnection();
+			closeSSEConnection();
 		};
 	}, [conversationDetail, conversationID]);
-
 	useEffect(() => {
 		virtuosoRef.current?.scrollToIndex({
 			index: "LAST",
