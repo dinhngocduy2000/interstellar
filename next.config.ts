@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
           compiler.hooks.beforeCompile.tap("BiomeLintPlugin", () => {
             try {
               // Run Biome linting (adjust path/globs as needed)
-              execSync("npx biome check ./src", {
+              execSync("npx biome check src", {
                 stdio: "inherit", // Show output in terminal
               });
             } catch {
