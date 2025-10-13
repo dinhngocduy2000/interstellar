@@ -108,7 +108,7 @@ const ListMessageComponent = ({
 			handleSendMessage(conversationDetail.first_message);
 		}
 		return () => {
-			closeSSEConnection();
+			// closeSSEConnection();
 		};
 	}, [conversationDetail, conversationID]);
 
