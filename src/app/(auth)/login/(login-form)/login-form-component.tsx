@@ -115,11 +115,11 @@ const LoginFormComponent = () => {
                 id="saveSession"
                 type="checkbox"
                 defaultChecked={field.value as boolean}
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                className="mt-2 h-4 max-h-fit w-4 rounded border-gray-300 text-primary focus:ring-primary"
                 onChange={(e) => field.onChange(e.target.checked)}
               />
             )}
-            containerClassName="flex-row-reverse items-start"
+            containerClassName="flex-row-reverse items-center"
           />
         </div>
         <Link

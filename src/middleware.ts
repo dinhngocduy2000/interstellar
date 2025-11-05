@@ -5,7 +5,7 @@ import { refreshTokenAction } from "./actions/refresh-token";
 import { COOKIE_KEYS } from "./lib/enum/cookie-keys";
 import { ROUTE_PATH } from "./lib/enum/route-path";
 
-const publicRoutes = ["/login", "/signup"];
+const publicRoutes = ["/login", "/signup", "/sso"];
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_KEYS.ACCESS_TOKEN)?.value;
