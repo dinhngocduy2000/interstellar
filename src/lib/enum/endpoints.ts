@@ -3,6 +3,7 @@ export enum AUTH_ENDPOINTS {
   REFRESH_TOKEN = "/api/v1/auth/refresh",
   SIGN_UP = "/api/v1/auth/register",
   TRACK_SESSION = "/api/v1/auth/track",
+  GOOGLE_LOGIN = "/api/v1/auth/sso/google/login",
 }
 
 export enum CONVERSATIONS_ENDPOINTS {

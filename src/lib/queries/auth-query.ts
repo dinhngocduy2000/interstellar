@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { loginAction } from "@/actions/auth";
-import { trackSession } from "../api/auth";
+import { loginAPI, trackSession } from "../api/auth";
 import { LoginForm, LoginResponse } from "../interfaces/auth";
 import { IMutation } from "../interfaces/utils";
 
@@ -15,7 +15,7 @@ export const useLoginMutation = ({
 }: ILoginMutation) => {
   return useMutation({
     mutationFn: async (data: LoginForm) => {
-      return await loginAction({ ...data, saveSession: undefined }, signal);
+      return await loginAPI({ ...data, saveSession: undefined }, signal);
     },
     onSuccess: (data, variables) => {
       onSuccess?.(data, variables);
